@@ -1,0 +1,73 @@
+baseURL = 'https://www.flandre.love/'
+languageCode = 'en-us'
+title = '绯想天'
+theme = 'tokiwa'
+copyright = "Copyright © 2020 - 2022 Fei Pan"
+
+googleAnalytics = "UA-1234567890" # or "G-xxxxxxxx" in Google Analytics v4, in hugo v0.82+
+
+defaultContentLanguage = 'zh'
+defaultContentLanguageInSubdir = true
+[languages]
+  [languages.zh]
+  [languages.en]
+
+[params]
+description = """
+梦想天生
+"""
+math = false # for introducing $KaTEX$
+env = "production" # for Google Analytics and DISQUS.
+useChineseFonts = true # for font Noto Serif etc.
+bannerFont = "fonts/exampleFont" # custom your own font for the title.
+postDateFormat = "2006-01-02" # override custom date format posts.
+
+[menu]
+# Shown in the side menu.
+  [[menu.main]]
+    identifier = "posts"
+    name = "归档"
+    weight = 1
+    url = "/posts/"
+  [[menu.main]]
+    identifier = "categories"
+    name = "分类"
+    url = "/categories/"
+    weight = 2
+  [[menu.main]]
+    identifier = "tags"
+    name = "标签"
+    url = "/tags/"
+    weight = 2
+  [[menu.main]]
+    identifier = "series"
+    name = "系列"
+    url = "/series/"
+    weight = 3
+  [[menu.main]]
+    identifier = "about"
+    name = "关于"
+    url = "/about/"
+    weight = 4
+
+[taxonomies]
+  category = "categories"
+  tag = "tags"
+  series = "series"
+
+[social]
+#instagram="http://example.com/"
+#bilibili="http://example.com/"
+#weibo="http://example.com/"
+#zhihu="https://www.zhihu.com/people/flandreeyes"
+#twitter="http://twitter.com/"
+#gitlab="http://gitlab.com/"
+#youtube="http://youtube.com/"
+github="http://github.com/fei0319"
+mail="mailto:pan-fei@outlook.com"
+
+[params.utteranc]         # utteranc is a comment system based on GitHub issues. see https://utteranc.es
+    enable = true
+    repo = "fei0319/fei0319.github.io.utterances"    # The repo to store comments
+    issueTerm = "pathname"
+	theme = "github-light"

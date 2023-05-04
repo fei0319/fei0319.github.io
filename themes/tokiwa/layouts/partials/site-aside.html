@@ -1,0 +1,14 @@
+{{$scratch := newScratch}}
+{{ range (.Site.Pages)}}
+{{$scratch.Add "total" .WordCount}}
+{{ end }}
+<div class="md:max-w-xs  flex flex-col md:items-end pt-2">
+	{{ partial "social-follow.html" . }}
+	<div class="a-gray text-sm text-gray-500 leading-tight">
+		{{.Site.Copyright|safeHTML}}
+		<br />
+		Licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC-BY-SA 4.0</a>
+			<br />
+			{{ len  .Site.Pages }} pages in total
+	</div>
+</div>

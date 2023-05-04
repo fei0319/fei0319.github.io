@@ -1,0 +1,39 @@
+<ul class="font-serif flex-grow-0 flex justify-between flex-wrap md:flex-col">
+	{{ if .Site.Menus.main }}
+	{{ range .Site.Menus.main }}
+	<li class="px-1 md:px-0">
+		<a href="{{ .URL | absLangURL }}" title="{{ .Name }} page" {{ if in ($.Permalink| absURL ) (.URL|absURL) }}
+			class="font-medium text-medium-red-violet-600 hover:text-medium-red-violet-400" {{ end }}>
+			{{ i18n .Identifier | default .Name}}
+		</a>
+	</li>
+	{{ end }}
+	{{ if .OutputFormats.Get "RSS" }}
+	<li>
+		<a href='{{ with .OutputFormats.Get "RSS" }}{{ .RelPermalink }}{{ end }}'>RSS</a>
+	</li>
+	{{ end }}
+
+	{{ if eq .Site.Language.Lang "zh"}}
+	<li>
+		<a href="/en" class="font-medium text-medium-red-violet-600 hover:text-medium-red-violet-400">English</a>
+	</li>
+	{{ end }}
+	{{ if eq .Site.Language.Lang "en"}}
+	<li>
+		<a href="/zh" class="font-medium text-medium-red-violet-600 hover:text-medium-red-violet-400">中文</a>
+	</li>
+	{{ end }}
+
+	{{ end }}
+	{{ if .Site.Params.fuse }}
+	<div id="fastSearch" class="m-0">
+		<input id="searchInput" type="text" size=10 
+			class="bg-gray-100 focus:outline-none border-b border-gray-100 focus:border-eucalyptus-300 md:text-right
+			placeholder-java-500 min-w-0 max-w-xxxs"
+			placeholder="search" />
+		<ul id="searchResults" class="bg-gray-200 px-2 divide-y divide-gray-400">
+		</ul>
+	</div>
+	{{ end }}
+</ul>
