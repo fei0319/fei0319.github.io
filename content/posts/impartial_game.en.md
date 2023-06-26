@@ -8,10 +8,11 @@ description: 'Though named "impartial", its result has been determined before th
 ---
 
 An impartial game is a 2-players game where players take turns to move that satisfies the following constraints:
+
 - Impartial: A player's optional move is restricted by the current game status only and not by his/her identity.
 - Finite: The game will end after finite rounds.
 - Non-random: For any given move under a certain game status, there will be a predictable and unique consequence.
-- Perfect information: Both players know all information about the current game status.
+- Perfect-information: Both players know all information about the current game status.
 
 "Impartial" doesn't mean that the game is fair, but that players' optional move isn't decided by their identity. For example, go isn't an impartial game, since whether a player can place white stones or black stones is determined by their identity. Games like nim game are impartial game, however, because the rules for both players to remove stones is identical.
 

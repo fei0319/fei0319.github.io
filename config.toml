@@ -2,7 +2,7 @@ baseURL = 'https://www.flandre.love/'
 languageCode = 'en-us'
 title = '绯想天'
 theme = 'tokiwa'
-copyright = "Copyright © 2020 - 2022 Fei Pan"
+copyright = "Copyright © 2020 - 2023 Fei Pan"
 
 googleAnalytics = "UA-1234567890" # or "G-xxxxxxxx" in Google Analytics v4, in hugo v0.82+
 
