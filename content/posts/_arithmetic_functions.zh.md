@@ -1,8 +1,8 @@
 ---
 title: 狄利克雷卷积和莫比乌斯反演
 date: 2023-06-16T20:20:00+08:00
-tags: ["多项式", "拉格朗日插值法"]
-categories: ["离散数学"]
+tags: ["莫比乌斯反演"]
+categories: ["数论"]
 math: true
 draft: false
 ---
@@ -110,7 +110,7 @@ $$
 
 $$
 \begin{aligned}
-f(n)=\sum\limits_{n\mid d}g(d)
+\forall n \le N, f(n)=\sum\limits_{n\mid d}g(d)
 &\iff F_N\left(\frac{M}{n}\right)-\sum\limits_{\frac{M}{d}\mid \frac{M}{n}}G_N\left(\frac{M}{d}\right) - \sum\limits_{n\mid d \land d>N}g(d) = 0\newline
 &\iff F_N\left(n\right)-\sum\limits_{d\mid n}G_N\left(d\right) - \sum\limits_{n\mid d \land d>N}g(d) = 0
 \end{aligned}
@@ -120,11 +120,11 @@ $$
 
 $$
 \begin{aligned}
-f(n)=\sum\limits_{n\mid d}g(d)
+N\to+\infty, \forall n \le N, f(n)=\sum\limits_{n\mid d}g(d)
 &\iff
-\lim_{N\to\infty} \left(F_N\left(n\right)-\sum\limits_{d\mid n}G_N\left(d\right) - \sum\limits_{n\mid d \land d>N}g(d)\right) = 0 \newline
+F_N\left(n\right)-\sum\limits_{d\mid n}G_N\left(d\right) - \sum\limits_{n\mid d \land d>N}g(d) = 0 \newline
 &\iff
-\lim_{N\to\infty} \left(F_N\left(n\right)-\sum\limits_{d\mid n}G_N\left(d\right)\right) = 0
+F_N\left(n\right)-\sum\limits_{d\mid n}G_N\left(d\right) = 0
 \end{aligned}
 $$
 
@@ -132,31 +132,51 @@ $$
 
 $$
 \begin{aligned}
-g(n)=\sum\limits_{n\mid d}\mu\left(\dfrac{d}{n}\right)f(d)
-&\iff G_N\left(\frac{M}{n}\right)-\sum\limits_{\frac{M}{d}\mid \frac{M}{n}}\mu\left(\frac{\frac{M}{n}}{\frac{M}{d}}\right)F_N\left(\frac{M}{d} \right) - \sum_{n\mid d \land d > N}\mu\left(\dfrac{d}{n}\right)f(d)=0\newline
-&\iff G_N\left(n\right)-\sum\limits_{d\mid n}\mu\left(\frac{n}{d}\right)F_N\left(d \right) - \sum_{n\mid d \land d > N}\mu\left(\dfrac{d}{n}\right)f(d)=0
+\forall n\le N, g(n)=\sum\limits_{n\mid d}\mu\left(\dfrac{d}{n}\right)f(d)
+&\iff G_N\left(\frac{M}{n}\right)-\sum\limits_{\frac{M}{d}\mid \frac{M}{n}}\mu\left(\frac{\frac{M}{n}}{\frac{M}{d}}\right)F_N\left(\frac{M}{d} \right)-\newline
+&\sum_{n\mid d \land d > N}\mu\left(\dfrac{d}{n}\right)f(d)=0\newline
+&\iff G_N\left(n\right)-\sum\limits_{d\mid n}\mu\left(\frac{n}{d}\right)F_N\left(d \right) -\newline
+&\sum_{n\mid d \land d > N}\mu\left(\dfrac{d}{n}\right)f(d)=0
 \end{aligned}
 $$
 
 由于 $|\mu(n)| \le 1$，余项 $\left|\sum\limits_{n\mid d \land d > N}\mu\left(\dfrac{d}{n}\right)f(d)\right| \le \sum\limits_{n\mid d \land d > N}|f(d)|\le \sum\limits_{n > N}|f(n)|$。由于 $\sum\limits_{n=1}^\infty f(n)$ 绝对收敛，类似上面的推理，可以得到
 
 $$
-g(n)=\sum\limits_{n\mid d}\mu\left(\dfrac{d}{n}\right)f(d)\iff
-\lim_{N\to\infty}\left(G_N\left(n\right)-\sum\limits_{d\mid n}\mu\left(\frac{n}{d}\right)F_N\left(d \right)\right)=0
+N\to+\infty,\forall n\le N, g(n)=\sum\limits_{n\mid d}\mu\left(\dfrac{d}{n}\right)f(d)\iff
+G_N\left(n\right)-\sum\limits_{d\mid n}\mu\left(\frac{n}{d}\right)F_N\left(d \right)=0
 $$
 
-由莫比乌斯反演的第一种形式，可以得到 $n\le N$ 时
+由莫比乌斯反演的第一种形式，可以得到 $N\to\infty, n\le N$ 时
 
 $$
 f(n)=\sum\limits_{n\mid d}g(d)\iff g(n)=\sum\limits_{n\mid d}\mu\left(\dfrac{d}{n}\right)f(d)
 $$
-
-由于 $N$ 可以取得任意大的值，上述结论可以推广至 $n \in \mathbb N^+$。
 
 ## 欧拉反演
 
 $$n=\sum\limits_{d\mid n}\varphi(d)$$
 
 用狄利克雷卷积的形式表达就是
+
+$$\operatorname{id}=\varphi\ast 1$$
+
+### 证明
+
+由 $\epsilon = 1\ast \mu$ 可得 $[(i, n) = 1] = \sum\limits_{d\mid (i,n)}\mu(d)$，于是
+
+$$
+\begin{aligned}
+\varphi(n) &= \sum_{i=1}^n\sum_{d\mid (i, n)}\mu(d)\newline
+&= \sum_{d\mid n}\sum_{d\mid i\land i\le n}\mu(d)\newline
+&= \sum_{d\mid n}\frac{n}{d}\mu(d)
+\end{aligned}
+$$
+
+故
+
+$$\varphi = \operatorname{id}\ast \mu$$
+
+结合 $\mu \ast 1 = \epsilon$ 得
 
 $$\operatorname{id}=\varphi\ast 1$$
