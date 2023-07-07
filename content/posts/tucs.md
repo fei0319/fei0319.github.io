@@ -16,6 +16,6 @@ description: "基于比较的排序算法的复杂度的理论下界"
 
 我们完全可以让每次比较后可能的大小关系的集合变为 $C_q$ 和 $C_r$ 中大小较大的那一个，即 $|C_{m+1}|=\max(q,r)\ge\dfrac{|C_m|}{2}$；在此种情况下，将可能的大小关系的集合的大小削减至 $1$ 所需的比较次数是 $\Theta(\log |C_0|)=\Theta(\log n!)$ 级别的。于是 $R(n) \in \Omega(\log n!)$。
 
-接下来我们研究 $\Theta(\log n!)$ 是什么。由放缩 $n^n \le n! \le \left(\dfrac{n}{2}\right)^{n/2}$ 以及 $\log (n^n)\in \Theta(n\log n),\log\left(\dfrac{n}{2}\right)^{n/2}=\dfrac{n\log\dfrac{n}{2}}{2}\in \Theta(n\log n)$ 可知 $\log n!\in \Theta(n\log n)，即 $\Theta(\log n!)=\Theta(n\log n)$。
+接下来我们研究 $\Theta(\log n!)$ 是什么。由放缩 $n^n \le n! \le \left(\dfrac{n}{2}\right)^{n/2}$ 以及 $\log (n^n)\in \Theta(n\log n),\log\left(\dfrac{n}{2}\right)^{n/2}=\dfrac{n\log\dfrac{n}{2}}{2}\in \Theta(n\log n)$ 可知 $\log n!\in \Theta(n\log n)$，即 $\Theta(\log n!)=\Theta(n\log n)$。
 
 也就是说，TUCS 的复杂度就是 $\Theta(n\log n)$。世界上再没有最坏情况下复杂度更好的比较排序算法了！
