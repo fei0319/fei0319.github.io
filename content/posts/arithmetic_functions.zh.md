@@ -5,6 +5,7 @@ tags: ["莫比乌斯反演"]
 categories: ["数论"]
 math: true
 draft: false
+description: "从狄利克雷卷积出发证明莫比乌斯反演"
 ---
 
 数论函数是定义域为 $\mathbb{N}^{+}$，陪域为 $\mathbb{C}$ 的一类函数。常见的数论函数有：
