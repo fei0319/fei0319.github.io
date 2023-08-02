@@ -22,13 +22,13 @@ $$
 1 & \textbf{Input. }\text{Object } s\newline
 2 & \textbf{Output. } k\text{, length of the shortest program that yields }s\newline
 3 & \textbf{Method. }\newline
-5 & \textbf{Function}\text{ kolmogorov(}s{)}\newline
-4 & \qquad \textbf{for }i\text{ from }1\text{ to }+\infty\newline
-4 & \qquad \qquad \textbf{for }\text{each }p\text{ of length }i\newline
-4 & \qquad \qquad \qquad \textbf{if }p\text{ is a valid program and eval}(p)=s\newline
-4 & \qquad \qquad \qquad \qquad \textbf{return }p\newline
-14 & \textbf{End}\newline
-15 & \textbf{return }\text{kolmogorov(}s\text{)}\newline
+4 & \textbf{Function}\text{ kolmogorov(}s{)}\newline
+5 & \qquad \textbf{for }i\text{ from }1\text{ to }+\infty\newline
+6 & \qquad \qquad \textbf{for }\text{each }p\text{ of length }i\newline
+7 & \qquad \qquad \qquad \textbf{if }p\text{ is a valid program and eval}(p)=s\newline
+8 & \qquad \qquad \qquad \qquad \textbf{return }p\newline
+9 & \textbf{End}\newline
+10 & \textbf{return }\text{kolmogorov(}s\text{)}\newline
 \end{array}
 $$
 
