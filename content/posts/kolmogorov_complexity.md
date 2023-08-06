@@ -5,6 +5,7 @@ draft: false
 math: true
 tags: ["可计算性", "渐进复杂度"]
 categories: ["数据处理"]
+description: "不可计算的最小值"
 ---
 
 柯尔莫哥洛夫复杂度（Kolmogorov Complexity）也称描述复杂度（Descriptive Complexity）、算法熵（Algorithmic Entropy），是一个衡量描述一个对象所需资源的量。具体地，对于一编程语言 $L$，对象 $s$ 的柯尔莫哥洛夫复杂度可记作 $K(s)$；它表示一个输出 $s$ 的 $L$ 程序的最小长度。
