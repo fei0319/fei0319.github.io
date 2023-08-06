@@ -3,6 +3,7 @@ title: ICPC2022 南京躺金记
 date: 2022-12-18T19:26:18+08:00
 tags: ["ICPC", "游记"]
 categories: ["杂谈"]
+series: ["赛事"]
 math: true
 description: "我的第一场 XCPC"
 ---

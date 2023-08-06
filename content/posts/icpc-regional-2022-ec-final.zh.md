@@ -3,6 +3,7 @@ title: ICPC2022 EC-Final 爆零记
 date: 2023-04-02T23:05:00+08:00
 tags: ["ICPC", "游记"]
 categories: ["杂谈"]
+series: ["赛事"]
 math: true
 description: "炼铜"
 ---
