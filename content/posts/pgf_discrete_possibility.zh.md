@@ -83,13 +83,13 @@ $$
 而由二项式定理
 
 $$
-G_n(1+z) = \frac{(1+z)^n-1}{nz} = \sum_{k\ge 0} \frac{1}{n} \binom{n}{k} z^k
+G_n(1+z) = \frac{(1+z)^n-1}{nz} = \sum_{k\ge 0} \frac{1}{n} \binom{n}{k} z^{k-1}
 $$
 
 于是
 
 $$
-\frac{G^{(k)}(1)}{k!} = \frac{1}{n} \binom{n}{k}
+\frac{G^{(k)}(1)}{k!} = \frac{1}{n} \binom{n}{k+1}
 $$
 
 故
