@@ -20,15 +20,18 @@ description: "澄清一些奇怪的概念"
 关于为什么求强连通分量可以写 `low[node]=min(low[node],low[to])` 而求点双连通分量却只能写 `low[node]=min(low[node],dfn[node]` 的原因，想必读者也已经懂了。当然 `low[node]=min(low[node],low[to])` 也不是一定就不能用于求割点，比如下面的代码就是可行的。
 
 ```cpp
-void dfs(int node){
+void dfs (int node) {
 	dfn[node] = low[node] = ++ind;
-	for(int i = head[node]; i; i = edge[i].next)
-		if(!dfn[edge[i].to]){
+	for (int i = head[node]; i; i = edge[i].next) {
+		if (!dfn[edge[i].to]) {
 			dfs(edge[i].to);
-			if(low[edge[i].to] == dfn[node])
+			if (low[edge[i].to] == dfn[node]) {
 				is_cut[node] = true;
+			}
 		}
-    for(int i = head[node]; i; i = edge[i].next)
+	}
+    for (int i = head[node]; i; i = edge[i].next) {
         low[node] = std::min(low[node], low[edge[i].to]);
+	}
 }
 ```
