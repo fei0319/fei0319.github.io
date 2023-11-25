@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>最小生成树 on 绯想天</title><link>https://www.flandre.love/zh/tags/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91/</link><description>Recent content in 最小生成树 on 绯想天</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>Copyright © 2020 - 2023 Fei Pan</copyright><lastBuildDate>Mon, 01 Aug 2022 16:01:25 +0800</lastBuildDate><atom:link href="https://www.flandre.love/zh/tags/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91/index.xml" rel="self" type="application/rss+xml"/><item><title>最小生成树上路径为最小瓶颈路的证明</title><link>https://www.flandre.love/zh/posts/proof_mbp_mst/</link><pubDate>Mon, 01 Aug 2022 16:01:25 +0800</pubDate><guid>https://www.flandre.love/zh/posts/proof_mbp_mst/</guid><description>&lt;p>对于无向图 $G$，$x$ 到 $y$ 的最小瓶颈路定义为它们间所有简单路径中最大边权最小的路径。显然，$x$ 到 $y$ 的最小瓶颈路不一定只有唯一一条。&lt;/p>
+&lt;p>一个广为人知的结论是，$G$ 的一个最小生成树上 $x$ 到 $y$ 的路径是它们间的一个最小瓶颈路。下面给出两个证明。&lt;/p>
+&lt;h2 id="从构造方法证明">从构造方法证明&lt;/h2>
+&lt;p>假定我们的最小生成树由 Kruskal 算法构造。&lt;/p>
+&lt;p>设 $x$ 到 $y$ 最小瓶颈路上的最大边权为 $m$。由于 $x$ 到 $y$ 最小瓶颈路上的最大边权为 $m$，一定可以仅通过边权小于等于 $m$ 的边使 $x$ 和 $y$ 联通，则在 Kruskal 算法仅处理完边权小于等于 $m$ 的边时，$x$ 和 $y$ 已在生成树中联通，即最小生成树中 $x$ 到 $y$ 的路径上的最大边权小于等于 $m$。&lt;/p>
+&lt;p>类似地，也可以说明 Prim 算法构造的最小生成树具有该性质。这样不能证明其他最小生成树也具有性质。&lt;/p>
+&lt;h2 id="反证法">反证法&lt;/h2>
+&lt;p>设 $x$ 到 $y$ 最小瓶颈路上的最大边权为 $m$。假设最小生成树 $T = (V, E)$ 上 $x$ 到 $y$ 的路径上存在边权大于 $m$ 的边，则我们去除 $T$ 中所有边权大于 $m$ 的边 (记作 $V_m$)，$T$ 中剩余的边与顶点形成的图 $T_m = (\complement_VV_m, E)$ 中含超过一个连通块。&lt;/p>
+&lt;p>由于 $x$ 到 $y$ 存在一条所有边的边权都不超过 $m$ 的路径，一定可以加入 $p$ 条边权不大于 $m$ 的边，使得包含 $x$ 所在连通块和 $y$ 所在连通块的一系列共 $p + 1$ 个连通块连通。之后再加入 $|V_m| - p$ 个 $V_m$ 中的边，即可形成一个新的生成树 $T^\prime$。&lt;/p>
+&lt;p>比较 $T$ 和 $T^\prime$，发现 $T^\prime$ 以一些边权不大于 $m$ 的边替换了 $T$ 中边权大于 $m$ 的边，故 $T^\prime$ 的边权和比 $T$ 的更小，$T$ 不是最小生成树，与假设矛盾。&lt;/p></description></item><item><title>Boruvka 算法</title><link>https://www.flandre.love/zh/posts/boruvka/</link><pubDate>Fri, 26 Mar 2021 11:38:23 +0800</pubDate><guid>https://www.flandre.love/zh/posts/boruvka/</guid><description>&lt;p>Borůvka 算法是一种基于贪心的最小生成树算法，它比 Prim 算法和 Kruskal 算法更加古老。在 Borůvka 算法的基础上，已经发展出了&lt;a href="https://www.flandre.love/files/a-randomized-linear-time-algorithm-to-find-mst.pdf">线性的最小生成树算法&lt;/a>。&lt;/p>
+&lt;p>Borůvka 算法的思想是：每次迭代，选取每一个连通块中最小的连向另一个连通块的边，将其加入最小生成树。其过程如下伪代码所示：&lt;/p>
+&lt;p>$$
+\begin{array}{ll}
+1 &amp;amp; \textbf{Input.}\text{ Edge set }E\text{ and vertex set }V\text{ of the graph}\newline
+2 &amp;amp; \textbf{Output.}\text{ A minimum spanning tree of the graph}\newline
+3 &amp;amp; \textbf{Method.}\newline
+4 &amp;amp; \textbf{Function}\text{ Borůvka(void)}\newline
+5 &amp;amp; \qquad S\text{ is a graph of vertex set }V\text{ and empty edge set}\newline
+6 &amp;amp; \qquad\textbf{while}\text{ the count of connected components in }S&amp;gt;1\newline
+7 &amp;amp; \qquad\qquad T\text{ is an empty set}\newline
+8 &amp;amp; \qquad\qquad\textbf{for}\text{ each connected component }C\text{ in }S\newline
+9 &amp;amp; \qquad\qquad\qquad\text{edge }(u,v)\text{ is the minimum edge that connects }C\text{ and another component}\newline
+10 &amp;amp; \qquad\qquad\qquad\textbf{if }(u,v)\notin T\newline
+11 &amp;amp; \qquad\qquad\qquad\qquad T\gets T+(u,v)\newline
+12 &amp;amp; \qquad\qquad\textbf{for}\text{ each edge }(u,v)\in T\newline
+13 &amp;amp; \qquad\qquad\qquad S\gets S+(u,v)\newline
+14 &amp;amp; \qquad\textbf{return }S\newline
+15 &amp;amp; \textbf{End}\newline
+16 &amp;amp; \textbf{return }\text{Borůvka()}
+\end{array}
+$$&lt;/p>
+&lt;p>对于每次迭代，迭代后的每个连通块至少包含两个迭代前的连通块，故连通块总数至少减少一半，迭代次数为对数级别。&lt;/p>
+&lt;p>可以发现，对于每次迭代，若 $T$ 中的某些边可以连接若干个连通块形成环，则该环上属于 $T$ 的所有边的边权一定相等。因此只要确保所有边权互不相等我们就可断定 Borůvka 算法必然不会成环。&lt;/p>
+&lt;p>实际情况中可能会出现一些边边权相等的情况，但我们可以给边随意分配一个第二关键字，或是用并查集排除形成环的边。因此，Borůvka 算法可以用于存在边权相同的图。&lt;/p></description></item></channel></rss>

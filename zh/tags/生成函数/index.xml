@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>生成函数 on 绯想天</title><link>https://www.flandre.love/zh/tags/%E7%94%9F%E6%88%90%E5%87%BD%E6%95%B0/</link><description>Recent content in 生成函数 on 绯想天</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>Copyright © 2020 - 2023 Fei Pan</copyright><lastBuildDate>Sun, 06 Aug 2023 13:10:58 +0800</lastBuildDate><atom:link href="https://www.flandre.love/zh/tags/%E7%94%9F%E6%88%90%E5%87%BD%E6%95%B0/index.xml" rel="self" type="application/rss+xml"/><item><title>生成函数幂科技</title><link>https://www.flandre.love/zh/posts/power_of_gf/</link><pubDate>Sun, 06 Aug 2023 13:10:58 +0800</pubDate><guid>https://www.flandre.love/zh/posts/power_of_gf/</guid><description>&lt;p>给定 $F(z) = \sum\limits_{i=0}^n f_i x^i$，如何求出 $F^k \bmod x^m$？这样一个问题可以用快速幂在 $O(m\log m\log k)$ 的时间复杂度内解决，亦可以通过&lt;a href="https://www.flandre.love/zh/posts/polylog/">多项式对数指数&lt;/a>在 $O(m \log m)$ 的时间复杂度内解决。但假定 $m$ 特别大，$n$ 特别小（$m=10^7,n=5$），那我们如何解决？&lt;/p>
+&lt;p>这就需要这样一个 $O(nm)$ 的生成函数幂科技了。令 $G=F^k$，我们有 $G^\prime=kF^\prime F^{k-1}$，故 $FG^\prime = kF^\prime G$。考虑 $x^i$ 项的系数，有&lt;/p>
+&lt;p>$$
+\sum_{j=0}^{i+1} jf_{i-j+1} g_{j} = \sum_{j=0}^{i+1}k(i-j+1)f_{i-j+1} g_{j}
+$$&lt;/p>
+&lt;p>根据 $g_{0}, g_{1}, \ldots, g_i$ 就可以 $O(m)$ 地计算 $g_{i+1}$ 了；而常数项 $g_0=f_0^k$。&lt;/p>
+&lt;p>这个方法不止适用于整数的 $k$，还适用于有理数的 $k$；不止适用于 OGF，还适用于 DGF。下面介绍一个计算 DGF 的 $k$ 次方根的例子。&lt;/p>
+&lt;p>给定 $F(z) = \sum\limits_{i=1}^n \dfrac{f_i}{i^z}$，求 $G$ 使得 $F=G^k$。不失一般性，我们只需求 $F^k$（$k$ 为有理数）；令 $G=F^k$，由上题结论可知 $FG^\prime = kF^\prime G$。考察 $F^\prime$，可知 $F^\prime = \sum\limits_{i=1}^n -\dfrac{\ln if_i}{i^z}$，故&lt;/p>
+&lt;p>$$
+\sum_{d\mid i} \ln d f_{i/d}g_d = \sum_{d\mid i} k\ln\frac{i}{d} f_{i/d}g_d
+$$&lt;/p>
+&lt;p>只要知道前面的 $g$，就可以 $O(\log n)$ 的平均复杂度求 $g_i$ 了。不过有一个问题仍待解决：在剩余系中 $\ln i$ 是什么？这甚至都不是离散对数，因为它的底不在剩余系中。为了规避这个问题，我们需要另一个 $\operatorname{t}$ 算子来取代微分算子。它需要具有某些和微分算子相同的特性，从而可以有 $F\operatorname{t}(G) = k\operatorname{t}(F) G$。&lt;/p>
+&lt;p>$F\operatorname{t}(G) = k\operatorname{t}(F) G$ 可以由 $\operatorname{d} uv = v\operatorname{d}u + u\operatorname{d}v$ 推出，故只要我们的 $\operatorname{t}$ 算子也满足 $\operatorname{t} uv = v\operatorname{t}u + u\operatorname{t}v$ 即可。如果我们规定 $\operatorname{t}(F)=\sum\limits_{i=1}^n \dfrac{\Omega(i)f_i}{i^z}$，其中 $\Omega(i)$ 为 $i$ 的质因子幂次和，那么我们就得到了一个满足条件的 $\operatorname{t}$ 算子，于是&lt;/p>
+&lt;p>$$
+\sum_{d\mid i} \Omega(d) f_{i/d}g_d = \sum_{d\mid i} k\Omega\left(\frac{i}{d}\right) f_{i/d}g_d
+$$&lt;/p>
+&lt;p>事实上任何满足 $p(xy) = p(x) + p(y)$ 且 $\forall x &amp;gt; 0, p(x) \neq 0$ 的数论函数都可用于取代 $\Omega$。&lt;/p>
+&lt;h2 id="credits">Credits&lt;/h2>
+&lt;p>&lt;em>&lt;a href="https://codeforces.com/blog/entry/76447">A problem collection of ODE and differential technique&lt;/a>&lt;/em>, amiya&lt;/p></description></item><item><title>从概率生成函数出发研究离散概率</title><link>https://www.flandre.love/zh/posts/pgf_discrete_possibility/</link><pubDate>Sun, 17 Jul 2022 20:16:44 +0800</pubDate><guid>https://www.flandre.love/zh/posts/pgf_discrete_possibility/</guid><description>&lt;p>概率生成函数是一种特殊的生成函数，其导数和卷积在离散概率的研究中都有意义。&lt;/p>
+&lt;h2 id="一些基础概念">一些基础概念&lt;/h2>
+&lt;p>对于一个仅取非负实数值的随机变量 $X$，我们定义其概率生成函数为&lt;/p>
+&lt;p>$$
+G_X(z) = \sum_{k\ge 0} P(X=k)z^k
+$$&lt;/p>
+&lt;p>与一般的幂级数形式的生成函数不同，概率生成函数存在非整数次的项。&lt;/p>
+&lt;h2 id="导数期望与方差">导数、期望与方差&lt;/h2>
+&lt;p>我们很少研究生成函数的导数，但概率生成函数的导数却值得研究：它与随机变量的期望和方差关系匪浅。由于&lt;/p>
+&lt;p>$$
+G_X^\prime(z) = \sum_{k\ge 0} kP(X=k)z^{k-1}
+$$&lt;/p>
+&lt;p>我们可以得到&lt;/p>
+&lt;p>$$
+E(X) = \sum_{k\ge 0} kP(X=k) = G_X^\prime(1)
+$$&lt;/p>
+&lt;p>同理我们也可以用 $G_X(z)$ 表示 $X$ 的方差 $V(X)$：&lt;/p>
+&lt;p>$$
+\begin{aligned}
+V(X) &amp;amp;= E(X^2) - E^2(X) \newline
+&amp;amp;= E(X^2) - \left(G_X^\prime(1)\right)^2 \newline
+&amp;amp;= G_X^{\prime\prime}(1) + G_X^\prime(1) - \left(G_X^\prime(1)\right)^2
+\end{aligned}
+$$&lt;/p>
+&lt;p>其中&lt;/p>
+&lt;p>$$
+\begin{aligned}
+E(X^2) &amp;amp;= \sum_{k\ge 0} k^2P(X=k) \newline
+&amp;amp;= \sum_{k\ge 0}k(k-1)P(X=k) + \sum_{k\ge 0}kP(X=k) \newline
+&amp;amp;= G_X^{\prime\prime}(1) + G_X^\prime(1)
+\end{aligned}
+$$&lt;/p>
+&lt;p>总而言之，我们有&lt;/p>
+&lt;p>$$
+\begin{aligned}
+E(X) &amp;amp;= G_X^\prime(1) \newline
+V(X) &amp;amp;= G_X^{\prime\prime}(1) + G_X^\prime(1) - \left(G_X^\prime(1)\right)^2
+\end{aligned}
+$$&lt;/p>
+&lt;p>利用这个关系，我们可以方便地求出一些随机变量的期望、方差。以 $n$ 阶均匀分布为例 (即 $X$ 以 $\frac 1 n$ 的概率取遍 $[0,n-1]$ 范围内的每一个整数)：&lt;/p>
+&lt;p>$X$ 的概率生成函数为&lt;/p>
+&lt;p>$$
+G_n(z) = \frac{1}{n}\sum_{k=0}^{n-1}z^k = \frac{1-z^n}{n(1-z)}
+$$&lt;/p>
+&lt;p>研究一般的生成函数时，我们只关心各项系数而不关心生成函数在 $z$ 取特定值时的值，因而这种封闭形式的表达是没有问题的。但此时我们研究的是概率生成函数，我们需要知道 $z=1$ 时导数的值，而这种封闭形式的表达却要求 $z\neq 1$ 了。&lt;/p>
+&lt;p>一种思路是运用洛必达法则求 $\lim\limits_{z\rightarrow 1}G_n^\prime(z)$ 和 $\lim\limits_{z\rightarrow 1}G_n^{\prime\prime}(z)$，进而求出 $X$ 的期望、方差。这种方法十分困难，在此不做展开。&lt;/p>
+&lt;p>另一种思路是运用泰勒定理，得到&lt;/p>
+&lt;p>$$
+G_n(1+z) = \sum_{k\ge 0} \frac{G^{(k)}(1)}{k!}z^k
+$$&lt;/p>
+&lt;p>而由二项式定理&lt;/p>
+&lt;p>$$
+G_n(1+z) = \frac{(1+z)^n-1}{nz} = \sum_{k\ge 0} \frac{1}{n} \binom{n}{k} z^{k-1}
+$$&lt;/p>
+&lt;p>于是&lt;/p>
+&lt;p>$$
+\frac{G^{(k)}(1)}{k!} = \frac{1}{n} \binom{n}{k+1}
+$$&lt;/p>
+&lt;p>故&lt;/p>
+&lt;p>$$
+G_n^\prime(1)=\frac{n-1}{2}, G_n^{\prime\prime}(1)=\frac{(n-1)(n-2)}{3}
+$$&lt;/p>
+&lt;p>结合之前推导的关系，我们可以得出&lt;/p>
+&lt;p>$$
+E(X)=\frac{n-1}{2}, V(X)=\frac{n^2-1}{12}
+$$&lt;/p>
+&lt;p>类似地，我们也可以求泊松分布的期望、方差：&lt;/p>
+&lt;p>$$
+G_\lambda(z) = \sum_{k \ge 0}\frac{e^{-\lambda}\lambda^k}{k!}z^k = e^{\lambda(z-1)}
+$$&lt;/p>
+&lt;p>故&lt;/p>
+&lt;p>$$
+G_\lambda(1+z) = e^{\lambda z} = \sum \frac{\lambda^k}{k!}z^k
+$$&lt;/p>
+&lt;p>与泰勒展开式比较，可得 $G_\lambda^{(k)}=\lambda^k$，最终得到&lt;/p>
+&lt;p>$$
+E(X)=\lambda, V(X)=\lambda
+$$&lt;/p>
+&lt;p>然而，这种期望、方差的求法也不是万能的，将它用于二项分布就不是个好主意。&lt;/p>
+&lt;h2 id="推导期望方差的可加性">推导期望、方差的可加性&lt;/h2>
+&lt;p>设 $X$ 和 $Y$ 为两相互独立的随机变量，则&lt;/p>
+&lt;p>$$
+P(X = a \land Y = b) = P(X = a)P(Y = b)
+$$&lt;/p>
+&lt;p>那么&lt;/p>
+&lt;p>$$
+P(X + Y = n) = \sum_{a + b = n}P(X = a \land Y = b) = \sum_{a + b = n}P(X = a)P(Y = b)
+$$&lt;/p>
+&lt;p>这是一个卷积形式的式子，可以完美地用生成函数表示。即，若 $X$ 和 $Y$ 相互独立，我们就可以得到&lt;/p>
+&lt;p>$$
+G_{X+Y}(z) = G_X(z)G_Y(z)
+$$&lt;/p>
+&lt;p>这个式子是我们利用概率生成函数推导期望、方差可加性的基石。设随机变量 $X$、$Y$ 和 $X+Y$ 的概率生成函数分别为 $F(z)$、$G(z)$ 和 $H(z)$，根据我们推导出的关系 $H(z)=F(z)G(z)$，可以得到&lt;/p>
+&lt;p>$$
+\begin{aligned}
+H^\prime(z) &amp;amp;= F^\prime(z)G(z) + F(z)G^\prime(z) \newline
+H^{\prime\prime}(z) &amp;amp;= F^{\prime\prime}(z)G(z) + 2F^\prime(z)G^\prime(z) + F(z)G^{\prime\prime}(z)
+\end{aligned}
+$$&lt;/p>
+&lt;p>由概率生成函数的定义可知 $F(1)=G(1)=H(1)=1$，那么&lt;/p>
+&lt;p>$$
+\begin{aligned}
+H^\prime(1) &amp;amp;= F^\prime(1) + G^\prime(1) \newline
+H^{\prime\prime}(1) &amp;amp;= F^{\prime\prime}(1) + 2F^\prime(1)G^\prime(1) + G^{\prime\prime}(1)
+\end{aligned}
+$$&lt;/p>
+&lt;p>代入公式&lt;/p>
+&lt;p>$$
+\begin{aligned}
+E(X) &amp;amp;= G_X^\prime(1) \newline
+V(X) &amp;amp;= G_X^{\prime\prime}(1) + G_X^\prime(1) - \left(G_X^\prime(1)\right)^2
+\end{aligned}
+$$&lt;/p>
+&lt;p>可得&lt;/p>
+&lt;p>$$
+\begin{aligned}
+E(X+Y) &amp;amp;= E(X) + E(Y) \newline
+V(X+Y) &amp;amp;= V(X) + V(Y)
+\end{aligned}
+$$&lt;/p>
+&lt;p>即期望和方差都具有可加性。&lt;/p>
+&lt;h2 id="二项分布和负二项分布">二项分布和负二项分布&lt;/h2>
+&lt;p>二项分布我们都十分熟悉。由于它可以被看作 $n$ 个相互独立的伯努利试验的和，由可加性我们知它的期望和方差分别为 $np$ 和 $np(1-p)$。&lt;/p>
+&lt;p>而负二项分布是指：进行若干次相互独立的伯努利试验，成功次数为 $n$ 次时失败次数的概率分布。假定单次伯努利试验的成功概率为 $p$，那么成功一次时失败次数 $X$ 的概率分布显然满足&lt;/p>
+&lt;p>$$
+P(X=k) = (1-p)^kp
+$$&lt;/p>
+&lt;p>那么我们可以写出 $X$ 的概率生成函数为&lt;/p>
+&lt;p>$$
+F(z) = \sum_{i \ge 0}(1-p)^ipz^i=\dfrac{p}{1-(1-p)z}
+$$&lt;/p>
+&lt;p>且其期望和方差分别为&lt;/p>
+&lt;p>$$
+E(X) = F^\prime(1) = \dfrac{(1-p)}{p}, V(X) = F^{\prime\prime}(1) + F^\prime(1) - \left(F^\prime(1)\right)^2 = \dfrac{(1-p)}{p^2}
+$$&lt;/p>
+&lt;p>负二项分布进行了重复了上述过程 $n$ 次，且每次相互独立，则我们也可知 $X \sim NB(n, p)$ 的概率分布函数就是 $F(z)$ 的 $n$ 次方，即：&lt;/p>
+&lt;p>$$
+G_n(z) = F^n(z) = \left(\dfrac{p}{1-(1-p)z}\right)^n=\sum\binom{n+i-1}{i}p^n(1-p)^iz^i
+$$&lt;/p>
+&lt;p>当然它的期望和方差也可得分别为 $\dfrac{n(1-p)}{p}$ 和 $\dfrac{n(1-p)}{p^2}$。&lt;/p>
+&lt;p>负二项分布之名何来？我们发现，由于 $\dfrac{1}{F(1)} = 1$，$\dfrac{1}{F(z)}=\dfrac{1}{p}-\dfrac{1-p}{p}z$ 可被视做一次成功概率为 $-\dfrac{1-p}{p}$ （尽管它是个负数）的伯努利分布对应的概率分布函数，而 $G_n(z)=\left(\dfrac{1}{F(z)}\right)^{-n}$ 对应的就是 $-n$ （尽管这是个负数）次这样的伯努利试验的二项分布。&lt;/p>
+&lt;p>未完待续&lt;/p></description></item><item><title>生成函数入门</title><link>https://www.flandre.love/zh/posts/generating_function/</link><pubDate>Fri, 28 Feb 2020 10:51:38 +0800</pubDate><guid>https://www.flandre.love/zh/posts/generating_function/</guid><description>&lt;p>生成函数是一种用级数的系数来表达数列的方法，是处理数列的最强有力的方法之一。在 OI 中生成函数常常与多项式结合起来处理计数问题。&lt;/p>
+&lt;h2 id="几种基本的生成函数">几种基本的生成函数&lt;/h2>
+&lt;p>对于一个无限长度的数列 $a_0, a_1, a_2, \ldots$，它的普通型生成函数 (Ordinary Generating Function, OGF) 是&lt;/p>
+&lt;p>$$
+F(z)=a_0+a_1z+a_2z+\ldots+a_iz^i+\ldots
+$$&lt;/p>
+&lt;p>它的指数型生成函数 (Exponential Generating Function, EGF) 是&lt;/p>
+&lt;p>$$
+F(z)=\dfrac{a_0}{0!}+\dfrac{a_1z}{1!}+\dfrac{a_2z^2}{2!}+\ldots+\dfrac{a_iz^i}{i!}+\ldots
+$$&lt;/p>
+&lt;p>还有另一种较为特殊的狄利克雷型生成函数，暂时不提。&lt;/p>
+&lt;h2 id="普通型生成函数">普通型生成函数&lt;/h2>
+&lt;p>普通型生成函数是我们最常用的生成函数。在这之后，如果不说明是何种生成函数，默认是在指普通型生成函数。&lt;/p>
+&lt;p>数列 $1,1,1,\ldots$ 的普通型生成函数是什么？&lt;/p>
+&lt;p>这个问题似乎很无趣。让我们把它写下来&lt;/p>
+&lt;p>$$
+F(z)=1+z+z^2+\ldots\
+zF(z)=z+z^2+z^3+\ldots
+$$&lt;/p>
+&lt;p>我们发现&lt;/p>
+&lt;p>$$
+F(z)-zF(z)=1\
+F(z)=\dfrac{1}{1-z}
+$$&lt;/p>
+&lt;p>事实上，$1+z+z^2+\ldots$ 是 $F(z)$ 的开放形式，而 $\dfrac{1}{1-z}$ 是 $F(z)$ 的封闭形式。用相同的方法，我们能得到所有类似数列的普通型生成函数的封闭形式：&lt;/p>
+&lt;p>$$
+F(z)=1+az+a^2z^2+a^3z^3\ldots=\dfrac{1}{1-az}\
+G(z)=1+z^{a}+z^{2a}+z^{3a}+\ldots=\dfrac{1}{1-z^a}
+$$&lt;/p>
+&lt;blockquote>
+&lt;p>如果你把 $z=10$ 代入 $1+z+z^2+\ldots=\dfrac{1}{1-z}$，你会发现这个式子根本不成立。事实上，这个式子只有在 $|z|&amp;lt;1$，即 $z^{+\infty}=0$ 时才成立。&lt;/p>
+&lt;p>幸运的是，在生成函数中我们只关心 $F(z)$ 的系数，不关心 $z$ 的值和 $F(z)$ 的值。可以认为这些封闭形式在我们研究的范围内总是成立的。&lt;/p>
+&lt;/blockquote>
+&lt;p>数列 $\binom{n}{0},\binom{n}{1},\binom{n}{2},\ldots,\binom{n}{i},\ldots$ 的普通型生成函数是什么？&lt;/p>
+&lt;p>这个问题和上面那个大同小异。直接写出来&lt;/p>
+&lt;p>$$
+F(z)=\binom{n}{0}+\binom{n}{1}z+\binom{n}{2}z^2+\ldots
+$$&lt;/p>
+&lt;p>这符合二项式定理的形式。用二项式定理得到原式的封闭形式：&lt;/p>
+&lt;p>$$
+F(z)=(1+z)^n
+$$&lt;/p>
+&lt;p>看来很多数列都有封闭形式！斐波那契数列是否也有封闭形式？&lt;/p>
+&lt;p>$$
+F(z)=1+z+2z^2+3z^3+5z^4+8z^7+\ldots
+$$&lt;/p>
+&lt;p>因为 $f_n=f_{n-1}+f_{n-2}$，于是对于原函数的每一项 $f_iz^i$，我们都可以用 $f_iz^i=z\cdot f_{i-1}z^{i-1}+z^2\cdot f_{i-2}z^{i-2}$ 替换&lt;/p>
+&lt;p>$$
+F(z)=1+zF(z)+z^2F(z)
+$$&lt;/p>
+&lt;p>解得&lt;/p>
+&lt;p>$$
+F(z)=\dfrac{1}{1-z-z^2}
+$$&lt;/p>
+&lt;h2 id="普通型生成函数卷积">普通型生成函数卷积&lt;/h2>
+&lt;p>生成函数如果不能进行运算，那它将是无用的。我们先介绍生成函数的卷积运算。你也可以认为卷积就是乘法。&lt;/p>
+&lt;p>普通型生成函数的卷积与多项式类似。设普通型生成函数 $F(z)=\sum\limits_{i=0} f_iz^i$ 和 $G(z)=\sum\limits_{i=0} g_iz^i$，则有 $(F*G)(z)=\sum\limits_{i=0}\sum\limits_{j=0}^if_jg_{i-j}z^i$。这样定义是很自然的，因为乘法分配律。&lt;/p>
+&lt;p>我们发现这像是一个动态规划的转移。如果把 $F$，$G$ 和 $F&lt;em>G$ 看做三个数组，则对于 $F&lt;/em>G$ 的每个元素，都有&lt;/p>
+&lt;p>$$
+(F*G)[i]=F[0]\times G[i]+F[1]\times G[i-1]+F[2]\times G[i-2]+F[3]\times G[i-3]+\ldots+F[i]\times G[0]
+$$&lt;/p>
+&lt;p>这个 DP 的转移原本是 $O(n^2)$ 的。但如果我们把它看成生成函数的卷积，就可以在 $O(n\log n)$ 的时间复杂度内计算。&lt;/p>
+&lt;p>当然，生成函数不止能优化时间，它还是一种更简便的计算工具。参考下面的例题：&lt;/p>
+&lt;blockquote>
+&lt;p>你们家将要外出野餐，由你负责准备食物。你打算携带一些水、牛奶、饼干、三明治和火腿。考虑到食物搭配合理，你准备的食物要满足如下条件：&lt;/p>
+&lt;ul>
+&lt;li>水携带任意瓶&lt;/li>
+&lt;li>牛奶携带 $0$ 瓶或 $2$ 瓶&lt;/li>
+&lt;li>饼干携带 $3$ 盒或 $4$ 盒&lt;/li>
+&lt;li>三明治携带偶数份&lt;/li>
+&lt;li>火腿携带奇数份&lt;/li>
+&lt;/ul>
+&lt;p>若一共携带 $1000$ 件食物，有多少种携带方案？两个方案不同当且仅当在这两种方案中，某种食物的数量不同。&lt;/p>
+&lt;/blockquote>
+&lt;p>携带水的方案数形成的数列是 $1, 1, 1, \ldots$ (携带任意瓶水的方案数都是 $1$)。由前面介绍的知识可知携带水的方案数的生成函数是 $\dfrac{1}{1-x}$。&lt;/p>
+&lt;p>携带牛奶的方案数形成的数列是 $1, 0, 1, 0, 0, 0 \ldots$ (只有携带 $0$ 瓶或 $2$ 瓶的方案数是 $1$)。它的生成函数是 $1+x^2$。&lt;/p>
+&lt;p>携带饼干的方案数形成的数列是 $0, 0, 0, 1, 1, 0, 0, \ldots$。它的生成函数是 $x^3+x^4$。&lt;/p>
+&lt;p>携带三明治的方案数形成的数列是 $1, 0, 1, 0, 1, 0, \ldots$。它的生成函数是 $1+x^2+x^4+x^6+\ldots=\dfrac{1}{1-x^2}$。&lt;/p>
+&lt;p>携带火腿的方案数形成的数列是 $0, 1, 0, 1, 0, 1, \ldots$。它的生成函数是 $\dfrac{x}{1-x^2}$。&lt;/p>
+&lt;p>由于转移的形式与生成函数的卷积的形式完全吻合，这些生成函数的卷积的 $x^{1000}$ 次项的系数就是答案。于是携带食物的方案数形成的数列的生成函数是&lt;/p>
+&lt;p>$$
+\dfrac{1}{1-x}(1+x^2)(x^3+x^4)\dfrac{1}{1-x^2}\dfrac{x}{1-x^2}=\dfrac{x^4+x^5+x^6+x^7}{(1-x)(1-x^2)^2}
+$$&lt;/p>
+&lt;p>由于包含除法，我们现在还不会求 $\dfrac{x^4+x^5+x^6+x^7}{(1-x)(1-x^2)^2}$ 的系数。但我们已经得到了复杂情况的简洁表达方式。&lt;/p>
+&lt;h2 id="指数型生成函数">指数型生成函数&lt;/h2>
+&lt;p>为什么指数型生成函数被称为指数型生成函数，而不是阶乘型生成函数？因为指数函数的麦克劳林级数是&lt;/p>
+&lt;p>$$
+e^x = \sum\limits_{i=0}^{+\infty}\dfrac{x^i}{i!}
+$$&lt;/p>
+&lt;p>我们也常把 $e^x$ 写作 $\exp x$。可以看出 $\exp x$ 正好与指数型生成函数的形式吻合。&lt;/p>
+&lt;p>由于 $\binom{n}{m}=\dfrac{n!}{m!(n-m)!}$，指数型生成函数的卷积恰好满足 $(F*G)(z)=\sum\limits_{i=0}\sum\limits_{j=0}^i\binom{i}{j}f_jg_{i-j}z^i$，正好比 OGF 多了一个二项式系数。下面的例题可以帮助理解这里的二项式系数的作用。&lt;/p>
+&lt;blockquote>
+&lt;p>科学家最近在火星上发现了一种原始生物。这种原始生物也是以 DNA 作为遗传物质的。&lt;/p>
+&lt;p>我们可以用一个仅含 $\texttt{A,T,G,C}$ 的字符串来描述这个生物的某个基因片段。经过研究，科学家发现这个字符串满足如下限制：&lt;/p>
+&lt;ul>
+&lt;li>$\texttt{A}$ 的出现次数为偶数&lt;/li>
+&lt;li>$\texttt{T}$ 的出现次数为奇数&lt;/li>
+&lt;/ul>
+&lt;p>求有多少个满足如上限制且长度为 $n$ 的字符串。&lt;/p>
+&lt;/blockquote>
+&lt;p>由于字符间的不同顺序也要计入方案，在转移时我们要乘上对应的二项式系数。指数型生成函数正好可以担负这一任务。&lt;/p>
+&lt;p>$\texttt{A}$ 的方案数的指数型生成函数是 $1+\dfrac{x^2}{2!}+\dfrac{x^2}{2!}+\dfrac{x^4}{4!}+\ldots=\dfrac{e^x + e^{-x}}{2}$。&lt;/p>
+&lt;p>$\texttt{T}$ 的方案数的指数型生成函数是 $\dfrac{x}{1!}+\dfrac{x^3}{3!}+\dfrac{x^5}{5!}+\ldots=\dfrac{e^x-e^{-x}}{2}$。&lt;/p>
+&lt;p>$\texttt{G}$ 和 $\texttt{C}$ 的方案数的指数型生成函数都是 $e^x$。&lt;/p>
+&lt;p>于是字符串的方案数的指数型生成函数就是&lt;/p>
+&lt;p>$$\dfrac{e^x + e^{-x}}{2}\dfrac{e^x - e^{-x}}{2}e^xe^x=\dfrac{e^{4x}-1}{4}$$&lt;/p>
+&lt;p>用麦克劳林级数展开就可以得到各项系数了。这个生成函数的第 $n$ 项系数就是答案。&lt;/p>
+&lt;h2 id="更高阶的生成函数运算">更高阶的生成函数运算&lt;/h2>
+&lt;p>事实上这一类类多项式生成函数还可以求指数函数、对数函数、平方根甚至三角函数。其中，指数函数有组合意义，对数函数则是这一组合意义的反演。&lt;/p>
+&lt;h2 id="例题">例题&lt;/h2>
+&lt;p>&lt;a href="https://www.luogu.com.cn/problem/P4389">付公主的背包&lt;/a>&lt;br>
+&lt;a href="https://codeforces.com/problemset/problem/438/E">The Child and Binary Tree&lt;/a>&lt;/p></description></item></channel></rss>

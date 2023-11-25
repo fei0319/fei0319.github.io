@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>扩展欧几里得 on 绯想天</title><link>https://www.flandre.love/zh/tags/%E6%89%A9%E5%B1%95%E6%AC%A7%E5%87%A0%E9%87%8C%E5%BE%97/</link><description>Recent content in 扩展欧几里得 on 绯想天</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>Copyright © 2020 - 2023 Fei Pan</copyright><lastBuildDate>Fri, 19 Mar 2021 14:57:56 +0800</lastBuildDate><atom:link href="https://www.flandre.love/zh/tags/%E6%89%A9%E5%B1%95%E6%AC%A7%E5%87%A0%E9%87%8C%E5%BE%97/index.xml" rel="self" type="application/rss+xml"/><item><title>扩展欧几里得算法得出的解的绝对值上界</title><link>https://www.flandre.love/zh/posts/exgcd/</link><pubDate>Fri, 19 Mar 2021 14:57:56 +0800</pubDate><guid>https://www.flandre.love/zh/posts/exgcd/</guid><description>&lt;p>众所周知，扩展欧几里得算法是用于求解线性不定方程 $ax+by=(a,b)$ 的一组可行解的，其时间复杂度为对数级。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">void&lt;/span> &lt;span style="color:#a6e22e">exgcd&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> a, &lt;span style="color:#66d9ef">int&lt;/span> b, &lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#f92672">&amp;amp;&lt;/span>x, &lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#f92672">&amp;amp;&lt;/span>y){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span>(&lt;span style="color:#f92672">!&lt;/span>b) &lt;span style="color:#66d9ef">return&lt;/span> (&lt;span style="color:#66d9ef">void&lt;/span>)(x &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>, y &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> exgcd(b, a &lt;span style="color:#f92672">%&lt;/span> b, y, x), y &lt;span style="color:#f92672">-=&lt;/span> a &lt;span style="color:#f92672">/&lt;/span> b &lt;span style="color:#f92672">*&lt;/span> x;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>在计算过程中出现了乘法。$x$ 和 $y$ 是否有可能发生整型溢出呢？&lt;/p>
+&lt;p>事实上，除了 $b=0$ 的情况，在扩展欧几里得的过程中总是有 $|x|\le b,|y|\le a$，不可能发生溢出。这里给出简要证明：&lt;/p>
+&lt;p>记 $S=(a,b,x,y)$ 为一个同余方程 $ax+by=(a,b)$。中止状态解的同余方程为 $S_1=(\gcd(a,b),0,1,0)$。&lt;/p>
+&lt;p>考虑终止状态的前一个状态 $S_2=(a_2,b_2,x_2,y_2)$。此时一定有 $b_2\mid a_2$。根据公式&lt;/p>
+&lt;p>$$
+\begin{cases}x_2=y_1\newline
+y_2=x_1-\left\lfloor\dfrac{a}{b}\right\rfloor y_1\end{cases}
+$$&lt;/p>
+&lt;p>解得 $x_2=0,y_2=1$。由于 $b_2\neq 0$ 且 $b_2\mid a_2$，则该状态满足 $|x_2|\le b_2,|y_2|\le a_2$。&lt;/p>
+&lt;p>归纳证明后面的情况。对于后面的任何一个状态 $S_i$ ($i&amp;gt;2$)，我们有 $x_i=y_{i-1},y_i=x_{i-1}-\left\lfloor\dfrac{a}{b}\right\rfloor y_{i-1}$。将 $|x_{i-1}|\le b_{i-1}=a_i\bmod b_i,|y_{i-1}|\le a_{i-1}=b_i$ 代入得到 $|x_i|\le b_i,|y_i|\le a_i$。&lt;/p></description></item></channel></rss>

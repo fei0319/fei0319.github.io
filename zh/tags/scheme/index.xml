@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Scheme on 绯想天</title><link>https://www.flandre.love/zh/tags/scheme/</link><description>Recent content in Scheme on 绯想天</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>Copyright © 2020 - 2023 Fei Pan</copyright><lastBuildDate>Tue, 16 May 2023 16:25:00 +0800</lastBuildDate><atom:link href="https://www.flandre.love/zh/tags/scheme/index.xml" rel="self" type="application/rss+xml"/><item><title>Scheme 解释器原理</title><link>https://www.flandre.love/zh/posts/thoery_of_scheme_interpretation/</link><pubDate>Tue, 16 May 2023 16:25:00 +0800</pubDate><guid>https://www.flandre.love/zh/posts/thoery_of_scheme_interpretation/</guid><description>&lt;p>Scheme 是 Lisp 的一种方言，其语法极为简洁。&lt;/p>
+&lt;p>在 Scheme 中，所有的过程都通过 &lt;code>(procedure param)&lt;/code> 的形式调用。下面是一些例子：&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>(eq? 3 (+ 1 2))&lt;/code>：计算 3 是否等于 1 + 2&lt;/li>
+&lt;li>&lt;code>(define x (* 3 4))&lt;/code>：将变量 &lt;code>x&lt;/code> 绑定至 3 * 4 的结果&lt;/li>
+&lt;li>&lt;code>(define (abs x) (if (&amp;gt; x 0) x (- x)))&lt;/code>：定义过程 &lt;code>abs&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;p>可见，Scheme 使用波兰表示法而非我们惯用的中缀表示法。这对于初用者来说可能很麻烦，但也方便了我们实现其解释器。我们不用考虑种种运算符的运算顺序，然后在此基础上复杂地将中缀表达式转换为波兰表达式处理。&lt;/p>
+&lt;p>需要注意的是，在 Scheme 中括号不用于表示运算顺序，而是表示过程调用。例如 &lt;code>+&lt;/code> 和 &lt;code>(+)&lt;/code> 是不同的，前者表示加法函数，后者表示无参数地调用加法函数。&lt;/p>
+&lt;h2 id="read-eval-print-循环">Read-Eval-Print 循环&lt;/h2>
+&lt;p>类似 Python，Scheme 解释器在交互模式下也按照“读入-求值-输出”的模式循环。&lt;/p>
+&lt;h3 id="读入">读入&lt;/h3>
+&lt;p>首先以空格、括号为界，将输入 tokenize。例如 &lt;code>(+ 1 (* 2 3))&lt;/code> 在被 tokenized 后会成为 &lt;code>['(', '+', '1', '(', '*', '2', '3' ')', ')']&lt;/code>。&lt;/p>
+&lt;p>之后，再将 token 转化为可供求值的对象。在我们的设计中，任何可供求值的对象，要么是个字符串，要么是个本质为链表的 &lt;code>Pair&lt;/code>。任何被括号包围的 token 将被转化为 &lt;code>Pair&lt;/code>，而独立的 token 将被转化为字符串。例如，&lt;code>'1'&lt;/code> 会被转化为 &lt;code>'1'&lt;/code>（技术上，它其实没发生任何改变），而 &lt;code>('1')&lt;/code> 却会被转化为 &lt;code>Pair('1', nil)&lt;/code>（nil 代表尾节点）。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">class&lt;/span> &lt;span style="color:#a6e22e">Pair&lt;/span>(object):
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">def&lt;/span> __init__(self, first, rest):
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> self&lt;span style="color:#f92672">.&lt;/span>first &lt;span style="color:#f92672">=&lt;/span> first
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> self&lt;span style="color:#f92672">.&lt;/span>rest &lt;span style="color:#f92672">=&lt;/span> rest
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>对于字符串，我们在当前环境下查找其值，例如 &lt;code>'+'&lt;/code> 对应了一个代表加法的过程，&lt;code>'#t'&lt;/code> 对应了为真的布尔值，&lt;code>'a'&lt;/code> 对应了变量 &lt;code>a&lt;/code> 的值。对于 &lt;code>Pair&lt;/code>，在求值时我们认为其是个过程调用，当前数据为所调用的过程，下一个链表节点为过程的参数，例如 &lt;code>Pair('+', Pair('1', Pair('2', 'nil')))&lt;/code> 将被认为是一个以 &lt;code>Pair('1', Pair('2', 'nil'))&lt;/code> 为参数对过程 &lt;code>'+'&lt;/code> 的调用。&lt;code>Pair&lt;/code> 除了代表过程调用，还代表普通的链表，例如在刚才的例子中，&lt;code>Pair('1', Pair('2', 'nil'))&lt;/code> 代表一个普通的链表 &lt;code>['1', '2']&lt;/code> 而非对过程 &lt;code>'1'&lt;/code> 的调用。&lt;/p>
+&lt;p>那么，一个 &lt;code>Pair&lt;/code> 何时被视作过程调用，何时被视作链表呢？&lt;code>Pair&lt;/code> 在被求值时被视作过程调用，而存储时被视作链表。这种说法有些抽象，将在接下来的对求值的介绍中予以澄清。&lt;/p>
+&lt;h3 id="求值">求值&lt;/h3>
+&lt;p>之前我们提到过，可供求值的对象要么是字符串，要么是 &lt;code>Pair&lt;/code>；独立的字符串以及包含在 &lt;code>Pair&lt;/code> 中的字符串可以被轻松的实现求值，于是我们要实现求值的只剩 &lt;code>Pair&lt;/code> 了。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">scheme_eval&lt;/span>(expr):
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> isinstance(expr, str):
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># if it is a string&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># we provoke some procedure to evaluate it&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> expr &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#e6db74">&amp;#39;#t&amp;#39;&lt;/span>: &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">True&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">elif&lt;/span> expr &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#e6db74">&amp;#39;#f&amp;#39;&lt;/span>: &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">False&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">elif&lt;/span> expr &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#e6db74">&amp;#39;1&amp;#39;&lt;/span>: &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">elif&lt;/span> expr &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#e6db74">&amp;#39;2&amp;#39;&lt;/span>: &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#ae81ff">2&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">elif&lt;/span> expr &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#e6db74">&amp;#39;+&amp;#39;&lt;/span>: &lt;span style="color:#66d9ef">return&lt;/span> plus_function
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># blah blah blah...&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># of course the real implementation won&amp;#39;t be this stupid; this is just a demo&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> isinstance(expr, Pair):
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># otherwise it is a pair&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># expr.first is the procedure while expr.rest being the argument&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> scheme_apply(scheme_eval(expr&lt;span style="color:#f92672">.&lt;/span>first, env), expr&lt;span style="color:#f92672">.&lt;/span>rest)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>我们通过函数 &lt;code>scheme_apply(procedure, args)&lt;/code> 实现 &lt;code>Pair&lt;/code> 的求值。将 &lt;code>args&lt;/code> 视作一个链表而非过程调用，逐个地对其中元素调用 &lt;code>scheme_eval&lt;/code>：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">scheme_apply&lt;/span>(procedure, args):
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> lst &lt;span style="color:#f92672">=&lt;/span> list()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">while&lt;/span> args &lt;span style="color:#f92672">!=&lt;/span> nil:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> lst&lt;span style="color:#f92672">.&lt;/span>append(scheme_eval(args&lt;span style="color:#f92672">.&lt;/span>first))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> args &lt;span style="color:#f92672">=&lt;/span> args&lt;span style="color:#f92672">.&lt;/span>rest
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> procedure(&lt;span style="color:#960050;background-color:#1e0010">＊&lt;/span>lst)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="输出">输出&lt;/h3>
+&lt;p>简单地输出调用 &lt;code>scheme_eval&lt;/code> 的返回值即可。&lt;/p>
+&lt;h2 id="框架和环境">框架和环境&lt;/h2>
+&lt;p>框架（Frame）和环境（Environment）都是关于变量和实例绑定的概念，都是从变量到实例的单射。但它们并非完全一样的概念。请参考下面的介绍：&lt;/p>
+&lt;blockquote>
+&lt;p>An frame is a box that contains bindings from variables to values. An frame can “extend” another frame; that is, this frame can see all bindings of the frame it extends. We represent this by drawing an arrow from an environment frame to the frame it is extending. The global environment is the only environment that extends nothing.&lt;/p>
+&lt;p>An environment is a series of frames, which we get from extending the current frame. To determine which frames are in an environment, follow the arrows until reaching the global environment. Every frame you passed through is part of that environment. The global environment is only made up of the global frame, because its frame extends nothing.&lt;/p>
+&lt;/blockquote>
+&lt;p>之前的 &lt;code>scheme_eval&lt;/code> 中，对于字符串，我们采用了类似 &lt;code>if expr == '1': return 1&lt;/code> 这样的愚蠢实现，并表示其只是个 demo。那么对于字符串我们究竟要怎么处理呢？&lt;/p>
+&lt;p>字符串分为两类：字面量和变量。对于字面量，我们免不了要使用一些烦人的分类讨论。对于变量，我们要在环境内寻找其值。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">class&lt;/span> &lt;span style="color:#a6e22e">Frame&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">def&lt;/span> __init__(self, parent):
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> self&lt;span style="color:#f92672">.&lt;/span>bindings &lt;span style="color:#f92672">=&lt;/span> dict()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> self&lt;span style="color:#f92672">.&lt;/span>parent &lt;span style="color:#f92672">=&lt;/span> parent
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">lookup&lt;/span>(self, name):
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> name &lt;span style="color:#f92672">in&lt;/span> self&lt;span style="color:#f92672">.&lt;/span>bindings:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> self&lt;span style="color:#f92672">.&lt;/span>bindings[name]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> self&lt;span style="color:#f92672">.&lt;/span>parent &lt;span style="color:#f92672">is&lt;/span> &lt;span style="color:#66d9ef">None&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">raise&lt;/span> SomeError
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> self&lt;span style="color:#f92672">.&lt;/span>parent&lt;span style="color:#f92672">.&lt;/span>lookup(name)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">define&lt;/span>(self, name, value):
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> self&lt;span style="color:#f92672">.&lt;/span>bindings[name] &lt;span style="color:#f92672">=&lt;/span> value
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>为了确定当前的环境，&lt;code>scheme_eval&lt;/code> 和 &lt;code>scheme_apply&lt;/code> 要加上一个新的参数 &lt;code>env&lt;/code> 表示当前环境：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">scheme_eval&lt;/span>(expr, env):
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> isinstance(expr, str):
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> is_literal(expr):
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> literal(expr)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> env&lt;span style="color:#f92672">.&lt;/span>lookup(expr)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> scheme_apply(scheme_eval(expr&lt;span style="color:#f92672">.&lt;/span>first, env), expr&lt;span style="color:#f92672">.&lt;/span>rest, env)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">scheme_apply&lt;/span>(procedure, args, env):
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> lst &lt;span style="color:#f92672">=&lt;/span> list()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">while&lt;/span> args &lt;span style="color:#f92672">!=&lt;/span> nil:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> lst&lt;span style="color:#f92672">.&lt;/span>append(scheme_eval(args&lt;span style="color:#f92672">.&lt;/span>first, env))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> args &lt;span style="color:#f92672">=&lt;/span> args&lt;span style="color:#f92672">.&lt;/span>rest
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> procedure(&lt;span style="color:#f92672">*&lt;/span>lst)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>我们要预先创建一个 global 框架，并向其中加入一些预设的变量。&lt;/p>
+&lt;h3 id="if">if&lt;/h3>
+&lt;p>在 C/C++ 和 Java 中，if/while/for 等语句会以当前环境为父环境创建新的环境，但在 Scheme 中 if 并不会。&lt;/p>
+&lt;h3 id="函数">函数&lt;/h3>
+&lt;p>和其他大多数语言一样，Scheme 的函数调用会创建新环境，父环境为声明函数的环境。&lt;/p>
+&lt;h2 id="特殊形式">特殊形式&lt;/h2>
+&lt;p>上面的设计只考虑了函数，而未考虑其他的特殊形式。函数和特殊形式的不同之处在于，函数总是会先对所有参数进行求值，而特殊形式却并不会。&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>(define a (+ 1 2))&lt;/code> 的参数有 &lt;code>a&lt;/code> 和 &lt;code>(+ 1 2)&lt;/code>，但 &lt;code>a&lt;/code> 不会被求值，只有 &lt;code>(+ 1 2)&lt;/code> 会被求值&lt;/li>
+&lt;li>&lt;code>(and #f (+ 1 2))&lt;/code> 的参数有 &lt;code>#f&lt;/code> 和 &lt;code>(+ 1 2)&lt;/code>，但由于逻辑与的短路规则，&lt;code>(+ 1 2)&lt;/code> 并不会被求值&lt;/li>
+&lt;li>&lt;code>(define (plus x y) (+ x y))&lt;/code> 的参数有 &lt;code>(plus x y)&lt;/code> 和 &lt;code>(+ x y)&lt;/code>，但它们都不会被求值&lt;/li>
+&lt;/ul>
+&lt;p>因此，我们需要改变 &lt;code>scheme_apply&lt;/code> 的实现。具体地，若 &lt;code>procedure&lt;/code> 是特殊形式，我们将不对 &lt;code>args&lt;/code> 中的元素求值，而是将其直接传给 &lt;code>procedure&lt;/code>。&lt;/p>
+&lt;p>Scheme 中的特殊形式有很多，这里只介绍其中关键的特殊形式的实现。&lt;/p>
+&lt;h3 id="逻辑运算">逻辑运算&lt;/h3>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">scheme_and&lt;/span>(args, env):
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">while&lt;/span> args &lt;span style="color:#f92672">!=&lt;/span> nil:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#f92672">not&lt;/span> scheme_eval(args&lt;span style="color:#f92672">.&lt;/span>first, env):
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">False&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> args &lt;span style="color:#f92672">=&lt;/span> args&lt;span style="color:#f92672">.&lt;/span>rest
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">True&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">scheme_if&lt;/span>(args, env):
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> len(args) &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#ae81ff">3&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">raise&lt;/span> SomeError
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> scheme_eval(args&lt;span style="color:#f92672">.&lt;/span>first):
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> scheme_eval(args&lt;span style="color:#f92672">.&lt;/span>rest&lt;span style="color:#f92672">.&lt;/span>first)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">else&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> scheme_eval(args&lt;span style="color:#f92672">.&lt;/span>rest&lt;span style="color:#f92672">.&lt;/span>rest&lt;span style="color:#f92672">.&lt;/span>first)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="变量定义">变量定义&lt;/h3>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">scheme_define&lt;/span>(args, env):
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> name, value &lt;span style="color:#f92672">=&lt;/span> args&lt;span style="color:#f92672">.&lt;/span>first, scheme_eval(args&lt;span style="color:#f92672">.&lt;/span>rest)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> env&lt;span style="color:#f92672">.&lt;/span>define(name, value)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="函数定义和-lambda-表达式">函数定义和 Lambda 表达式&lt;/h3>
+&lt;p>在我们的 Scheme 解释器中，用户定义函数就是用 Lambda 表达式实现的。我们只需实现 Lambda 表达式即可。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">class&lt;/span> &lt;span style="color:#a6e22e">Lambda&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">def&lt;/span> __init__(self, formals, body, env):
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> self&lt;span style="color:#f92672">.&lt;/span>formals &lt;span style="color:#f92672">=&lt;/span> formals
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> self&lt;span style="color:#f92672">.&lt;/span>body &lt;span style="color:#f92672">=&lt;/span> body
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> self&lt;span style="color:#f92672">.&lt;/span>env &lt;span style="color:#f92672">=&lt;/span> env
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">apply&lt;/span>(self, args):
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> len(formals) &lt;span style="color:#f92672">!=&lt;/span> len(args):
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">raise&lt;/span> SomeError
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> env &lt;span style="color:#f92672">=&lt;/span> Frame(self&lt;span style="color:#f92672">.&lt;/span>env)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">while&lt;/span> args &lt;span style="color:#f92672">!=&lt;/span> nil:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> env&lt;span style="color:#f92672">.&lt;/span>define(formals&lt;span style="color:#f92672">.&lt;/span>first, args&lt;span style="color:#f92672">.&lt;/span>first)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> scheme_eval(self&lt;span style="color:#f92672">.&lt;/span>body, env)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>可见，在 Lambda 表达式的实现中，我们存储三个变量：参数列表，函数体，定义函数的 Environment。调用函数时，我们直接创建一个定义函数的 Environment 的拷贝，在该拷贝中绑定参数和参数的值，并调用 &lt;code>scheme_eval&lt;/code> 计算返回值。&lt;/p>
+&lt;h3 id="quote-和-quasiquote">Quote 和 Quasiquote&lt;/h3>
+&lt;p>在 Scheme 中，quote 是一个返回参数的过程。例如 &lt;code>(square 4)&lt;/code> 作为一个包含两个元素的 Pair，在被求值后得到 &lt;code>16&lt;/code>；但 &lt;code>'(square 4)&lt;/code> 中却会直接返回这个包含两个元素的 Pair，而非其被求值后的结果 &lt;code>16&lt;/code>。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">scheme_quote&lt;/span>(args, env):
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> len(args) &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">raise&lt;/span> SomeError
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> args&lt;span style="color:#f92672">.&lt;/span>first &lt;span style="color:#75715e"># rather than scheme_eval(args.first, env)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Quasiquote 的功能与 quote 类似，但其允许参数中存在 unquote 的调用。Unquote 则是一个必须位于 quasiquote 的参数中调用的过程。它能够避免其参数被 quote 直接返回，而是使其在求值后再被返回。例如，``((+ 1 2) (* 2 ,(+ 5 6)))&lt;code>求值后将得到&lt;/code>((+ 1 2) (* 2 11))`。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">scheme_quasiquote&lt;/span>(args, env):
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> len(args) &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">raise&lt;/span> SomeError
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> arg &lt;span style="color:#f92672">=&lt;/span> args&lt;span style="color:#f92672">.&lt;/span>first
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> isinstance(arg, Pair):
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> arg&lt;span style="color:#f92672">.&lt;/span>first &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#e6db74">&amp;#39;quote&amp;#39;&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> scheme_eval(arg&lt;span style="color:#f92672">.&lt;/span>rest, env)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">else&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> arg&lt;span style="color:#f92672">.&lt;/span>map(&lt;span style="color:#66d9ef">lambda&lt;/span> x:scheme_eval(x, env))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">else&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> arg
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="尾递归">尾递归&lt;/h2>
+&lt;p>Scheme 没有设计循环语句，因此其任何的批量操作都要通过递归实现。因此在 Scheme 中递归的发生十分频繁，实现尾递归十分重要。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span>(define (fact n)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> (if (eq? n 0)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> 1
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> (* (fact (- n 1)) n)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> )
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>以上函数不符合尾递归的形式，因为递归调用成为了另一个函数的参数。&lt;/p>
+&lt;p>那么，什么才是尾递归调用呢？若递归调用是某个函数的参数，则其一定不是尾递归，因为函数要在递归返回后才能返回；若递归是某个可以和参数同时返回的过程的参数，则其可以为尾递归，例如&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span>(define (output n)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> (if (&amp;gt;= n 1)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> (begin (print n) (output (- n 1)))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> (print n)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> )
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>尽管 &lt;code>(output (- n 1))&lt;/code> 作了 &lt;code>begin&lt;/code> 的参数，但 &lt;code>output&lt;/code> 仍是尾递归的。因为 &lt;code>begin&lt;/code> 无需等待 &lt;code>(output (- n 1))&lt;/code> 返回再返回，而是可以直接退出，再让 &lt;code>(output (- n 1))&lt;/code> 作为自己的返回值。&lt;/p>
+&lt;p>我们可以为 &lt;code>scheme_apply&lt;/code> 设计一个接口，允许其处理的过程调用提前退出并通过该接口告知 &lt;code>scheme_apply&lt;/code> 最后调用的过程。同时，我们也要重新设计我们的过程，使之能够分离不涉及返回值的调用和作为返回值的调用；不涉及返回值的调用直接执行，作为返回值的调用则不执行，而是告知 &lt;code>scheme_apply&lt;/code> 后退出，由 &lt;code>scheme_apply&lt;/code> 执行。&lt;/p>
+&lt;h2 id="credits">Credits&lt;/h2>
+&lt;p>本文参考 &lt;a href="https://inst.eecs.berkeley.edu/~cs61a/su20/proj/scheme_stubbed/">UC Berkeley CS61A Project 4&lt;/a> 写成。实现代码存储于 &lt;a href="https://github.com/fei0319/CS61A/tree/main/scheme_stubbed">fei0319/CS61A/scheme_stubbed&lt;/a>。&lt;/p></description></item></channel></rss>

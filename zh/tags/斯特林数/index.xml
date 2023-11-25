@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>斯特林数 on 绯想天</title><link>https://www.flandre.love/zh/tags/%E6%96%AF%E7%89%B9%E6%9E%97%E6%95%B0/</link><description>Recent content in 斯特林数 on 绯想天</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>Copyright © 2020 - 2023 Fei Pan</copyright><lastBuildDate>Sat, 27 Feb 2021 10:46:08 +0800</lastBuildDate><atom:link href="https://www.flandre.love/zh/tags/%E6%96%AF%E7%89%B9%E6%9E%97%E6%95%B0/index.xml" rel="self" type="application/rss+xml"/><item><title>多项式对数函数、指数函数和欧拉变换</title><link>https://www.flandre.love/zh/posts/polylog/</link><pubDate>Sat, 27 Feb 2021 10:46:08 +0800</pubDate><guid>https://www.flandre.love/zh/posts/polylog/</guid><description>&lt;p>与一般想法不同，多项式也有自己的对数函数和指数函数。它们也可以在 $O(n\log n)$ 的优秀时间内求解。&lt;/p>
+&lt;p>有这么一个式子广为人知&lt;/p>
+&lt;p>$$
+e^x=\sum\limits_{i=0}^{+\infty}\dfrac{x^i}{i!}
+$$&lt;/p>
+&lt;p>事实上对数函数也可以像这样用无限幂级数定义：&lt;/p>
+&lt;p>$$
+\ln(1-x)=-\sum\limits_{i=1}^{+\infty}\dfrac{x^i}{i}
+$$&lt;/p>
+&lt;p>$$
+\ln(1+x)=-\sum\limits_{i=1}^{+\infty}\dfrac{(-1)^i\cdot x^i}{i}
+$$&lt;/p>
+&lt;p>指数函数的泰勒展开式对于任意实数 $x$ 都成立，对数函数的泰勒展开式只对定义域内的一些 $x$ 成立；不过我们并不关心 $x$，只关心其系数。多项式的指数函数和对数函数就是用这些级数定义的。因为这些级数都是无限级数，多项式只在模意义下存在指数函数和对数函数。&lt;/p>
+&lt;h2 id="多项式对数函数">多项式对数函数&lt;/h2>
+&lt;p>多项式 $g(x)$ 在模 $x^n$ 意义下的对数函数存在，当且仅当其常数项为 $1$，否则它对应的泰勒级数不收敛。把 $\ln g(x)$ 视作一个关于 $x$ 的函数，我们有&lt;/p>
+&lt;p>$$
+\begin{aligned}\left[\ln g(x)\right]^\prime&amp;amp;=\dfrac{g(x)^\prime}{g(x)}\newline
+\ln g(x)&amp;amp;=\int\mathrm{d}\ln g(x)=\int\dfrac{g(x)^\prime}{g(x)}\mathrm{d}x\end{aligned}
+$$&lt;/p>
+&lt;p>只要对 $g(x)$ 求导，再乘上 $\dfrac{1}{g(x)}$ 就能够得到 $\ln g(x)$ 的导数，这个导数的积分就是 $\ln(g(x))$。多项式求导、积分都是非常容易的事情，但是，$\dfrac{g(x)^\prime}{g(x)}$ 的不定积分随常数项的不同有无穷多个，我们应该取哪一个呢？我们取常数项为 $0$ 的那个作为答案，因为只有常数项为 $0$ 的多项式在模意义下存在指数函数。&lt;/p>
+&lt;h2 id="多项式指数函数">多项式指数函数&lt;/h2>
+&lt;p>上面我们提到，多项式 $g(x)$ 在模 $x^n$ 意义下的指数函数存在，当且仅当其常数项为 $0$，否则它对应的泰勒级数也一样不收敛。由于 $\exp f(x)$ 的导数里还是存在 $\exp f(x)$，我们只能用分治 FFT 的方法 $O\left(n\log^2n\right)$ 求出。这种方法由于比较缓慢而不常使用，通常我们使用 &lt;a href="https://www.flandre.love/zh/posts/newtons_method/">Newton&amp;rsquo;s Method&lt;/a> $O(n\log n)$ 求。&lt;/p>
+&lt;p>分治法并非一无是处。这个方法不需要写多项式求逆和多项式对数函数，写起来要快很多；虽然复杂度多一个对数，但常数较小，也不会慢特别多。&lt;/p>
+&lt;p>多项式的指数函数是有实际的组合意义的。设 $f(x)$ 是一个大小为 $i$ 的盒子内部分配方案数的指数型生成函数（即，$\left[\dfrac{x^i}{i!}\right] f(x)$ 表示一个盒子装 $i$ 个小球的方案数），则 $\exp f(x)$ 表示 $i$ 个有标号小球分配到任意多个无标号盒子的方案数的指数型生成函数（即，$\left[\dfrac{x^i}{i!}\right] (\exp f(x))$ 表示 $i$ 个相互区分的小球放到若干个完全一样的盒子的方案数）。这个组合意义与指数函数的幂级数有关系。&lt;/p>
+&lt;p>这一点的证明只需用下式说明&lt;/p>
+&lt;p>$$
+\exp f(x)=\sum\dfrac{f^i(x)}{i!}=\prod \exp f_ix^i
+$$&lt;/p>
+&lt;p>其中的含义是：&lt;/p>
+&lt;p>$f^i(x)$ 是将有标号小球分配到 $i$ 个有标号盒子的方案数的指数型生成函数；&lt;/p>
+&lt;p>$\dfrac{f^i(x)}{i!}$ 是将有标号小球分配到 $i$ 个无标号盒子的方案数的指数型生成函数；&lt;/p>
+&lt;p>$\sum\dfrac{f^i(x)}{i!}$ 是将有标号小球分配到任意多个无标号盒子的方案数的指数型生成函数；&lt;/p>
+&lt;p>$\prod \exp f_ix^i$ 也有含义。&lt;/p>
+&lt;h2 id="欧拉变换">欧拉变换&lt;/h2>
+&lt;p>在多项式指数函数中，我们提到了多项式指数函数的组合含义。如果要求无标号小球放到无标号盒子的方案数，我们应该怎么做呢？&lt;/p>
+&lt;p>令 $f(x)=\sum\limits_{i=1}^nf_ix^i$，则我们可以写出所求的普通型生成函数 $g(f(x))$&lt;/p>
+&lt;p>$$
+g(f(x))=\prod\limits_{i=1}^n\dfrac{1}{(1-x^i)^{f_i}}
+$$&lt;/p>
+&lt;blockquote>
+&lt;p>在指数函数的组合意义中，我们使用了指数型生成函数（EGF），而在欧拉变换中，我们使用的却是普通型生成函数（OGF）。&lt;/p>
+&lt;/blockquote>
+&lt;p>出现了 $1-x^k$，对此敏感的我们考虑求出它的对数函数&lt;/p>
+&lt;p>$$
+\ln g(f(x))=\sum\limits_{i=1}^nf_i\sum\limits_{j=1}^{+\infty}\dfrac{x^{ij}}{j}
+$$&lt;/p>
+&lt;p>交换求和顺序&lt;/p>
+&lt;p>$$
+\begin{aligned}\ln g(f(x))&amp;amp;=\sum\limits_{i=1}^{+\infty}\dfrac{1}{i}\sum\limits_{j=1}^{n}f_jx^{ij}\&amp;amp;=\sum\limits_{i=1}^{+\infty}\dfrac{f(x^i)}{i}\end{aligned}
+$$&lt;/p>
+&lt;p>于是&lt;/p>
+&lt;p>$$
+g(f(x))=\exp \sum\limits_{i=1}^{+\infty}\dfrac{f(x^i)}{i}
+$$&lt;/p>
+&lt;p>我们把 $g(f(x))$ 称作 $f(x)$ 的欧拉变换，它的组合含义是无标号小球放到无标号盒子的方案数。我们可以用 $O(n\log n)$ 的复杂度求一个多项式 $f(x)$ 的欧拉变换。&lt;/p>
+&lt;p>&lt;a href="https://www.luogu.com.cn/problem/P4389">付公主的背包&lt;/a>可以用欧拉变换解释。完全背包的本质就是把 $s$ 个无标号体积放到 $n$ 种有标号商品中。&lt;/p></description></item><item><title>斯特林数与上升幂、下降幂</title><link>https://www.flandre.love/zh/posts/stirling/</link><pubDate>Thu, 28 Jan 2021 14:29:04 +0800</pubDate><guid>https://www.flandre.love/zh/posts/stirling/</guid><description>&lt;blockquote>
+&lt;p>&lt;strong>本文内容已被整合至 OI Wiki，请至 &lt;a href="https://oi-wiki.org/math/combinatorics/stirling/">OI Wiki&lt;/a> 查看最新内容。&lt;/strong>&lt;/p>
+&lt;/blockquote>
+&lt;p>斯特林数与二项式系数密切相关，是离散数学的重要内容。&lt;/p>
+&lt;p>斯特林数分为两类，分别是“第二类斯特林数”和“第一类斯特林数”。虽然被称作“第二类”，第二类斯特林数却比第一类的更常用，也在斯特林的相关著作和具体数学中被首先描述；因此，在这篇文章中我们也先介绍第二类斯特林数。&lt;/p>
+&lt;h2 id="第二类斯特林数">第二类斯特林数&lt;/h2>
+&lt;p>第二类斯特林数又称作斯特林子集数，用 $\begin{Bmatrix}n\m\end{Bmatrix}$ 表示，读作“$n$ 子集 $m$”。它的组合含义是，将 $n$ 个有标号物品划分为 $m$ 个无标号集合的方案数。学习&lt;a href="https://www.flandre.love/2021/polylog">多项式对数函数、指数函数和欧拉变换&lt;/a>应该有助于能找到第二类斯特林数和指数函数的相关性（斯特林数限定了划分子集的个数而指数函数没有）。&lt;/p>
+&lt;p>可以认为，对于 $n \less m$，有 $\begin{Bmatrix}n\m\end{Bmatrix}=0$。$m=0$ 的情况比较特殊。一般认为，将空集划分为 $0$ 个非空集合是可行的，因此我们定义 $\begin{Bmatrix}0\0\end{Bmatrix}=1$；而对于任意 $n \greater 0$，都有 $\begin{Bmatrix}n\0\end{Bmatrix}=0$。&lt;/p>
+&lt;p>和二项式系数类似，第二类斯特林数也有递推公式&lt;/p>
+&lt;p>$$
+\begin{Bmatrix}n\m\end{Bmatrix}=m\begin{Bmatrix}n-1\m\end{Bmatrix}+\begin{Bmatrix}n-1\m-1\end{Bmatrix},n&amp;gt;0
+$$&lt;/p>
+&lt;p>同时，第二类斯特林数也有简洁的通项公式，即&lt;/p>
+&lt;p>$$
+\begin{Bmatrix}n\m\end{Bmatrix}=\sum\limits_{i=0}^m\dfrac{(-1)^{m-i}i^n}{i!(m-i)!}
+$$&lt;/p>
+&lt;p>考虑使用容斥原理证明。设 $G_i$ 表示 $n$ 个有标号元素，放置到 $i$ 个有标号集合的方案数；$F_i$ 表示 $n$ 个有标号元素，放置到 $i$ 个有标号非空集合的方案数。不难得到&lt;/p>
+&lt;p>$$
+G_i=i^n=\sum\limits_{j=0}^i\binom{i}{j}F_j
+$$&lt;/p>
+&lt;p>根据二项式反演&lt;/p>
+&lt;p>$$
+F_i=\sum\limits_{j=0}^{i}(-1)^{i-j}\binom{i}{j}j^n
+$$&lt;/p>
+&lt;p>考虑第二类斯特林数与 $F_i$ 的关系&lt;/p>
+&lt;p>$$
+\begin{Bmatrix}n\i\end{Bmatrix}=\dfrac{F_i}{i!}
+$$&lt;/p>
+&lt;p>联立得证。&lt;/p>
+&lt;h2 id="同一行第二类斯特林数的计算">同一行第二类斯特林数的计算&lt;/h2>
+&lt;p>“同一行”的第二类斯特林数指的是，有着不同的 $i$，相同的 $n$ 的一系列 $\begin{Bmatrix}n\i\end{Bmatrix}$。求出同一行的所有第二类斯特林数，就是对 $i=0..n$ 求出了将 $n$ 个不同元素划分为 $i$ 个非空集的方案数。&lt;/p>
+&lt;p>根据上面给出的通项公式，卷积计算即可。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>(){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> scanf(&lt;span style="color:#e6db74">&amp;#34;%d&amp;#34;&lt;/span>, &lt;span style="color:#f92672">&amp;amp;&lt;/span>n);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> fact[&lt;span style="color:#ae81ff">0&lt;/span>] &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> i &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>; i &lt;span style="color:#f92672">&amp;lt;=&lt;/span> n; &lt;span style="color:#f92672">++&lt;/span>i) fact[i] &lt;span style="color:#f92672">=&lt;/span> (ll)fact[i &lt;span style="color:#f92672">-&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>] &lt;span style="color:#f92672">*&lt;/span> i &lt;span style="color:#f92672">%&lt;/span> mod;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> exgcd(fact[n], mod, ifact[n], ifact[&lt;span style="color:#ae81ff">0&lt;/span>]), ifact[n] &lt;span style="color:#f92672">=&lt;/span> (ifact[n] &lt;span style="color:#f92672">%&lt;/span> mod &lt;span style="color:#f92672">+&lt;/span> mod) &lt;span style="color:#f92672">%&lt;/span> mod;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> i &lt;span style="color:#f92672">=&lt;/span> n &lt;span style="color:#f92672">-&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>; i &lt;span style="color:#f92672">&amp;gt;=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>; &lt;span style="color:#f92672">--&lt;/span>i) ifact[i] &lt;span style="color:#f92672">=&lt;/span> (ll)ifact[i &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>] &lt;span style="color:#f92672">*&lt;/span> (i &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>) &lt;span style="color:#f92672">%&lt;/span> mod;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> fstdlib&lt;span style="color:#f92672">::&lt;/span>poly f(n &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>), g(n &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> i &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>; i &lt;span style="color:#f92672">&amp;lt;=&lt;/span> n; &lt;span style="color:#f92672">++&lt;/span>i) g[i] &lt;span style="color:#f92672">=&lt;/span> (i &lt;span style="color:#f92672">&amp;amp;&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span> &lt;span style="color:#f92672">?&lt;/span> mod &lt;span style="color:#f92672">-&lt;/span> &lt;span style="color:#ae81ff">1ll&lt;/span> &lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#ae81ff">1ll&lt;/span>) &lt;span style="color:#f92672">*&lt;/span> ifact[i] &lt;span style="color:#f92672">%&lt;/span> mod, f[i] &lt;span style="color:#f92672">=&lt;/span> (ll)qpow(i, n) &lt;span style="color:#f92672">*&lt;/span> ifact[i] &lt;span style="color:#f92672">%&lt;/span> mod;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> f &lt;span style="color:#f92672">*=&lt;/span> g, f.resize(n &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> i &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>; i &lt;span style="color:#f92672">&amp;lt;=&lt;/span> n; &lt;span style="color:#f92672">++&lt;/span>i) printf(&lt;span style="color:#e6db74">&amp;#34;%d &amp;#34;&lt;/span>, f[i]);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="同一列第二类斯特林数的计算">同一列第二类斯特林数的计算&lt;/h2>
+&lt;p>即对 $i=0..n$，求出 $\begin{Bmatrix}i\k\end{Bmatrix}$。有两种常用的快速计算方法。&lt;/p>
+&lt;h3 id="方法-1-利用递推公式">方法 1. 利用递推公式&lt;/h3>
+&lt;p>第二类斯特林数的通项公式不适合计算列，我们考虑利用递推公式写出它的生成函数。设 $F_k(x)=\sum\limits_{i=0}^n\begin{Bmatrix}i\k\end{Bmatrix}x^i$，则&lt;/p>
+&lt;p>$$
+F_k(x)=kxF_k(x)+xF_{k-1}(x)
+$$&lt;/p>
+&lt;p>综合第二类斯特林数的定义解得&lt;/p>
+&lt;p>$$
+F_k(x)=\begin{cases}\dfrac{x}{1-kx}F_{k-1}(x)&amp;amp;\text{if }k&amp;gt;0\1&amp;amp;\text{else}\end{cases}
+$$&lt;/p>
+&lt;p>即 $F_k(x)=\prod\limits_{i=1}^k\dfrac{x}{1-ix}$&lt;/p>
+&lt;p>利用多项式分治乘和多项式乘法逆即可在 $O(k\log k\log n)$ 的时间内解出 $F_k(x)$。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>(){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> scanf(&lt;span style="color:#e6db74">&amp;#34;%d%d&amp;#34;&lt;/span>, &lt;span style="color:#f92672">&amp;amp;&lt;/span>n, &lt;span style="color:#f92672">&amp;amp;&lt;/span>k);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> i &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>; i &lt;span style="color:#f92672">&amp;lt;=&lt;/span> k; &lt;span style="color:#f92672">++&lt;/span>i) mask.emplace_back(std&lt;span style="color:#f92672">::&lt;/span>vector&lt;span style="color:#f92672">&amp;lt;&lt;/span>&lt;span style="color:#66d9ef">int&lt;/span>&lt;span style="color:#f92672">&amp;gt;&lt;/span>{&lt;span style="color:#ae81ff">1&lt;/span>, mod &lt;span style="color:#f92672">-&lt;/span> i});
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">while&lt;/span>((&lt;span style="color:#66d9ef">int&lt;/span>)mask.size() &lt;span style="color:#f92672">&amp;gt;=&lt;/span> &lt;span style="color:#ae81ff">2&lt;/span>){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">while&lt;/span>((&lt;span style="color:#66d9ef">int&lt;/span>)mask.size() &lt;span style="color:#f92672">&amp;gt;=&lt;/span> &lt;span style="color:#ae81ff">2&lt;/span>){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> tmp.push_back(mask[mask.size() &lt;span style="color:#f92672">-&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>] &lt;span style="color:#f92672">*&lt;/span> mask[mask.size() &lt;span style="color:#f92672">-&lt;/span> &lt;span style="color:#ae81ff">2&lt;/span>]);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> mask.pop_back(), mask.pop_back();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span>(&lt;span style="color:#f92672">!&lt;/span>mask.empty()) tmp.push_back(mask[&lt;span style="color:#ae81ff">0&lt;/span>]), mask.pop_back();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> std&lt;span style="color:#f92672">::&lt;/span>swap(mask, tmp);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> fstdlib&lt;span style="color:#f92672">::&lt;/span>poly f(mask[&lt;span style="color:#ae81ff">0&lt;/span>].inv(n &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>));
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> i &lt;span style="color:#f92672">=&lt;/span> f.size() &lt;span style="color:#f92672">-&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>; i &lt;span style="color:#f92672">&amp;gt;=&lt;/span> k; &lt;span style="color:#f92672">--&lt;/span>i) f[i] &lt;span style="color:#f92672">=&lt;/span> f[i &lt;span style="color:#f92672">-&lt;/span> k];
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> i &lt;span style="color:#f92672">=&lt;/span> std&lt;span style="color:#f92672">::&lt;/span>min(k, (&lt;span style="color:#66d9ef">int&lt;/span>)f.size()) &lt;span style="color:#f92672">-&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>; i &lt;span style="color:#f92672">&amp;gt;=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>; &lt;span style="color:#f92672">--&lt;/span>i) f[i] &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> i &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>; i &lt;span style="color:#f92672">&amp;lt;&lt;/span> (&lt;span style="color:#66d9ef">int&lt;/span>)f.size(); &lt;span style="color:#f92672">++&lt;/span>i) printf(&lt;span style="color:#e6db74">&amp;#34;%d &amp;#34;&lt;/span>, f[i]);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="方法-2-利用指数型生成函数">方法 2. 利用指数型生成函数&lt;/h3>
+&lt;p>一个盒子装 $i$ 个物品的方案是 $\begin{cases}1&amp;amp;\text{if }i&amp;gt;0\0&amp;amp;\text{else}\end{cases}$。我们可以写出它的指数型生成函数为 $F(x)=\sum\limits_{i=1}^{+\infty}\dfrac{x^i}{i!}$。经过之前的学习，我们明白 $F^k(x)$ 就是 $i$ 个有标号物品放到 $k$ 个有标号盒子里的指数型生成函数，$\exp F(x)=\sum\limits_{i=0}^{+\infty}\dfrac{F^i(x)}{i!}$ 就是 $i$ 个有标号物品放到任意多个无标号盒子里的指数型生成函数（指数函数通过每项除以一个 $i!$ 去掉了盒子的标号）。这里涉及到很多“有标号”“无标号”的内容，注意辨析。&lt;/p>
+&lt;p>那么 $\begin{Bmatrix}i\k\end{Bmatrix}=\dfrac{\left[\dfrac{x^i}{i!}\right]F^k(x)}{k!}$，$O(n\log n)$ 计算多项式幂即可。实际使用时比 $O(n\log^2n)$ 的方法 1 要慢。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>(){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> scanf(&lt;span style="color:#e6db74">&amp;#34;%d%d&amp;#34;&lt;/span>, &lt;span style="color:#f92672">&amp;amp;&lt;/span>n, &lt;span style="color:#f92672">&amp;amp;&lt;/span>k);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> fstdlib&lt;span style="color:#f92672">::&lt;/span>poly f(n &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> fact[&lt;span style="color:#ae81ff">0&lt;/span>] &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> i &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>; i &lt;span style="color:#f92672">&amp;lt;=&lt;/span> n; &lt;span style="color:#f92672">++&lt;/span>i) fact[i] &lt;span style="color:#f92672">=&lt;/span> (ll)fact[i &lt;span style="color:#f92672">-&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>] &lt;span style="color:#f92672">*&lt;/span> i &lt;span style="color:#f92672">%&lt;/span> mod;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> i &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>; i &lt;span style="color:#f92672">&amp;lt;=&lt;/span> n; &lt;span style="color:#f92672">++&lt;/span>i) f[i] &lt;span style="color:#f92672">=&lt;/span> qpow(fact[i], mod &lt;span style="color:#f92672">-&lt;/span> &lt;span style="color:#ae81ff">2&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> f &lt;span style="color:#f92672">=&lt;/span> fstdlib&lt;span style="color:#f92672">::&lt;/span>exp(fstdlib&lt;span style="color:#f92672">::&lt;/span>log(f &lt;span style="color:#f92672">&amp;gt;&amp;gt;&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>) &lt;span style="color:#f92672">*&lt;/span> k) &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> k, f.resize(n &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">int&lt;/span> inv &lt;span style="color:#f92672">=&lt;/span> qpow(fact[k], mod &lt;span style="color:#f92672">-&lt;/span> &lt;span style="color:#ae81ff">2&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> i &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>; i &lt;span style="color:#f92672">&amp;lt;=&lt;/span> n; &lt;span style="color:#f92672">++&lt;/span>i) printf(&lt;span style="color:#e6db74">&amp;#34;%lld &amp;#34;&lt;/span>, (ll)f[i] &lt;span style="color:#f92672">*&lt;/span> fact[i] &lt;span style="color:#f92672">%&lt;/span> mod &lt;span style="color:#f92672">*&lt;/span> inv &lt;span style="color:#f92672">%&lt;/span> mod);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="第一类斯特林数">第一类斯特林数&lt;/h2>
+&lt;p>第一类斯特林数又称作斯特林轮换数，用 $\begin{bmatrix}n\m\end{bmatrix}$ 表示，读作“$n$ 轮换 $m$”。它的组合含义是，将 $n$ 个有标号物品分为 $m$ 个无标号轮换的方案数。&lt;/p>
+&lt;p>一个轮换就是一个首尾相接的环形排列。我们可以写出一个轮换$[A,B,C,D]$，并且我们认为 $[A,B,C,D]=[B,C,D,A]=[C,D,A,B]=[D,A,B,C]$，即，两个可以通过旋转而互相得到的轮换是等价的。注意，我们不认为两个可以通过翻转而相互得到的轮换等价，即 $[A,B,C,D]\neq[D,C,B,A]$。&lt;/p>
+&lt;p>不难发现，对于 $n&amp;gt;0$ 有 $\begin{bmatrix}n\1\end{bmatrix}=(n-1)!$；进一步，也有 $\begin{bmatrix}n\m\end{bmatrix}\geq \begin{Bmatrix}n\m\end{Bmatrix}$。&lt;/p>
+&lt;p>轮换和排列一一对应，如果对同一行的所有第二类斯特林数求和，我们也能得到排列的总数 $\sum\limits_{i=0}^k\begin{bmatrix}n\i\end{bmatrix}=n!$。这一点可以参考 &lt;em>具体数学&lt;/em>。&lt;/p>
+&lt;p>类似第二类斯特林数，我们也可以写出第一类斯特林数的递推公式&lt;/p>
+&lt;p>$$
+\begin{bmatrix}n\m\end{bmatrix}=(n-1)\begin{bmatrix}n-1\m\end{bmatrix}+\begin{bmatrix}n-1\m-1\end{bmatrix},n&amp;gt;0
+$$&lt;/p>
+&lt;h2 id="同一行第一类斯特林数的计算">同一行第一类斯特林数的计算&lt;/h2>
+&lt;p>类似第二类斯特林数，我们构造同行第一类斯特林数的生成函数，即&lt;/p>
+&lt;p>$$
+F_n(x)=\sum\limits_{i=0}^n\begin{bmatrix}n\i\end{bmatrix}x^i
+$$&lt;/p>
+&lt;p>根据递推公式，不难写出&lt;/p>
+&lt;p>$$
+F_n(x)=(n-1)F_{n-1}(x)+xF_{n-1}(x)
+$$&lt;/p>
+&lt;p>于是&lt;/p>
+&lt;p>$$
+F_n(x)=\prod\limits_{i=0}^{n-1}(x+i)=\dfrac{(x+n-1)!}{(x-1)!}
+$$&lt;/p>
+&lt;p>这其实是 $x$ 的 $n$ 次上升阶乘幂，记做 $x^{\overline n}$。这个东西自然是可以暴力分治乘 $O(n\log^2n)$ 求出的，但用上升幂相关做法可以 $O(n\log n)$ 求出。具体见下面有关阶乘幂的部分。&lt;/p>
+&lt;h2 id="同一列第一类斯特林数的计算">同一列第一类斯特林数的计算&lt;/h2>
+&lt;p>仿照第二类斯特林数的计算，我们可以用指数型生成函数解决该问题。注意，由于递推公式和行有关，我们不能利用递推公式计算同列的第一类斯特林数。&lt;/p>
+&lt;p>显然，单个轮换的指数型生成函数为&lt;/p>
+&lt;p>$$
+F(x)=\sum\limits_{i=1}^n\dfrac{(i-1)!x^i}{i!}=\sum\limits_{i=1}^n\dfrac{x^i}{i}
+$$&lt;/p>
+&lt;p>它的 $k$ 次幂就是 $\begin{bmatrix}i\k\end{bmatrix}$ 的指数型生成函数，$O(n\log n)$ 计算即可。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>(){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> scanf(&lt;span style="color:#e6db74">&amp;#34;%d%d&amp;#34;&lt;/span>, &lt;span style="color:#f92672">&amp;amp;&lt;/span>n, &lt;span style="color:#f92672">&amp;amp;&lt;/span>k);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> fact[&lt;span style="color:#ae81ff">0&lt;/span>] &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> i &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>; i &lt;span style="color:#f92672">&amp;lt;=&lt;/span> n; &lt;span style="color:#f92672">++&lt;/span>i) fact[i] &lt;span style="color:#f92672">=&lt;/span> (ll)fact[i &lt;span style="color:#f92672">-&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>] &lt;span style="color:#f92672">*&lt;/span> i &lt;span style="color:#f92672">%&lt;/span> mod;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ifact[n] &lt;span style="color:#f92672">=&lt;/span> qpow(fact[n], mod &lt;span style="color:#f92672">-&lt;/span> &lt;span style="color:#ae81ff">2&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> i &lt;span style="color:#f92672">=&lt;/span> n &lt;span style="color:#f92672">-&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>; i &lt;span style="color:#f92672">&amp;gt;=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>; &lt;span style="color:#f92672">--&lt;/span>i) ifact[i] &lt;span style="color:#f92672">=&lt;/span> (ll)ifact[i &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>] &lt;span style="color:#f92672">*&lt;/span> (i &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>) &lt;span style="color:#f92672">%&lt;/span> mod;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> fstdlib&lt;span style="color:#f92672">::&lt;/span>poly f(n &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> i &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>; i &lt;span style="color:#f92672">&amp;lt;=&lt;/span> n; &lt;span style="color:#f92672">++&lt;/span>i) f[i] &lt;span style="color:#f92672">=&lt;/span> (ll)fact[i &lt;span style="color:#f92672">-&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>] &lt;span style="color:#f92672">*&lt;/span> ifact[i] &lt;span style="color:#f92672">%&lt;/span> mod;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> f &lt;span style="color:#f92672">=&lt;/span> fstdlib&lt;span style="color:#f92672">::&lt;/span>exp(fstdlib&lt;span style="color:#f92672">::&lt;/span>log(f &lt;span style="color:#f92672">&amp;gt;&amp;gt;&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>) &lt;span style="color:#f92672">*&lt;/span> k) &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> k, f.resize(n &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> i &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>; i &lt;span style="color:#f92672">&amp;lt;=&lt;/span> n; &lt;span style="color:#f92672">++&lt;/span>i) printf(&lt;span style="color:#e6db74">&amp;#34;%lld &amp;#34;&lt;/span>, (ll)f[i] &lt;span style="color:#f92672">*&lt;/span> fact[i] &lt;span style="color:#f92672">%&lt;/span> mod &lt;span style="color:#f92672">*&lt;/span> ifact[k] &lt;span style="color:#f92672">%&lt;/span> mod);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="上升阶乘幂和下降阶乘幂">上升阶乘幂和下降阶乘幂&lt;/h2>
+&lt;p>之前我们提出了第一类斯特林数和上升阶乘幂的关系，即 $x$ 的 $n$ 次上升阶乘幂正是第 $n$ 行的第一类斯特林数的普通型生成函数。&lt;/p>
+&lt;p>$$
+F_n(x)=x^{\overline n}
+$$&lt;/p>
+&lt;p>接下来我们就介绍上升阶乘幂和与之类似的下降阶乘幂。&lt;/p>
+&lt;p>一般的，我们分别用 $x^{\overline n}$ 和 $x^{\underline n}$ 来表示 $x$ 的 $n$ 次上升阶乘幂和下降阶乘幂。它们可以被这样描述&lt;/p>
+&lt;p>$$
+x^{\overline n}=\prod\limits_{i=0}^{n-1}(x+i)=\dfrac{(x+n-1)!}{(x-1)!},x^{\underline n}=\prod\limits_{i=0}^{n-1}(x-i)=\dfrac{x!}{(x-n)!}
+$$&lt;/p>
+&lt;p>直观上看，上升幂和下降幂是对称的。我们可以写出&lt;/p>
+&lt;p>$$
+\begin{aligned}(-x)^{\overline n}&amp;amp;=\prod\limits_{i=0}^{n-1}(-x+i)\&amp;amp;=(-1)^n\prod_{i=0}^{n-1}(x-i)\&amp;amp;=(-1)^nx^{\underline n}\end{aligned}
+$$&lt;/p>
+&lt;p>同理，$(-x)^{\underline n}=(-1)^nx^{\overline n}$ 也是成立的。&lt;/p>
+&lt;p>我们还可以用下降阶乘幂表示二项式系数，这使得下降阶乘幂成为解决带组合数多项式的重要方法。&lt;/p>
+&lt;p>$$
+\binom{n}{m}=\dfrac{n!}{(n-m)!m!}=\dfrac{n^{\underline m}}{m!}
+$$&lt;/p>
+&lt;h2 id="阶乘幂和两类斯特林数的关系">阶乘幂和两类斯特林数的关系&lt;/h2>
+&lt;h3 id="阶乘幂和第二类斯特林数的关系">阶乘幂和第二类斯特林数的关系&lt;/h3>
+&lt;p>我们先研究阶乘幂与第二类斯特林数的关系。事实上它们之间有这样的关系&lt;/p>
+&lt;p>$$
+x^n=\sum\limits_{i=0}^n\begin{Bmatrix}n\i\end{Bmatrix}x^{\underline{i}},n\geq 0
+$$&lt;/p>
+&lt;p>我们用“生成函数”证明这一点。令&lt;/p>
+&lt;p>$$
+F_n(x)=\sum\limits_{i=0}^n\begin{Bmatrix}n\i\end{Bmatrix}x^{\underline i}
+$$&lt;/p>
+&lt;p>根据第二类斯特林数的递推公式 $\begin{Bmatrix}n\m\end{Bmatrix}=m\begin{Bmatrix}n-1\m\end{Bmatrix}+\begin{Bmatrix}n-1\m-1\end{Bmatrix}$ 可以写出&lt;/p>
+&lt;p>$$
+\begin{aligned}F_n(x)&amp;amp;=\sum\limits_{i=0}^{n-1}i\begin{Bmatrix}n-1\i\end{Bmatrix}x^{\underline i}+\sum\limits_{i=1}^{n}\begin{Bmatrix}n-1\i-1\end{Bmatrix}x^{\underline {i}}\&amp;amp;=\sum\limits_{i=0}^{n-1}i\begin{Bmatrix}n-1\i\end{Bmatrix}x^{\underline i}+\sum\limits_{i=0}^{n-1}\begin{Bmatrix}n-1\i\end{Bmatrix}x^{\underline {i+1}}\&amp;amp;=\sum\limits_{i=0}^{n-1}\begin{Bmatrix}n-1\i\end{Bmatrix}(i\cdot x^{\underline i}+x^{\underline {i+1}})\end{aligned}
+$$&lt;/p>
+&lt;p>由 $x^{\underline {i+1}}=(x-i)\cdot x^{\underline{i}}$ 知&lt;/p>
+&lt;p>$$
+\begin{aligned}i\cdot x^{\underline i}+x^{\underline {i+1}}&amp;amp;=i\cdot x^{\underline{i}}+(x-i)x^{\underline{i}}\&amp;amp;=x \cdot x^{\underline i}\end{aligned}
+$$&lt;/p>
+&lt;p>代入原式得&lt;/p>
+&lt;p>$$
+\begin{aligned}F_n(x)&amp;amp;=\sum\limits_{i=0}^{n-1}\begin{Bmatrix}n-1\i\end{Bmatrix}x\cdot x^{\underline i}\&amp;amp;=x\cdot\sum\limits_{i=0}^{n-1}\begin{Bmatrix}n-1\i\end{Bmatrix}x^{\underline i}\&amp;amp;=x\cdot F_{n-1}(x)\end{aligned}
+$$&lt;/p>
+&lt;p>由于 $F_0(x)=1$，因此 $F_n(x)=x^n$，得证。&lt;/p>
+&lt;p>当然，也可以根据上升、下降阶乘幂的关系，将其中的下降阶乘幂替换为上升阶乘幂&lt;/p>
+&lt;p>$$
+(-x)^n=\sum\limits_{i=0}^n\begin{Bmatrix}n\i\end{Bmatrix}(-1)^{i}x^{\overline i}
+$$&lt;/p>
+&lt;p>也就是&lt;/p>
+&lt;p>$$
+x^n=\sum\limits_{i=0}^n\begin{Bmatrix}n\i\end{Bmatrix}(-1)^{n-i}x^{\overline i}
+$$&lt;/p>
+&lt;p>第二类斯特林数建立了一般多项式向阶乘幂多项式转化的通道。它是一般多项式转上升、下降阶乘幂多项式的有力工具。&lt;/p>
+&lt;h3 id="阶乘幂和第一类斯特林数的关系">阶乘幂和第一类斯特林数的关系&lt;/h3>
+&lt;p>通过之前构造的生成函数，我们已经知道&lt;/p>
+&lt;p>$$
+x^{\overline n}=\sum\limits_{i=0}^n\begin{bmatrix}n\i\end{bmatrix}x^i,n\ge 0
+$$&lt;/p>
+&lt;p>同样，也可以写成下降幂的形式&lt;/p>
+&lt;p>$$
+x^{\underline n}=\sum\limits_{i=0}^n\begin{bmatrix}n\i\end{bmatrix}(-1)^{n-i}x^i
+$$&lt;/p>
+&lt;p>第一类斯特林数和第二类斯特林数的作用正好相反，用于将上升、下降幂多项式转化为一般多项式。&lt;/p>
+&lt;h2 id="下降阶乘幂在-oi-中的应用">下降阶乘幂在 OI 中的应用&lt;/h2>
+&lt;p>上升阶乘幂在 OI 中的应用较少，在此不做介绍；我们只研究下降阶乘幂。&lt;/p>
+&lt;h3 id="多项式下降阶乘幂表示与多项式点值表示的关系">多项式下降阶乘幂表示与多项式点值表示的关系&lt;/h3>
+&lt;p>在这里，多项式的下降阶乘幂表示就是用&lt;/p>
+&lt;p>$$
+f(x)=\sum\limits_{i=0}^nb_i{x^\underline i}
+$$&lt;/p>
+&lt;p>的形式表示一个多项式，而点值表示就是用 $n+1$ 个点&lt;/p>
+&lt;p>$$
+(i,a_i),i=0..n
+$$&lt;/p>
+&lt;p>来表示一个多项式。&lt;/p>
+&lt;p>显然，下降阶乘幂 $b$ 和点值 $a$ 间满足这样的关系：&lt;/p>
+&lt;p>$$
+a_k=\sum\limits_{i=0}^{n}b_ik^{\underline i}
+$$&lt;/p>
+&lt;p>即&lt;/p>
+&lt;p>$$
+\begin{aligned}a_k&amp;amp;=\sum\limits_{i=0}^{n}\dfrac{b_ik!}{(k-i)!}\\dfrac{a_k}{k!}&amp;amp;=\sum\limits_{i=0}^kb_i\dfrac{1}{(k-i)!}\end{aligned}
+$$&lt;/p>
+&lt;p>这显然是个卷积形式，我们可以在 $O(n\log n)$ 的时间复杂度内完成点值和下降阶乘幂的互相转化。&lt;/p></description></item></channel></rss>

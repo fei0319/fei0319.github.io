@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>莫比乌斯反演 on 绯想天</title><link>https://www.flandre.love/zh/tags/%E8%8E%AB%E6%AF%94%E4%B9%8C%E6%96%AF%E5%8F%8D%E6%BC%94/</link><description>Recent content in 莫比乌斯反演 on 绯想天</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>Copyright © 2020 - 2023 Fei Pan</copyright><lastBuildDate>Wed, 28 Jun 2023 10:07:00 +0800</lastBuildDate><atom:link href="https://www.flandre.love/zh/tags/%E8%8E%AB%E6%AF%94%E4%B9%8C%E6%96%AF%E5%8F%8D%E6%BC%94/index.xml" rel="self" type="application/rss+xml"/><item><title>狄利克雷卷积和莫比乌斯反演</title><link>https://www.flandre.love/zh/posts/arithmetic_functions/</link><pubDate>Wed, 28 Jun 2023 10:07:00 +0800</pubDate><guid>https://www.flandre.love/zh/posts/arithmetic_functions/</guid><description>&lt;p>数论函数是定义域为 $\mathbb{N}^{+}$，陪域为 $\mathbb{C}$ 的一类函数。常见的数论函数有：&lt;/p>
+&lt;ul>
+&lt;li>单位函数 $\epsilon(n)=[n=1]$&lt;/li>
+&lt;li>欧拉函数 $\varphi(n)=\sum\limits_{i=1}^n[(i,n)=1]$&lt;/li>
+&lt;li>恒等函数 $\operatorname{id}(n)=n$&lt;/li>
+&lt;li>常值函数 $1(n)=1$&lt;/li>
+&lt;li>约数函数 $\tau(n)=\sum\limits_{i=1}^n[i\mid n]$ （亦可记作 $d(n)$、$\sigma_0(n)$）&lt;/li>
+&lt;li>莫比乌斯函数 $\mu(n)=\begin{cases}1&amp;amp;\text{if }n=1\newline 0&amp;amp;\text{if }p\text{ contains square prime divisor}\newline (-1)^{\omega(n)}&amp;amp;\text{otherwise}\end{cases}$，其中 $\omega(n)$ 代表 $n$ 的质因子个数。&lt;/li>
+&lt;/ul>
+&lt;p>若 $\forall x, y\in \mathbb{N}^{+}, (x, y)=1$ 都有 $f(xy)=f(x)f(y)$，则称数论函数 $f$ 为积性函数。若 $f$ 对 $\forall x, y\in \mathbb{N}^{+}, (x, y)\neq 1$ 也满足 $f(xy)=f(x)f(y)$ 则称 $f$ 为完全积性函数。上面给出的数论函数都是积性函数。&lt;/p>
+&lt;p>积性函数可以通过欧拉筛法线性求值，伪代码如下：&lt;/p>
+&lt;p>$$
+\begin{array}{ll}
+1 &amp;amp; \textbf{Input.}\text{ Positive integer }N\text{ and multiplicative function }f\newline
+2 &amp;amp; \textbf{Output.}\text{ }f(n)\text{ for every positive integer }n\text{ that is less than or equal to } N\newline
+3 &amp;amp; \textbf{Method.}\newline
+4 &amp;amp; \textbf{Function}\text{ sieve(}N, f\text{)}\newline
+5 &amp;amp; \qquad F\text{ is a 1-indexed array of length }N\newline
+7 &amp;amp; \qquad\textbf{for}\text{ each integer }i\text{ in }[1, N]\newline
+8 &amp;amp; \qquad\qquad\textbf{if }i\text{ is prime}\newline
+9 &amp;amp; \qquad\qquad\qquad F_i \leftarrow f(i)\newline
+10 &amp;amp; \qquad\qquad \textbf{for}\text{ each prime number }j\newline
+11 &amp;amp; \qquad\qquad\qquad \textbf{if}\text{ }j\nmid i\newline
+12 &amp;amp; \qquad\qquad\qquad\qquad F_{ij} \leftarrow F_iF_j\newline
+13 &amp;amp; \qquad\qquad\qquad \textbf{else}\newline
+14 &amp;amp; \qquad\qquad\qquad\qquad F_{ij} \leftarrow f(ij)\newline
+15 &amp;amp; \qquad\qquad\qquad\qquad \textbf{break}\newline
+16 &amp;amp; \qquad\textbf{return }F\newline
+17 &amp;amp; \textbf{End}\newline
+18 &amp;amp; \textbf{return }\text{sieve(}N,f\text{)}
+\end{array}
+$$&lt;/p>
+&lt;h2 id="狄利克雷卷积">狄利克雷卷积&lt;/h2>
+&lt;p>定义两个数论函数 $f$ 和 $g$ 的狄利克雷卷积 $f*g$ 为&lt;/p>
+&lt;p>$$(f*g)(n)=\sum\limits_{d\mid n}f(d)g\left(\dfrac{n}{d}\right)$$&lt;/p>
+&lt;p>事先了解生成函数（特别是狄利克雷型生成函数）有助于理解狄利克雷卷积。&lt;/p>
+&lt;p>狄利克雷卷积是离散卷积的一种，满足三种主要运算律：&lt;/p>
+&lt;ul>
+&lt;li>交换律 $f\ast g=g\ast f$&lt;/li>
+&lt;li>结合律 $(f\ast g)\ast h=f\ast (g\ast h)$&lt;/li>
+&lt;li>分配律 $f\ast(g+h)=f\ast g+f\ast h$&lt;/li>
+&lt;/ul>
+&lt;p>正如 $1$ 是乘法的单位元（$x\times 1=x$），单位函数 $\epsilon$ 是狄利克雷卷积的单位元（$f*\epsilon=f$），任何数论函数 $f$ 与 $\epsilon$ 的狄利克雷卷积都是其本身。&lt;/p>
+&lt;h2 id="莫比乌斯反演--其一">莫比乌斯反演 · 其一&lt;/h2>
+&lt;p>莫比乌斯反演有两个形式，在此先介绍其第一个形式，即&lt;/p>
+&lt;p>$$f(n)=\sum\limits_{d\mid n}g(n)\iff g(n)=\sum\limits_{d\mid n}\mu\left(\dfrac{n}{d}\right)f(d)$$&lt;/p>
+&lt;p>用狄利克雷卷积的形式表达就是&lt;/p>
+&lt;p>$$f=1*g\iff g=\mu * f$$&lt;/p>
+&lt;p>我们当即发现，莫比乌斯函数 $\mu$ 与单位函数 $1$ 之间似乎有非常紧密的关系，$\mu$ 似乎可以被视作是 $1$ 的逆元。换句话讲&lt;/p>
+&lt;p>$$1*\mu=\epsilon$$&lt;/p>
+&lt;p>$$\sum\limits_{d\mid n}\mu(d)=[n=1]$$&lt;/p>
+&lt;h3 id="证明">证明&lt;/h3>
+&lt;p>由于含有平方质因子的数的莫比乌斯函数值为 $0$，设 $n=\prod {p_i}^{k_i},n^\prime=\prod p_i$，满足 $(1*\varphi)(n)=(1*\varphi)(n^\prime)$。&lt;/p>
+&lt;p>于是&lt;/p>
+&lt;p>$$(1*\varphi)(n)=(1*\varphi)(n^\prime)=\sum\binom{\omega(n^\prime)}{i}\cdot (-1)^i=0^{\omega(n^\prime)}$$&lt;/p>
+&lt;p>只有当 $n^\prime$ 的质因子数为 $0$，即 $n=n^\prime=1$ 时，才有 $(1*\varphi)(n)=1$。&lt;/p>
+&lt;p>当然，由于 $1*\varphi=\epsilon$ 和莫比乌斯反演的第一种形式是等价的，我们同时也证明了莫比乌斯反演的第一种形式。&lt;/p>
+&lt;h2 id="莫比乌斯反演--其二">莫比乌斯反演 · 其二&lt;/h2>
+&lt;p>莫比乌斯反演的第二个形式是&lt;/p>
+&lt;p>$$
+f(n)=\sum\limits_{n\mid d}g(d)\iff g(n)=\sum\limits_{n\mid d}\mu\left(\dfrac{d}{n}\right)f(d)
+$$&lt;/p>
+&lt;p>我们发现它和第一个形式具有高度的对称性。接下来阐述如何在 $\sum\limits_{n=1}^\infty f(n)$ 和 $\sum\limits_{n=1}^\infty g(n)$ 均绝对收敛的条件下将第二种形式转化为第一种形式，从而证明之。&lt;/p>
+&lt;p>设 $N$ 为正整数， $M = N!$，且&lt;/p>
+&lt;p>$$
+\begin{aligned}
+F_N(x) = \begin{cases}f(n) &amp;amp;\text{ if }\exists n \in \mathbb N^+, n \le N, x = \dfrac{M}{n}\newline 0&amp;amp;\text{ else}\end{cases}\newline
+G_N(x) = \begin{cases}g(n) &amp;amp;\text{ if }\exists n \in \mathbb N^+, n \le N, x = \dfrac{M}{n}\newline 0&amp;amp;\text{ else}\end{cases}
+\end{aligned}
+\qquad\left(n \le N\right)
+$$&lt;/p>
+&lt;p>则对于任意 $N$ 和 $n \le N$ 有&lt;/p>
+&lt;p>$$
+\begin{aligned}
+\forall n \le N, f(n)=\sum\limits_{n\mid d}g(d)
+&amp;amp;\iff F_N\left(\frac{M}{n}\right)-\sum\limits_{\frac{M}{d}\mid \frac{M}{n}}G_N\left(\frac{M}{d}\right) - \sum\limits_{n\mid d \land d&amp;gt;N}g(d) = 0\newline
+&amp;amp;\iff F_N\left(n\right)-\sum\limits_{d\mid n}G_N\left(d\right) - \sum\limits_{n\mid d \land d&amp;gt;N}g(d) = 0
+\end{aligned}
+$$&lt;/p>
+&lt;p>其中余项满足 $\left|\sum\limits_{n\mid d \land d&amp;gt;N}g(d)\right| \le \sum\limits_{n\mid d \land d&amp;gt;N}|g(d)| \le \sum\limits_{n &amp;gt; N}|g(n)|$。由于 $\sum\limits_{n=1}^\infty g(n)$ 绝对收敛，则 $\forall \epsilon &amp;gt; 0, \exists N, \left|\sum\limits_{n\mid d \land d&amp;gt;N}g(d)\right| &amp;lt; \epsilon$。那么&lt;/p>
+&lt;p>$$
+\begin{aligned}
+N\to+\infty, \forall n \le N, f(n)=\sum\limits_{n\mid d}g(d)
+&amp;amp;\iff
+F_N\left(n\right)-\sum\limits_{d\mid n}G_N\left(d\right) - \sum\limits_{n\mid d \land d&amp;gt;N}g(d) = 0 \newline
+&amp;amp;\iff
+F_N\left(n\right)-\sum\limits_{d\mid n}G_N\left(d\right) = 0
+\end{aligned}
+$$&lt;/p>
+&lt;p>类似地，&lt;/p>
+&lt;p>$$
+\begin{aligned}
+\forall n\le N, g(n)=\sum\limits_{n\mid d}\mu\left(\dfrac{d}{n}\right)f(d)
+&amp;amp;\iff G_N\left(\frac{M}{n}\right)-\sum\limits_{\frac{M}{d}\mid \frac{M}{n}}\mu\left(\frac{\frac{M}{n}}{\frac{M}{d}}\right)F_N\left(\frac{M}{d} \right)-\newline
+&amp;amp;\sum_{n\mid d \land d &amp;gt; N}\mu\left(\dfrac{d}{n}\right)f(d)=0\newline
+&amp;amp;\iff G_N\left(n\right)-\sum\limits_{d\mid n}\mu\left(\frac{n}{d}\right)F_N\left(d \right) -\newline
+&amp;amp;\sum_{n\mid d \land d &amp;gt; N}\mu\left(\dfrac{d}{n}\right)f(d)=0
+\end{aligned}
+$$&lt;/p>
+&lt;p>由于 $|\mu(n)| \le 1$，余项 $\left|\sum\limits_{n\mid d \land d &amp;gt; N}\mu\left(\dfrac{d}{n}\right)f(d)\right| \le \sum\limits_{n\mid d \land d &amp;gt; N}|f(d)|\le \sum\limits_{n &amp;gt; N}|f(n)|$。由于 $\sum\limits_{n=1}^\infty f(n)$ 绝对收敛，类似上面的推理，可以得到&lt;/p>
+&lt;p>$$
+N\to+\infty,\forall n\le N, g(n)=\sum\limits_{n\mid d}\mu\left(\dfrac{d}{n}\right)f(d)\iff
+G_N\left(n\right)-\sum\limits_{d\mid n}\mu\left(\frac{n}{d}\right)F_N\left(d \right)=0
+$$&lt;/p>
+&lt;p>由莫比乌斯反演的第一种形式，可以得到 $N\to\infty, n\le N$ 时&lt;/p>
+&lt;p>$$
+f(n)=\sum\limits_{n\mid d}g(d)\iff g(n)=\sum\limits_{n\mid d}\mu\left(\dfrac{d}{n}\right)f(d)
+$$&lt;/p>
+&lt;h2 id="欧拉反演">欧拉反演&lt;/h2>
+&lt;p>$$n=\sum\limits_{d\mid n}\varphi(d)$$&lt;/p>
+&lt;p>用狄利克雷卷积的形式表达就是&lt;/p>
+&lt;p>$$\operatorname{id}=\varphi\ast 1$$&lt;/p>
+&lt;h3 id="证明-1">证明&lt;/h3>
+&lt;p>由 $\epsilon = 1\ast \mu$ 可得 $[(i, n) = 1] = \sum\limits_{d\mid (i,n)}\mu(d)$，于是&lt;/p>
+&lt;p>$$
+\begin{aligned}
+\varphi(n) &amp;amp;= \sum_{i=1}^n\sum_{d\mid (i, n)}\mu(d)\newline
+&amp;amp;= \sum_{d\mid n}\sum_{d\mid i\land i\le n}\mu(d)\newline
+&amp;amp;= \sum_{d\mid n}\frac{n}{d}\mu(d)
+\end{aligned}
+$$&lt;/p>
+&lt;p>故&lt;/p>
+&lt;p>$$\varphi = \operatorname{id}\ast \mu$$&lt;/p>
+&lt;p>结合 $\mu \ast 1 = \epsilon$ 得&lt;/p>
+&lt;p>$$\operatorname{id}=\varphi\ast 1$$&lt;/p></description></item></channel></rss>

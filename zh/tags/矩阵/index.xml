@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>矩阵 on 绯想天</title><link>https://www.flandre.love/zh/tags/%E7%9F%A9%E9%98%B5/</link><description>Recent content in 矩阵 on 绯想天</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>Copyright © 2020 - 2023 Fei Pan</copyright><lastBuildDate>Tue, 12 May 2020 16:18:59 +0800</lastBuildDate><atom:link href="https://www.flandre.love/zh/tags/%E7%9F%A9%E9%98%B5/index.xml" rel="self" type="application/rss+xml"/><item><title>多项式时间复杂度计算行列式</title><link>https://www.flandre.love/zh/posts/det/</link><pubDate>Tue, 12 May 2020 16:18:59 +0800</pubDate><guid>https://www.flandre.love/zh/posts/det/</guid><description>&lt;p>矩阵的行列式在诸多领域有着广泛的应用。其最广为人知的应用便是在 Matrix-Tree 定理中求基尔霍夫矩阵的代数余子式。&lt;/p>
+&lt;p>根据行列式的定义，求其值的时间复杂度可达 $O(n\cdot n!)$。下面介绍一个能以多项式时间复杂度计算行列式的算法。&lt;/p>
+&lt;h2 id="一些约定">一些约定&lt;/h2>
+&lt;ul>
+&lt;li>用 $A_{i, j}$ 表示一个矩阵 $A$ 第 $i$ 行第 $j$ 列的值；&lt;/li>
+&lt;li>用 $|A|$ 表示关于 $n$ 阶方阵 $A$ 的行列式；&lt;/li>
+&lt;/ul>
+&lt;h2 id="行列式的一般定义">行列式的一般定义&lt;/h2>
+&lt;p>$n$ 阶行列式是关于一个 $n$ 阶方阵的函数，写作 $|A|$ 或 $\text{det}(A)$。&lt;/p>
+&lt;p>设 $P$ 为 $1$ ~ $n$ 的一个排列，$\alpha(P)$ 为排列 $P$ 中的逆序对个数，有&lt;/p>
+&lt;p>$$
+|A| = \sum\limits_{P \text{ 是 } 1 \text{ 至 } n \text{ 的一个排列 }}(-1)^{\alpha(P)}\cdot\prod_{i=1}^nA_{i, P_i}
+$$&lt;/p>
+&lt;h2 id="矩阵变换与行列式值的改变">矩阵变换与行列式值的改变&lt;/h2>
+&lt;p>由行列式的相关知识，我们必须要枚举所有的 $n!$ 种排列才能够得到行列式的值。为了改变我们的计算方法，就必须对矩阵进行一定的变换。下面是一些简单的引理：&lt;/p>
+&lt;blockquote>
+&lt;p>引理 1. 交换矩阵的两行，行列式值变为原来的相反数&lt;/p>
+&lt;/blockquote>
+&lt;p>定义 $\omega(A, P) = (-1)^{\alpha(P)}\cdot\prod_{i=1}^nA_{i, P_i}$，那么 $|A| = \sum\limits_{P \text{ 是 } 1 \text{ 至 } n \text{ 的一个排列}}\omega(A, P)$。&lt;/p>
+&lt;p>交换矩阵的两行 $i, j$ 得到矩阵 $A&amp;rsquo;$。设同样交换 $P$ 的两个元素 $i, j$ 得到 $P&amp;rsquo;$，显然有 $\alpha(P&amp;rsquo;) = \alpha(P) \pm 1$，即 $(-1) ^ {\alpha(P`)} = -(-1) ^ {\alpha(P)}$。&lt;/p>
+&lt;p>根据我们对 $A&amp;rsquo;$ 和 $P&amp;rsquo;$ 的定义，显然有 $\omega(A, P) = \omega(A&amp;rsquo;, P&amp;rsquo;)$。&lt;/p>
+&lt;p>那么&lt;/p>
+&lt;p>$$
+\begin{aligned}|A&amp;rsquo;| &amp;amp;= -\sum\limits_{P \text{ 是 } 1 \text{ 至 } n \text{ 的一个排列}}\omega(A&amp;rsquo;, P&amp;rsquo;)\ &amp;amp;= -\sum\limits_{P \text{ 是 } 1 \text{ 至 } n \text{ 的一个排列}}\omega(A, P)\ &amp;amp;= -|A|\end{aligned}
+$$&lt;/p>
+&lt;blockquote>
+&lt;p>引理 2. 有两行完全相同的矩阵，其行列式为 $0$&amp;quot;&lt;/p>
+&lt;/blockquote>
+&lt;p>由&lt;strong>引理 1&lt;/strong>可知，交换该矩阵的任意两行，其行列式变为相反数。若交换该矩阵相同的那两行，其矩阵不变，行列式变为相反数，即 $|A| = -|A|$。故 $|A| = 0$。&lt;/p>
+&lt;blockquote>
+&lt;p>引理 3. 将矩阵的某一行乘以一个实数 $k$，其行列式变为原来的 $k$ 倍&lt;/p>
+&lt;/blockquote>
+&lt;blockquote>
+&lt;p>引理 4. 若两矩阵除了一行之外完全相同，将两矩阵相加并减去相同部分得到矩阵的行列式为该两矩阵行列式之和&lt;/p>
+&lt;/blockquote>
+&lt;p>即&lt;/p>
+&lt;p>$$
+\left|\begin{array}{ccc} A_{1,1} &amp;amp; \dots &amp;amp; A_{1,n-1} &amp;amp; A_{1,n}\newline
+\cdots &amp;amp; \cdots &amp;amp; \cdots &amp;amp; \cdots\newline
+X_{1}+Y_{1} &amp;amp; \dots &amp;amp; X_{n-1}+Y_{n-1} &amp;amp; X_{n}+Y_{n}\newline
+\cdots &amp;amp; \cdots &amp;amp; \cdots &amp;amp; \cdots\newline
+A_{n,1} &amp;amp; \cdots &amp;amp; A_{n,n-1} &amp;amp; A_{n,n}\end{array}\right|=
+\left|\begin{array}{ccc} A_{1,1} &amp;amp; \dots &amp;amp; A_{1,n-1} &amp;amp; A_{1,n}\newline
+\cdots &amp;amp; \cdots &amp;amp; \cdots &amp;amp; \cdots\newline
+X_{1} &amp;amp; \dots &amp;amp; X_{n-1} &amp;amp; X_{n}\newline
+\cdots &amp;amp; \cdots &amp;amp; \cdots &amp;amp; \cdots\newline
+A_{n,1} &amp;amp; \cdots &amp;amp; A_{n,n-1} &amp;amp; A_{n,n}\end{array}\right|+\left|\begin{array}{ccc} A_{1,1} &amp;amp; \dots &amp;amp; A_{1,n-1} &amp;amp; A_{1,n}\newline
+\cdots &amp;amp; \cdots &amp;amp; \cdots &amp;amp; \cdots\newline
+Y_{1} &amp;amp; \dots &amp;amp; Y_{n-1} &amp;amp; Y_{n}\newline
+\cdots &amp;amp; \cdots &amp;amp; \cdots &amp;amp; \cdots\newline
+A_{n,1} &amp;amp; \cdots &amp;amp; A_{n,n-1} &amp;amp; A_{n,n}\end{array}\right|
+$$&lt;/p>
+&lt;blockquote>
+&lt;p>引理 5. 矩阵的某一行加上另一行的倍数，其行列式不变&lt;/p>
+&lt;/blockquote>
+&lt;p>即&lt;/p>
+&lt;p>$$
+\left|\begin{array}{ccc} A_{1,1} &amp;amp; \dots &amp;amp; A_{1,n-1} &amp;amp; A_{1,n}\newline
+\cdots &amp;amp; \cdots &amp;amp; \cdots &amp;amp; \cdots\newline
+X_{1} &amp;amp; \dots &amp;amp; X_{n-1} &amp;amp; X_{n}\newline
+Y_{1} &amp;amp; \dots &amp;amp; Y_{n-1} &amp;amp; Y_{n}\newline
+\cdots &amp;amp; \cdots &amp;amp; \cdots &amp;amp; \cdots\newline
+A_{n,1} &amp;amp; \cdots &amp;amp; A_{n,n-1} &amp;amp; A_{n,n}\end{array}\right|=\left|\begin{array}{ccc} A_{1,1} &amp;amp; \dots &amp;amp; A_{1,n-1} &amp;amp; A_{1,n}\newline
+\cdots &amp;amp; \cdots &amp;amp; \cdots &amp;amp; \cdots\newline
+X_{1}+k\cdot Y_{1} &amp;amp; \dots &amp;amp; X_{n-1}+k\cdot Y_{n-1} &amp;amp; X_{n}+k\cdot Y_{n}\newline
+Y_{1} &amp;amp; \dots &amp;amp; Y_{n-1} &amp;amp; Y_{n}\newline
+\cdots &amp;amp; \cdots &amp;amp; \cdots &amp;amp; \cdots\newline
+A_{n,1} &amp;amp; \cdots &amp;amp; A_{n,n-1} &amp;amp; A_{n,n}\end{array}\right|
+$$&lt;/p>
+&lt;p>这个结论可以引用&lt;strong>引理 2, 3, 4&lt;/strong>证明：&lt;/p>
+&lt;p>$$
+\begin{aligned}&amp;amp;\left|\begin{array}{ccc} A_{1,1} &amp;amp; \dots &amp;amp; A_{1,n-1} &amp;amp; A_{1,n}\newline
+\cdots &amp;amp; \cdots &amp;amp; \cdots &amp;amp; \cdots\newline
+X_{1}+k\cdot Y_{1} &amp;amp; \dots &amp;amp; X_{n-1}+k\cdot Y_{n-1} &amp;amp; X_{n}+k\cdot Y_{n}\newline
+Y_{1} &amp;amp; \dots &amp;amp; Y_{n-1} &amp;amp; Y_{n}\newline
+\cdots &amp;amp; \cdots &amp;amp; \cdots &amp;amp; \cdots\newline
+A_{n,1} &amp;amp; \cdots &amp;amp; A_{n,n-1} &amp;amp; A_{n,n}\end{array}\right|\newline
+&amp;amp;=\left|\begin{array}{ccc} A_{1,1} &amp;amp; \dots &amp;amp; A_{1,n-1} &amp;amp; A_{1,n}\newline
+\cdots &amp;amp; \cdots &amp;amp; \cdots &amp;amp; \cdots\newline
+X_{1} &amp;amp; \dots &amp;amp; X_{n-1} &amp;amp; X_{n}\newline
+Y_{1} &amp;amp; \dots &amp;amp; Y_{n-1} &amp;amp; Y_{n}\newline
+\cdots &amp;amp; \cdots &amp;amp; \cdots &amp;amp; \cdots\newline
+A_{n,1} &amp;amp; \cdots &amp;amp; A_{n,n-1} &amp;amp; A_{n,n}\end{array}\right|+\left|\begin{array}{ccc} A_{1,1} &amp;amp; \dots &amp;amp; A_{1,n-1} &amp;amp; A_{1,n}\newline
+\cdots &amp;amp; \cdots &amp;amp; \cdots &amp;amp; \cdots\newline
+k\cdot Y_{1} &amp;amp; \dots &amp;amp; k\cdot Y_{n-1} &amp;amp; k\cdot Y_{n}\newline
+Y_{1} &amp;amp; \dots &amp;amp; Y_{n-1} &amp;amp; Y_{n}\newline
+\cdots &amp;amp; \cdots &amp;amp; \cdots &amp;amp; \cdots\newline
+A_{n,1} &amp;amp; \cdots &amp;amp; A_{n,n-1} &amp;amp; A_{n,n}\end{array}\right|\newline
+&amp;amp;=\left|\begin{array}{ccc} A_{1,1} &amp;amp; \dots &amp;amp; A_{1,n-1} &amp;amp; A_{1,n}\newline
+\cdots &amp;amp; \cdots &amp;amp; \cdots &amp;amp; \cdots\newline
+X_{1} &amp;amp; \dots &amp;amp; X_{n-1} &amp;amp; X_{n}\newline
+Y_{1} &amp;amp; \dots &amp;amp; Y_{n-1} &amp;amp; Y_{n}\newline
+\cdots &amp;amp; \cdots &amp;amp; \cdots &amp;amp; \cdots\newline
+A_{n,1} &amp;amp; \cdots &amp;amp; A_{n,n-1} &amp;amp; A_{n,n}\end{array}\right|+k\cdot\left|\begin{array}{ccc} A_{1,1} &amp;amp; \dots &amp;amp; A_{1,n-1} &amp;amp; A_{1,n}\newline
+\cdots &amp;amp; \cdots &amp;amp; \cdots &amp;amp; \cdots\newline
+Y_{1} &amp;amp; \dots &amp;amp; Y_{n-1} &amp;amp; Y_{n}\newline
+Y_{1} &amp;amp; \dots &amp;amp; Y_{n-1} &amp;amp; Y_{n}\newline
+\cdots &amp;amp; \cdots &amp;amp; \cdots &amp;amp; \cdots\newline
+A_{n,1} &amp;amp; \cdots &amp;amp; A_{n,n-1} &amp;amp; A_{n,n}\end{array}\right|\newline
+&amp;amp;=\left|\begin{array}{ccc} A_{1,1} &amp;amp; \dots &amp;amp; A_{1,n-1} &amp;amp; A_{1,n}\newline
+\cdots &amp;amp; \cdots &amp;amp; \cdots &amp;amp; \cdots\newline
+X_{1} &amp;amp; \dots &amp;amp; X_{n-1} &amp;amp; X_{n}\newline
+Y_{1} &amp;amp; \dots &amp;amp; Y_{n-1} &amp;amp; Y_{n}\newline
+\cdots &amp;amp; \cdots &amp;amp; \cdots &amp;amp; \cdots\newline
+A_{n,1} &amp;amp; \cdots &amp;amp; A_{n,n-1} &amp;amp; A_{n,n}\end{array}\right|\end{aligned}
+$$&lt;/p>
+&lt;p>对于任意矩阵，交换其任意两行，其行列式变为相反数；对于任意矩阵，其中任意一行加上任意另一行的倍数，其行列式不变。&lt;/p>
+&lt;h2 id="特殊矩阵的行列式">特殊矩阵的行列式&lt;/h2>
+&lt;p>对于一个 $n$ 阶方阵，或是 $n$ 阶行列式，其从左上角至右下角连续 $n$ 个位置上的元素，称为它的主对角线。&lt;/p>
+&lt;p>对于一个方阵，若其主对角线以下的所有元素都为 $0$，则称之为上三角矩阵；若其主对角线以上的所有元素为 $0$，则称之为下三角矩阵。&lt;/p>
+&lt;p>由行列式的定义可知，若 $A$ 是上三角矩阵或下三角矩阵，$|A| = \prod\limits_{i=1}^nA_{i,i}$。&lt;/p>
+&lt;h2 id="求行列式">求行列式&lt;/h2>
+&lt;p>只要运用&lt;strong>引理 1&lt;/strong>和&lt;strong>引理 5&lt;/strong>，用类似高斯消元的方法将矩阵转为上三角矩阵，我们就可以在 $O(n^3)$ 的时间内求出矩阵的行列式了。&lt;/p></description></item></channel></rss>

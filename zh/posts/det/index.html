@@ -1,0 +1,73 @@
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge,chrome=1"><title>绯想天 | 多项式时间复杂度计算行列式</title><meta name=viewport content="width=device-width,minimum-scale=1"><meta name=generator content="Hugo 0.100.2"><meta name=ROBOTS content="INDEX, FOLLOW"><link href=/dist/app.css rel=stylesheet><script type=application/javascript>var doNotTrack=!1;doNotTrack||(function(e,o,i,a,t,n,s){e.GoogleAnalyticsObject=t,e[t]=e[t]||function(){(e[t].q=e[t].q||[]).push(arguments)},e[t].l=1*new Date,n=o.createElement(i),s=o.getElementsByTagName(i)[0],n.async=1,n.src=a,s.parentNode.insertBefore(n,s)}(window,document,'script','https://www.google-analytics.com/analytics.js','ga'),ga('create','UA-1234567890','auto'),ga('send','pageview'))</script><script>MathJax={tex:{inlineMath:[["$","$"]]},displayMath:[["$$","$$"],["[[","]]"]],svg:{fontCache:"global"}}</script><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script>
+<script>(function(i,t){var n=document,s='script',e=n.createElement(s),o=n.getElementsByTagName(s)[0];e.src=i,t&&e.addEventListener('load',function(e){t(e)}),o.parentNode.insertBefore(e,o)})('https://www.flandre.love/lib/pangu.min.js',function(){pangu.spacingPage()})</script><style type=text/css media="screen, print">@font-face{font-family:fancytitlefont;font-style:normal;font-display:swap;src:url(https://www.flandre.love/fonts/exampleFont.woff2)format('woff2'),url(https://www.flandre.love/fonts/exampleFont.woff)format('woff')}@font-face{font-family:noto serif cjk sc;font-style:normal;font-weight:300;font-display:swap;src:local('Noto Serif CJK SC Light'),local('NotoSerifCJK-Light'),url(https://www.flandre.love/fonts/noto-serif-sc-v7-latin_chinese-simplified-300.woff2)format('woff2'),url(https://www.flandre.love/fonts/noto-serif-sc-v7-latin_chinese-simplified-300.woff)format('woff')}@font-face{font-family:noto serif cjk sc;font-style:normal;font-weight:400;font-display:swap;src:local('Noto Serif CJK SC'),local('NotoSerifCJK-Regular'),url(https://www.flandre.love/fonts/noto-serif-sc-v7-latin_chinese-simplified-regular.woff2)format('woff2'),url(https://www.flandre.love/fonts/noto-serif-sc-v7-latin_chinese-simplified-regular.woff)format('woff')}@font-face{font-family:noto serif cjk sc;font-style:normal;font-weight:500;font-display:swap;src:local('Noto Serif CJK SC Medium'),local('NotoSerifCJK-Medium'),url(https://www.flandre.love/fonts/noto-serif-sc-v7-latin_chinese-simplified-500.woff2)format('woff2'),url(https://www.flandre.love/fonts/noto-serif-sc-v7-latin_chinese-simplified-500.woff)format('woff')}</style></head><body class="bg-gray-100 text-gray-700 font-sans"><div class="p-6 sm:p-10 md:p-16 flex flex-wrap"><header class="w-full md:w-2/5 xl:w-1/2 md:pr-12 lg:pr-20 xl:pr-24 order-1 md:order-1 max-w-2xl"><div class="z-50 bg-gray-100 bg-opacity-75 bg-opacity-custom lg:min-w-0.7 max-w-xl md:float-right md:text-right leading-loose tracking-tight md:sticky md:top-0 pt-2"><div><h2><a href=https://www.flandre.love/zh/ title=绯想天 class="heading font-cursive icon">绯想天</a></h2></div><h1 class=pt-2>多项式时间复杂度计算行列式</h1><div class="flex flex-wrap justify-end pt-2"><div class="md:flex-grow-0 font-light"><a class="post-taxonomy-category text-medium-red-violet-600 hover:text-medium-red-violet-400" href=/categories/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0>线性代数</a>
+&nbsp;&nbsp;
+<a class="post-taxonomy-tag text-eucalyptus-500" href=/tags/%E7%9F%A9%E9%98%B5>矩阵</a>&nbsp;/
+<a class="post-taxonomy-tag text-eucalyptus-500" href=/tags/%E8%A1%8C%E5%88%97%E5%BC%8F>行列式</a></div><time class="text-eucalyptus-500 md:text-right md:flex-grow font-light pl-4" datetime=2020-05-12T16:18:59+08:00>2020-05-12</time></div><hr></div></header><main role=main class="w-full md:w-3/5 xl:w-1/2 max-w-3xl order-2 md:order-2 min-h-70vh pt-2 pb-4"><article><section class="mx-auto content"><div class=c-rich-text><p>矩阵的行列式在诸多领域有着广泛的应用。其最广为人知的应用便是在 Matrix-Tree 定理中求基尔霍夫矩阵的代数余子式。</p><p>根据行列式的定义，求其值的时间复杂度可达 $O(n\cdot n!)$。下面介绍一个能以多项式时间复杂度计算行列式的算法。</p><h2 id=一些约定>一些约定</h2><ul><li>用 $A_{i, j}$ 表示一个矩阵 $A$ 第 $i$ 行第 $j$ 列的值；</li><li>用 $|A|$ 表示关于 $n$ 阶方阵 $A$ 的行列式；</li></ul><h2 id=行列式的一般定义>行列式的一般定义</h2><p>$n$ 阶行列式是关于一个 $n$ 阶方阵的函数，写作 $|A|$ 或 $\text{det}(A)$。</p><p>设 $P$ 为 $1$ ~ $n$ 的一个排列，$\alpha(P)$ 为排列 $P$ 中的逆序对个数，有</p><p>$$
+|A| = \sum\limits_{P \text{ 是 } 1 \text{ 至 } n \text{ 的一个排列 }}(-1)^{\alpha(P)}\cdot\prod_{i=1}^nA_{i, P_i}
+$$</p><h2 id=矩阵变换与行列式值的改变>矩阵变换与行列式值的改变</h2><p>由行列式的相关知识，我们必须要枚举所有的 $n!$ 种排列才能够得到行列式的值。为了改变我们的计算方法，就必须对矩阵进行一定的变换。下面是一些简单的引理：</p><blockquote><p>引理 1. 交换矩阵的两行，行列式值变为原来的相反数</p></blockquote><p>定义 $\omega(A, P) = (-1)^{\alpha(P)}\cdot\prod_{i=1}^nA_{i, P_i}$，那么 $|A| = \sum\limits_{P \text{ 是 } 1 \text{ 至 } n \text{ 的一个排列}}\omega(A, P)$。</p><p>交换矩阵的两行 $i, j$ 得到矩阵 $A&rsquo;$。设同样交换 $P$ 的两个元素 $i, j$ 得到 $P&rsquo;$，显然有 $\alpha(P&rsquo;) = \alpha(P) \pm 1$，即 $(-1) ^ {\alpha(P`)} = -(-1) ^ {\alpha(P)}$。</p><p>根据我们对 $A&rsquo;$ 和 $P&rsquo;$ 的定义，显然有 $\omega(A, P) = \omega(A&rsquo;, P&rsquo;)$。</p><p>那么</p><p>$$
+\begin{aligned}|A&rsquo;| &= -\sum\limits_{P \text{ 是 } 1 \text{ 至 } n \text{ 的一个排列}}\omega(A&rsquo;, P&rsquo;)\ &= -\sum\limits_{P \text{ 是 } 1 \text{ 至 } n \text{ 的一个排列}}\omega(A, P)\ &= -|A|\end{aligned}
+$$</p><blockquote><p>引理 2. 有两行完全相同的矩阵，其行列式为 $0$"</p></blockquote><p>由<strong>引理 1</strong>可知，交换该矩阵的任意两行，其行列式变为相反数。若交换该矩阵相同的那两行，其矩阵不变，行列式变为相反数，即 $|A| = -|A|$。故 $|A| = 0$。</p><blockquote><p>引理 3. 将矩阵的某一行乘以一个实数 $k$，其行列式变为原来的 $k$ 倍</p></blockquote><blockquote><p>引理 4. 若两矩阵除了一行之外完全相同，将两矩阵相加并减去相同部分得到矩阵的行列式为该两矩阵行列式之和</p></blockquote><p>即</p><p>$$
+\left|\begin{array}{ccc} A_{1,1} & \dots & A_{1,n-1} & A_{1,n}\newline
+\cdots & \cdots & \cdots & \cdots\newline
+X_{1}+Y_{1} & \dots & X_{n-1}+Y_{n-1} & X_{n}+Y_{n}\newline
+\cdots & \cdots & \cdots & \cdots\newline
+A_{n,1} & \cdots & A_{n,n-1} & A_{n,n}\end{array}\right|=
+\left|\begin{array}{ccc} A_{1,1} & \dots & A_{1,n-1} & A_{1,n}\newline
+\cdots & \cdots & \cdots & \cdots\newline
+X_{1} & \dots & X_{n-1} & X_{n}\newline
+\cdots & \cdots & \cdots & \cdots\newline
+A_{n,1} & \cdots & A_{n,n-1} & A_{n,n}\end{array}\right|+\left|\begin{array}{ccc} A_{1,1} & \dots & A_{1,n-1} & A_{1,n}\newline
+\cdots & \cdots & \cdots & \cdots\newline
+Y_{1} & \dots & Y_{n-1} & Y_{n}\newline
+\cdots & \cdots & \cdots & \cdots\newline
+A_{n,1} & \cdots & A_{n,n-1} & A_{n,n}\end{array}\right|
+$$</p><blockquote><p>引理 5. 矩阵的某一行加上另一行的倍数，其行列式不变</p></blockquote><p>即</p><p>$$
+\left|\begin{array}{ccc} A_{1,1} & \dots & A_{1,n-1} & A_{1,n}\newline
+\cdots & \cdots & \cdots & \cdots\newline
+X_{1} & \dots & X_{n-1} & X_{n}\newline
+Y_{1} & \dots & Y_{n-1} & Y_{n}\newline
+\cdots & \cdots & \cdots & \cdots\newline
+A_{n,1} & \cdots & A_{n,n-1} & A_{n,n}\end{array}\right|=\left|\begin{array}{ccc} A_{1,1} & \dots & A_{1,n-1} & A_{1,n}\newline
+\cdots & \cdots & \cdots & \cdots\newline
+X_{1}+k\cdot Y_{1} & \dots & X_{n-1}+k\cdot Y_{n-1} & X_{n}+k\cdot Y_{n}\newline
+Y_{1} & \dots & Y_{n-1} & Y_{n}\newline
+\cdots & \cdots & \cdots & \cdots\newline
+A_{n,1} & \cdots & A_{n,n-1} & A_{n,n}\end{array}\right|
+$$</p><p>这个结论可以引用<strong>引理 2, 3, 4</strong>证明：</p><p>$$
+\begin{aligned}&\left|\begin{array}{ccc} A_{1,1} & \dots & A_{1,n-1} & A_{1,n}\newline
+\cdots & \cdots & \cdots & \cdots\newline
+X_{1}+k\cdot Y_{1} & \dots & X_{n-1}+k\cdot Y_{n-1} & X_{n}+k\cdot Y_{n}\newline
+Y_{1} & \dots & Y_{n-1} & Y_{n}\newline
+\cdots & \cdots & \cdots & \cdots\newline
+A_{n,1} & \cdots & A_{n,n-1} & A_{n,n}\end{array}\right|\newline
+&=\left|\begin{array}{ccc} A_{1,1} & \dots & A_{1,n-1} & A_{1,n}\newline
+\cdots & \cdots & \cdots & \cdots\newline
+X_{1} & \dots & X_{n-1} & X_{n}\newline
+Y_{1} & \dots & Y_{n-1} & Y_{n}\newline
+\cdots & \cdots & \cdots & \cdots\newline
+A_{n,1} & \cdots & A_{n,n-1} & A_{n,n}\end{array}\right|+\left|\begin{array}{ccc} A_{1,1} & \dots & A_{1,n-1} & A_{1,n}\newline
+\cdots & \cdots & \cdots & \cdots\newline
+k\cdot Y_{1} & \dots & k\cdot Y_{n-1} & k\cdot Y_{n}\newline
+Y_{1} & \dots & Y_{n-1} & Y_{n}\newline
+\cdots & \cdots & \cdots & \cdots\newline
+A_{n,1} & \cdots & A_{n,n-1} & A_{n,n}\end{array}\right|\newline
+&=\left|\begin{array}{ccc} A_{1,1} & \dots & A_{1,n-1} & A_{1,n}\newline
+\cdots & \cdots & \cdots & \cdots\newline
+X_{1} & \dots & X_{n-1} & X_{n}\newline
+Y_{1} & \dots & Y_{n-1} & Y_{n}\newline
+\cdots & \cdots & \cdots & \cdots\newline
+A_{n,1} & \cdots & A_{n,n-1} & A_{n,n}\end{array}\right|+k\cdot\left|\begin{array}{ccc} A_{1,1} & \dots & A_{1,n-1} & A_{1,n}\newline
+\cdots & \cdots & \cdots & \cdots\newline
+Y_{1} & \dots & Y_{n-1} & Y_{n}\newline
+Y_{1} & \dots & Y_{n-1} & Y_{n}\newline
+\cdots & \cdots & \cdots & \cdots\newline
+A_{n,1} & \cdots & A_{n,n-1} & A_{n,n}\end{array}\right|\newline
+&=\left|\begin{array}{ccc} A_{1,1} & \dots & A_{1,n-1} & A_{1,n}\newline
+\cdots & \cdots & \cdots & \cdots\newline
+X_{1} & \dots & X_{n-1} & X_{n}\newline
+Y_{1} & \dots & Y_{n-1} & Y_{n}\newline
+\cdots & \cdots & \cdots & \cdots\newline
+A_{n,1} & \cdots & A_{n,n-1} & A_{n,n}\end{array}\right|\end{aligned}
+$$</p><p>对于任意矩阵，交换其任意两行，其行列式变为相反数；对于任意矩阵，其中任意一行加上任意另一行的倍数，其行列式不变。</p><h2 id=特殊矩阵的行列式>特殊矩阵的行列式</h2><p>对于一个 $n$ 阶方阵，或是 $n$ 阶行列式，其从左上角至右下角连续 $n$ 个位置上的元素，称为它的主对角线。</p><p>对于一个方阵，若其主对角线以下的所有元素都为 $0$，则称之为上三角矩阵；若其主对角线以上的所有元素为 $0$，则称之为下三角矩阵。</p><p>由行列式的定义可知，若 $A$ 是上三角矩阵或下三角矩阵，$|A| = \prod\limits_{i=1}^nA_{i,i}$。</p><h2 id=求行列式>求行列式</h2><p>只要运用<strong>引理 1</strong>和<strong>引理 5</strong>，用类似高斯消元的方法将矩阵转为上三角矩阵，我们就可以在 $O(n^3)$ 的时间内求出矩阵的行列式了。</p></div></section></article></main><div class="w-full h-0 flex-none order-3"></div><aside role=contentinfo class="w-full md:w-2/5 xl:w-1/2 md:pr-12 lg:pr-20 xl:pr-24 order-4 md:order-3 md:sticky md:bottom-0 self-end max-w-2xl"><div class="md:float-right md:text-right leading-loose tracking-tight md:mb-2"><div class="md:max-w-xs flex flex-col md:items-end"><ul class="font-serif flex-grow-0 flex justify-between flex-wrap md:flex-col"><li class="px-1 md:px-0"><a href=https://www.flandre.love/zh/posts/ title="归档 page">归档</a></li><li class="px-1 md:px-0"><a href=https://www.flandre.love/zh/categories/ title="分类 page">分类</a></li><li class="px-1 md:px-0"><a href=https://www.flandre.love/zh/tags/ title="标签 page">标签</a></li><li class="px-1 md:px-0"><a href=https://www.flandre.love/zh/series/ title="系列 page">系列</a></li><li class="px-1 md:px-0"><a href=https://www.flandre.love/zh/about/ title="关于 page">关于</a></li><li><a href=/en class="font-medium text-medium-red-violet-600 hover:text-medium-red-violet-400">English</a></li></ul><div class="flex flex-wrap-reverse md:justify-end content-end md:content-start justify-start items-start max-h-16"><a href=http://github.com/fei0319 target=_blank class="github icon pl-1 text-eucalyptus-400 hover:text-java-400" title="github link" rel=noopener aria-label="follow on github——Opens in a new window"><div class="fill-current h-8 w-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path fill="none" d="M0 0h24v24H0z"/><path fill-rule="nonzero" d="M5.883 18.653c-.3-.2-.558-.455-.86-.816a50.32 50.32.0 01-.466-.579c-.463-.575-.755-.84-1.057-.949a1 1 0 01.676-1.883c.752.27 1.261.735 1.947 1.588-.094-.117.34.427.433.539.19.227.33.365.44.438.204.137.587.196 1.15.14.023-.382.094-.753.202-1.095C5.38 15.31 3.7 13.396 3.7 9.64c0-1.24.37-2.356 1.058-3.292-.218-.894-.185-1.975.302-3.192a1 1 0 01.63-.582c.081-.024.127-.035.208-.047.803-.123 1.937.17 3.415 1.096A11.731 11.731.0 0112 3.315c.912.0 1.818.104 2.684.308 1.477-.933 2.613-1.226 3.422-1.096.085.013.157.03.218.05a1 1 0 01.616.58c.487 1.216.52 2.297.302 3.19.691.936 1.058 2.045 1.058 3.293.0 3.757-1.674 5.665-4.642 6.392.125.415.19.879.19 1.38a300.492 300.492.0 01-.012 2.716 1 1 0 01-.019 1.958c-1.139.228-1.983-.532-1.983-1.525l.002-.446.005-.705c.005-.708.007-1.338.007-1.998.0-.697-.183-1.152-.425-1.36-.661-.57-.326-1.655.54-1.752 2.967-.333 4.337-1.482 4.337-4.66.0-.955-.312-1.744-.913-2.404a1 1 0 01-.19-1.045c.166-.414.237-.957.096-1.614l-.01.003c-.491.139-1.11.44-1.858.949a1 1 0 01-.833.135A9.626 9.626.0 0012 5.315c-.89.0-1.772.119-2.592.35a1 1 0 01-.83-.134c-.752-.507-1.374-.807-1.868-.947-.144.653-.073 1.194.092 1.607a1 1 0 01-.189 1.045C6.016 7.89 5.7 8.694 5.7 9.64c0 3.172 1.371 4.328 4.322 4.66.865.097 1.201 1.177.544 1.748-.192.168-.429.732-.429 1.364v3.15c0 .986-.835 1.725-1.96 1.528a1 1 0 01-.04-1.962v-.99c-.91.061-1.662-.088-2.254-.485z"/></g></svg></div></a><a href=mailto:pan-fei@outlook.com target=_blank class="mail icon pl-1 text-eucalyptus-400 hover:text-java-400" title="mail link" rel=noopener aria-label="follow on mail——Opens in a new window"><div class="fill-current h-8 w-8"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path fill="none" d="M0 0h24v24H0z"/><path d="M3 3h18a1 1 0 011 1v16a1 1 0 01-1 1H3a1 1 0 01-1-1V4a1 1 0 011-1zm17 4.238-7.928 7.1L4 7.216V19h16V7.238zM4.511 5l7.55 6.662L19.502 5H4.511z"/></g></svg></div></a></div><div class="text-sm text-gray-500 leading-tight a-gray">Copyright © 2020 - 2023 Fei Pan<br>Licensed under <a href=https://creativecommons.org/licenses/by-nc-sa/4.0/>CC BY-NC-SA 4.0</a></div></div></div></aside><footer class="w-full md:w-3/5 xl:w-1/2 order-3 max-w-3xl md:order-4 pt-2"><hr class=double-line><div class="flex flex-wrap justify-between pb-2 leading-loose font-serif"><a class=flex-grow-0 href=/zh/posts/generating_function/><svg class="fill-current inline-block h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M7.828 11H20v2H7.828l5.364 5.364-1.414 1.414L4 12l7.778-7.778 1.414 1.414z"/></svg>生成函数入门</a>
+<a class=flex-grow-0 href=/zh/posts/arbitrary_modulo/>任意模数多项式乘法<svg class="fill-current inline-block h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z"/></svg></a></div><div></div><hr><div class=pb-2></div><script src=https://utteranc.es/client.js repo=fei0319/fei0319.github.io.utterances issue-term=pathname theme=github-light crossorigin=anonymous async></script><hr></footer><script src=/dist/app.js></script></div></body></html>

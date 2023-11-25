@@ -1,0 +1,613 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>多项式 on 绯想天</title><link>https://www.flandre.love/zh/tags/%E5%A4%9A%E9%A1%B9%E5%BC%8F/</link><description>Recent content in 多项式 on 绯想天</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>Copyright © 2020 - 2023 Fei Pan</copyright><lastBuildDate>Sun, 06 Aug 2023 13:10:58 +0800</lastBuildDate><atom:link href="https://www.flandre.love/zh/tags/%E5%A4%9A%E9%A1%B9%E5%BC%8F/index.xml" rel="self" type="application/rss+xml"/><item><title>生成函数幂科技</title><link>https://www.flandre.love/zh/posts/power_of_gf/</link><pubDate>Sun, 06 Aug 2023 13:10:58 +0800</pubDate><guid>https://www.flandre.love/zh/posts/power_of_gf/</guid><description>&lt;p>给定 $F(z) = \sum\limits_{i=0}^n f_i x^i$，如何求出 $F^k \bmod x^m$？这样一个问题可以用快速幂在 $O(m\log m\log k)$ 的时间复杂度内解决，亦可以通过&lt;a href="https://www.flandre.love/zh/posts/polylog/">多项式对数指数&lt;/a>在 $O(m \log m)$ 的时间复杂度内解决。但假定 $m$ 特别大，$n$ 特别小（$m=10^7,n=5$），那我们如何解决？&lt;/p>
+&lt;p>这就需要这样一个 $O(nm)$ 的生成函数幂科技了。令 $G=F^k$，我们有 $G^\prime=kF^\prime F^{k-1}$，故 $FG^\prime = kF^\prime G$。考虑 $x^i$ 项的系数，有&lt;/p>
+&lt;p>$$
+\sum_{j=0}^{i+1} jf_{i-j+1} g_{j} = \sum_{j=0}^{i+1}k(i-j+1)f_{i-j+1} g_{j}
+$$&lt;/p>
+&lt;p>根据 $g_{0}, g_{1}, \ldots, g_i$ 就可以 $O(m)$ 地计算 $g_{i+1}$ 了；而常数项 $g_0=f_0^k$。&lt;/p>
+&lt;p>这个方法不止适用于整数的 $k$，还适用于有理数的 $k$；不止适用于 OGF，还适用于 DGF。下面介绍一个计算 DGF 的 $k$ 次方根的例子。&lt;/p>
+&lt;p>给定 $F(z) = \sum\limits_{i=1}^n \dfrac{f_i}{i^z}$，求 $G$ 使得 $F=G^k$。不失一般性，我们只需求 $F^k$（$k$ 为有理数）；令 $G=F^k$，由上题结论可知 $FG^\prime = kF^\prime G$。考察 $F^\prime$，可知 $F^\prime = \sum\limits_{i=1}^n -\dfrac{\ln if_i}{i^z}$，故&lt;/p>
+&lt;p>$$
+\sum_{d\mid i} \ln d f_{i/d}g_d = \sum_{d\mid i} k\ln\frac{i}{d} f_{i/d}g_d
+$$&lt;/p>
+&lt;p>只要知道前面的 $g$，就可以 $O(\log n)$ 的平均复杂度求 $g_i$ 了。不过有一个问题仍待解决：在剩余系中 $\ln i$ 是什么？这甚至都不是离散对数，因为它的底不在剩余系中。为了规避这个问题，我们需要另一个 $\operatorname{t}$ 算子来取代微分算子。它需要具有某些和微分算子相同的特性，从而可以有 $F\operatorname{t}(G) = k\operatorname{t}(F) G$。&lt;/p>
+&lt;p>$F\operatorname{t}(G) = k\operatorname{t}(F) G$ 可以由 $\operatorname{d} uv = v\operatorname{d}u + u\operatorname{d}v$ 推出，故只要我们的 $\operatorname{t}$ 算子也满足 $\operatorname{t} uv = v\operatorname{t}u + u\operatorname{t}v$ 即可。如果我们规定 $\operatorname{t}(F)=\sum\limits_{i=1}^n \dfrac{\Omega(i)f_i}{i^z}$，其中 $\Omega(i)$ 为 $i$ 的质因子幂次和，那么我们就得到了一个满足条件的 $\operatorname{t}$ 算子，于是&lt;/p>
+&lt;p>$$
+\sum_{d\mid i} \Omega(d) f_{i/d}g_d = \sum_{d\mid i} k\Omega\left(\frac{i}{d}\right) f_{i/d}g_d
+$$&lt;/p>
+&lt;p>事实上任何满足 $p(xy) = p(x) + p(y)$ 且 $\forall x &amp;gt; 0, p(x) \neq 0$ 的数论函数都可用于取代 $\Omega$。&lt;/p>
+&lt;h2 id="credits">Credits&lt;/h2>
+&lt;p>&lt;em>&lt;a href="https://codeforces.com/blog/entry/76447">A problem collection of ODE and differential technique&lt;/a>&lt;/em>, amiya&lt;/p></description></item><item><title>多项式对数函数、指数函数和欧拉变换</title><link>https://www.flandre.love/zh/posts/polylog/</link><pubDate>Sat, 27 Feb 2021 10:46:08 +0800</pubDate><guid>https://www.flandre.love/zh/posts/polylog/</guid><description>&lt;p>与一般想法不同，多项式也有自己的对数函数和指数函数。它们也可以在 $O(n\log n)$ 的优秀时间内求解。&lt;/p>
+&lt;p>有这么一个式子广为人知&lt;/p>
+&lt;p>$$
+e^x=\sum\limits_{i=0}^{+\infty}\dfrac{x^i}{i!}
+$$&lt;/p>
+&lt;p>事实上对数函数也可以像这样用无限幂级数定义：&lt;/p>
+&lt;p>$$
+\ln(1-x)=-\sum\limits_{i=1}^{+\infty}\dfrac{x^i}{i}
+$$&lt;/p>
+&lt;p>$$
+\ln(1+x)=-\sum\limits_{i=1}^{+\infty}\dfrac{(-1)^i\cdot x^i}{i}
+$$&lt;/p>
+&lt;p>指数函数的泰勒展开式对于任意实数 $x$ 都成立，对数函数的泰勒展开式只对定义域内的一些 $x$ 成立；不过我们并不关心 $x$，只关心其系数。多项式的指数函数和对数函数就是用这些级数定义的。因为这些级数都是无限级数，多项式只在模意义下存在指数函数和对数函数。&lt;/p>
+&lt;h2 id="多项式对数函数">多项式对数函数&lt;/h2>
+&lt;p>多项式 $g(x)$ 在模 $x^n$ 意义下的对数函数存在，当且仅当其常数项为 $1$，否则它对应的泰勒级数不收敛。把 $\ln g(x)$ 视作一个关于 $x$ 的函数，我们有&lt;/p>
+&lt;p>$$
+\begin{aligned}\left[\ln g(x)\right]^\prime&amp;amp;=\dfrac{g(x)^\prime}{g(x)}\newline
+\ln g(x)&amp;amp;=\int\mathrm{d}\ln g(x)=\int\dfrac{g(x)^\prime}{g(x)}\mathrm{d}x\end{aligned}
+$$&lt;/p>
+&lt;p>只要对 $g(x)$ 求导，再乘上 $\dfrac{1}{g(x)}$ 就能够得到 $\ln g(x)$ 的导数，这个导数的积分就是 $\ln(g(x))$。多项式求导、积分都是非常容易的事情，但是，$\dfrac{g(x)^\prime}{g(x)}$ 的不定积分随常数项的不同有无穷多个，我们应该取哪一个呢？我们取常数项为 $0$ 的那个作为答案，因为只有常数项为 $0$ 的多项式在模意义下存在指数函数。&lt;/p>
+&lt;h2 id="多项式指数函数">多项式指数函数&lt;/h2>
+&lt;p>上面我们提到，多项式 $g(x)$ 在模 $x^n$ 意义下的指数函数存在，当且仅当其常数项为 $0$，否则它对应的泰勒级数也一样不收敛。由于 $\exp f(x)$ 的导数里还是存在 $\exp f(x)$，我们只能用分治 FFT 的方法 $O\left(n\log^2n\right)$ 求出。这种方法由于比较缓慢而不常使用，通常我们使用 &lt;a href="https://www.flandre.love/zh/posts/newtons_method/">Newton&amp;rsquo;s Method&lt;/a> $O(n\log n)$ 求。&lt;/p>
+&lt;p>分治法并非一无是处。这个方法不需要写多项式求逆和多项式对数函数，写起来要快很多；虽然复杂度多一个对数，但常数较小，也不会慢特别多。&lt;/p>
+&lt;p>多项式的指数函数是有实际的组合意义的。设 $f(x)$ 是一个大小为 $i$ 的盒子内部分配方案数的指数型生成函数（即，$\left[\dfrac{x^i}{i!}\right] f(x)$ 表示一个盒子装 $i$ 个小球的方案数），则 $\exp f(x)$ 表示 $i$ 个有标号小球分配到任意多个无标号盒子的方案数的指数型生成函数（即，$\left[\dfrac{x^i}{i!}\right] (\exp f(x))$ 表示 $i$ 个相互区分的小球放到若干个完全一样的盒子的方案数）。这个组合意义与指数函数的幂级数有关系。&lt;/p>
+&lt;p>这一点的证明只需用下式说明&lt;/p>
+&lt;p>$$
+\exp f(x)=\sum\dfrac{f^i(x)}{i!}=\prod \exp f_ix^i
+$$&lt;/p>
+&lt;p>其中的含义是：&lt;/p>
+&lt;p>$f^i(x)$ 是将有标号小球分配到 $i$ 个有标号盒子的方案数的指数型生成函数；&lt;/p>
+&lt;p>$\dfrac{f^i(x)}{i!}$ 是将有标号小球分配到 $i$ 个无标号盒子的方案数的指数型生成函数；&lt;/p>
+&lt;p>$\sum\dfrac{f^i(x)}{i!}$ 是将有标号小球分配到任意多个无标号盒子的方案数的指数型生成函数；&lt;/p>
+&lt;p>$\prod \exp f_ix^i$ 也有含义。&lt;/p>
+&lt;h2 id="欧拉变换">欧拉变换&lt;/h2>
+&lt;p>在多项式指数函数中，我们提到了多项式指数函数的组合含义。如果要求无标号小球放到无标号盒子的方案数，我们应该怎么做呢？&lt;/p>
+&lt;p>令 $f(x)=\sum\limits_{i=1}^nf_ix^i$，则我们可以写出所求的普通型生成函数 $g(f(x))$&lt;/p>
+&lt;p>$$
+g(f(x))=\prod\limits_{i=1}^n\dfrac{1}{(1-x^i)^{f_i}}
+$$&lt;/p>
+&lt;blockquote>
+&lt;p>在指数函数的组合意义中，我们使用了指数型生成函数（EGF），而在欧拉变换中，我们使用的却是普通型生成函数（OGF）。&lt;/p>
+&lt;/blockquote>
+&lt;p>出现了 $1-x^k$，对此敏感的我们考虑求出它的对数函数&lt;/p>
+&lt;p>$$
+\ln g(f(x))=\sum\limits_{i=1}^nf_i\sum\limits_{j=1}^{+\infty}\dfrac{x^{ij}}{j}
+$$&lt;/p>
+&lt;p>交换求和顺序&lt;/p>
+&lt;p>$$
+\begin{aligned}\ln g(f(x))&amp;amp;=\sum\limits_{i=1}^{+\infty}\dfrac{1}{i}\sum\limits_{j=1}^{n}f_jx^{ij}\&amp;amp;=\sum\limits_{i=1}^{+\infty}\dfrac{f(x^i)}{i}\end{aligned}
+$$&lt;/p>
+&lt;p>于是&lt;/p>
+&lt;p>$$
+g(f(x))=\exp \sum\limits_{i=1}^{+\infty}\dfrac{f(x^i)}{i}
+$$&lt;/p>
+&lt;p>我们把 $g(f(x))$ 称作 $f(x)$ 的欧拉变换，它的组合含义是无标号小球放到无标号盒子的方案数。我们可以用 $O(n\log n)$ 的复杂度求一个多项式 $f(x)$ 的欧拉变换。&lt;/p>
+&lt;p>&lt;a href="https://www.luogu.com.cn/problem/P4389">付公主的背包&lt;/a>可以用欧拉变换解释。完全背包的本质就是把 $s$ 个无标号体积放到 $n$ 种有标号商品中。&lt;/p></description></item><item><title>斯特林数与上升幂、下降幂</title><link>https://www.flandre.love/zh/posts/stirling/</link><pubDate>Thu, 28 Jan 2021 14:29:04 +0800</pubDate><guid>https://www.flandre.love/zh/posts/stirling/</guid><description>&lt;blockquote>
+&lt;p>&lt;strong>本文内容已被整合至 OI Wiki，请至 &lt;a href="https://oi-wiki.org/math/combinatorics/stirling/">OI Wiki&lt;/a> 查看最新内容。&lt;/strong>&lt;/p>
+&lt;/blockquote>
+&lt;p>斯特林数与二项式系数密切相关，是离散数学的重要内容。&lt;/p>
+&lt;p>斯特林数分为两类，分别是“第二类斯特林数”和“第一类斯特林数”。虽然被称作“第二类”，第二类斯特林数却比第一类的更常用，也在斯特林的相关著作和具体数学中被首先描述；因此，在这篇文章中我们也先介绍第二类斯特林数。&lt;/p>
+&lt;h2 id="第二类斯特林数">第二类斯特林数&lt;/h2>
+&lt;p>第二类斯特林数又称作斯特林子集数，用 $\begin{Bmatrix}n\m\end{Bmatrix}$ 表示，读作“$n$ 子集 $m$”。它的组合含义是，将 $n$ 个有标号物品划分为 $m$ 个无标号集合的方案数。学习&lt;a href="https://www.flandre.love/2021/polylog">多项式对数函数、指数函数和欧拉变换&lt;/a>应该有助于能找到第二类斯特林数和指数函数的相关性（斯特林数限定了划分子集的个数而指数函数没有）。&lt;/p>
+&lt;p>可以认为，对于 $n \less m$，有 $\begin{Bmatrix}n\m\end{Bmatrix}=0$。$m=0$ 的情况比较特殊。一般认为，将空集划分为 $0$ 个非空集合是可行的，因此我们定义 $\begin{Bmatrix}0\0\end{Bmatrix}=1$；而对于任意 $n \greater 0$，都有 $\begin{Bmatrix}n\0\end{Bmatrix}=0$。&lt;/p>
+&lt;p>和二项式系数类似，第二类斯特林数也有递推公式&lt;/p>
+&lt;p>$$
+\begin{Bmatrix}n\m\end{Bmatrix}=m\begin{Bmatrix}n-1\m\end{Bmatrix}+\begin{Bmatrix}n-1\m-1\end{Bmatrix},n&amp;gt;0
+$$&lt;/p>
+&lt;p>同时，第二类斯特林数也有简洁的通项公式，即&lt;/p>
+&lt;p>$$
+\begin{Bmatrix}n\m\end{Bmatrix}=\sum\limits_{i=0}^m\dfrac{(-1)^{m-i}i^n}{i!(m-i)!}
+$$&lt;/p>
+&lt;p>考虑使用容斥原理证明。设 $G_i$ 表示 $n$ 个有标号元素，放置到 $i$ 个有标号集合的方案数；$F_i$ 表示 $n$ 个有标号元素，放置到 $i$ 个有标号非空集合的方案数。不难得到&lt;/p>
+&lt;p>$$
+G_i=i^n=\sum\limits_{j=0}^i\binom{i}{j}F_j
+$$&lt;/p>
+&lt;p>根据二项式反演&lt;/p>
+&lt;p>$$
+F_i=\sum\limits_{j=0}^{i}(-1)^{i-j}\binom{i}{j}j^n
+$$&lt;/p>
+&lt;p>考虑第二类斯特林数与 $F_i$ 的关系&lt;/p>
+&lt;p>$$
+\begin{Bmatrix}n\i\end{Bmatrix}=\dfrac{F_i}{i!}
+$$&lt;/p>
+&lt;p>联立得证。&lt;/p>
+&lt;h2 id="同一行第二类斯特林数的计算">同一行第二类斯特林数的计算&lt;/h2>
+&lt;p>“同一行”的第二类斯特林数指的是，有着不同的 $i$，相同的 $n$ 的一系列 $\begin{Bmatrix}n\i\end{Bmatrix}$。求出同一行的所有第二类斯特林数，就是对 $i=0..n$ 求出了将 $n$ 个不同元素划分为 $i$ 个非空集的方案数。&lt;/p>
+&lt;p>根据上面给出的通项公式，卷积计算即可。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>(){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> scanf(&lt;span style="color:#e6db74">&amp;#34;%d&amp;#34;&lt;/span>, &lt;span style="color:#f92672">&amp;amp;&lt;/span>n);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> fact[&lt;span style="color:#ae81ff">0&lt;/span>] &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> i &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>; i &lt;span style="color:#f92672">&amp;lt;=&lt;/span> n; &lt;span style="color:#f92672">++&lt;/span>i) fact[i] &lt;span style="color:#f92672">=&lt;/span> (ll)fact[i &lt;span style="color:#f92672">-&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>] &lt;span style="color:#f92672">*&lt;/span> i &lt;span style="color:#f92672">%&lt;/span> mod;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> exgcd(fact[n], mod, ifact[n], ifact[&lt;span style="color:#ae81ff">0&lt;/span>]), ifact[n] &lt;span style="color:#f92672">=&lt;/span> (ifact[n] &lt;span style="color:#f92672">%&lt;/span> mod &lt;span style="color:#f92672">+&lt;/span> mod) &lt;span style="color:#f92672">%&lt;/span> mod;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> i &lt;span style="color:#f92672">=&lt;/span> n &lt;span style="color:#f92672">-&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>; i &lt;span style="color:#f92672">&amp;gt;=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>; &lt;span style="color:#f92672">--&lt;/span>i) ifact[i] &lt;span style="color:#f92672">=&lt;/span> (ll)ifact[i &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>] &lt;span style="color:#f92672">*&lt;/span> (i &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>) &lt;span style="color:#f92672">%&lt;/span> mod;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> fstdlib&lt;span style="color:#f92672">::&lt;/span>poly f(n &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>), g(n &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> i &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>; i &lt;span style="color:#f92672">&amp;lt;=&lt;/span> n; &lt;span style="color:#f92672">++&lt;/span>i) g[i] &lt;span style="color:#f92672">=&lt;/span> (i &lt;span style="color:#f92672">&amp;amp;&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span> &lt;span style="color:#f92672">?&lt;/span> mod &lt;span style="color:#f92672">-&lt;/span> &lt;span style="color:#ae81ff">1ll&lt;/span> &lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#ae81ff">1ll&lt;/span>) &lt;span style="color:#f92672">*&lt;/span> ifact[i] &lt;span style="color:#f92672">%&lt;/span> mod, f[i] &lt;span style="color:#f92672">=&lt;/span> (ll)qpow(i, n) &lt;span style="color:#f92672">*&lt;/span> ifact[i] &lt;span style="color:#f92672">%&lt;/span> mod;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> f &lt;span style="color:#f92672">*=&lt;/span> g, f.resize(n &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> i &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>; i &lt;span style="color:#f92672">&amp;lt;=&lt;/span> n; &lt;span style="color:#f92672">++&lt;/span>i) printf(&lt;span style="color:#e6db74">&amp;#34;%d &amp;#34;&lt;/span>, f[i]);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="同一列第二类斯特林数的计算">同一列第二类斯特林数的计算&lt;/h2>
+&lt;p>即对 $i=0..n$，求出 $\begin{Bmatrix}i\k\end{Bmatrix}$。有两种常用的快速计算方法。&lt;/p>
+&lt;h3 id="方法-1-利用递推公式">方法 1. 利用递推公式&lt;/h3>
+&lt;p>第二类斯特林数的通项公式不适合计算列，我们考虑利用递推公式写出它的生成函数。设 $F_k(x)=\sum\limits_{i=0}^n\begin{Bmatrix}i\k\end{Bmatrix}x^i$，则&lt;/p>
+&lt;p>$$
+F_k(x)=kxF_k(x)+xF_{k-1}(x)
+$$&lt;/p>
+&lt;p>综合第二类斯特林数的定义解得&lt;/p>
+&lt;p>$$
+F_k(x)=\begin{cases}\dfrac{x}{1-kx}F_{k-1}(x)&amp;amp;\text{if }k&amp;gt;0\1&amp;amp;\text{else}\end{cases}
+$$&lt;/p>
+&lt;p>即 $F_k(x)=\prod\limits_{i=1}^k\dfrac{x}{1-ix}$&lt;/p>
+&lt;p>利用多项式分治乘和多项式乘法逆即可在 $O(k\log k\log n)$ 的时间内解出 $F_k(x)$。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>(){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> scanf(&lt;span style="color:#e6db74">&amp;#34;%d%d&amp;#34;&lt;/span>, &lt;span style="color:#f92672">&amp;amp;&lt;/span>n, &lt;span style="color:#f92672">&amp;amp;&lt;/span>k);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> i &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>; i &lt;span style="color:#f92672">&amp;lt;=&lt;/span> k; &lt;span style="color:#f92672">++&lt;/span>i) mask.emplace_back(std&lt;span style="color:#f92672">::&lt;/span>vector&lt;span style="color:#f92672">&amp;lt;&lt;/span>&lt;span style="color:#66d9ef">int&lt;/span>&lt;span style="color:#f92672">&amp;gt;&lt;/span>{&lt;span style="color:#ae81ff">1&lt;/span>, mod &lt;span style="color:#f92672">-&lt;/span> i});
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">while&lt;/span>((&lt;span style="color:#66d9ef">int&lt;/span>)mask.size() &lt;span style="color:#f92672">&amp;gt;=&lt;/span> &lt;span style="color:#ae81ff">2&lt;/span>){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">while&lt;/span>((&lt;span style="color:#66d9ef">int&lt;/span>)mask.size() &lt;span style="color:#f92672">&amp;gt;=&lt;/span> &lt;span style="color:#ae81ff">2&lt;/span>){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> tmp.push_back(mask[mask.size() &lt;span style="color:#f92672">-&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>] &lt;span style="color:#f92672">*&lt;/span> mask[mask.size() &lt;span style="color:#f92672">-&lt;/span> &lt;span style="color:#ae81ff">2&lt;/span>]);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> mask.pop_back(), mask.pop_back();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span>(&lt;span style="color:#f92672">!&lt;/span>mask.empty()) tmp.push_back(mask[&lt;span style="color:#ae81ff">0&lt;/span>]), mask.pop_back();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> std&lt;span style="color:#f92672">::&lt;/span>swap(mask, tmp);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> fstdlib&lt;span style="color:#f92672">::&lt;/span>poly f(mask[&lt;span style="color:#ae81ff">0&lt;/span>].inv(n &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>));
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> i &lt;span style="color:#f92672">=&lt;/span> f.size() &lt;span style="color:#f92672">-&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>; i &lt;span style="color:#f92672">&amp;gt;=&lt;/span> k; &lt;span style="color:#f92672">--&lt;/span>i) f[i] &lt;span style="color:#f92672">=&lt;/span> f[i &lt;span style="color:#f92672">-&lt;/span> k];
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> i &lt;span style="color:#f92672">=&lt;/span> std&lt;span style="color:#f92672">::&lt;/span>min(k, (&lt;span style="color:#66d9ef">int&lt;/span>)f.size()) &lt;span style="color:#f92672">-&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>; i &lt;span style="color:#f92672">&amp;gt;=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>; &lt;span style="color:#f92672">--&lt;/span>i) f[i] &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> i &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>; i &lt;span style="color:#f92672">&amp;lt;&lt;/span> (&lt;span style="color:#66d9ef">int&lt;/span>)f.size(); &lt;span style="color:#f92672">++&lt;/span>i) printf(&lt;span style="color:#e6db74">&amp;#34;%d &amp;#34;&lt;/span>, f[i]);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="方法-2-利用指数型生成函数">方法 2. 利用指数型生成函数&lt;/h3>
+&lt;p>一个盒子装 $i$ 个物品的方案是 $\begin{cases}1&amp;amp;\text{if }i&amp;gt;0\0&amp;amp;\text{else}\end{cases}$。我们可以写出它的指数型生成函数为 $F(x)=\sum\limits_{i=1}^{+\infty}\dfrac{x^i}{i!}$。经过之前的学习，我们明白 $F^k(x)$ 就是 $i$ 个有标号物品放到 $k$ 个有标号盒子里的指数型生成函数，$\exp F(x)=\sum\limits_{i=0}^{+\infty}\dfrac{F^i(x)}{i!}$ 就是 $i$ 个有标号物品放到任意多个无标号盒子里的指数型生成函数（指数函数通过每项除以一个 $i!$ 去掉了盒子的标号）。这里涉及到很多“有标号”“无标号”的内容，注意辨析。&lt;/p>
+&lt;p>那么 $\begin{Bmatrix}i\k\end{Bmatrix}=\dfrac{\left[\dfrac{x^i}{i!}\right]F^k(x)}{k!}$，$O(n\log n)$ 计算多项式幂即可。实际使用时比 $O(n\log^2n)$ 的方法 1 要慢。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>(){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> scanf(&lt;span style="color:#e6db74">&amp;#34;%d%d&amp;#34;&lt;/span>, &lt;span style="color:#f92672">&amp;amp;&lt;/span>n, &lt;span style="color:#f92672">&amp;amp;&lt;/span>k);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> fstdlib&lt;span style="color:#f92672">::&lt;/span>poly f(n &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> fact[&lt;span style="color:#ae81ff">0&lt;/span>] &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> i &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>; i &lt;span style="color:#f92672">&amp;lt;=&lt;/span> n; &lt;span style="color:#f92672">++&lt;/span>i) fact[i] &lt;span style="color:#f92672">=&lt;/span> (ll)fact[i &lt;span style="color:#f92672">-&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>] &lt;span style="color:#f92672">*&lt;/span> i &lt;span style="color:#f92672">%&lt;/span> mod;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> i &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>; i &lt;span style="color:#f92672">&amp;lt;=&lt;/span> n; &lt;span style="color:#f92672">++&lt;/span>i) f[i] &lt;span style="color:#f92672">=&lt;/span> qpow(fact[i], mod &lt;span style="color:#f92672">-&lt;/span> &lt;span style="color:#ae81ff">2&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> f &lt;span style="color:#f92672">=&lt;/span> fstdlib&lt;span style="color:#f92672">::&lt;/span>exp(fstdlib&lt;span style="color:#f92672">::&lt;/span>log(f &lt;span style="color:#f92672">&amp;gt;&amp;gt;&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>) &lt;span style="color:#f92672">*&lt;/span> k) &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> k, f.resize(n &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">int&lt;/span> inv &lt;span style="color:#f92672">=&lt;/span> qpow(fact[k], mod &lt;span style="color:#f92672">-&lt;/span> &lt;span style="color:#ae81ff">2&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> i &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>; i &lt;span style="color:#f92672">&amp;lt;=&lt;/span> n; &lt;span style="color:#f92672">++&lt;/span>i) printf(&lt;span style="color:#e6db74">&amp;#34;%lld &amp;#34;&lt;/span>, (ll)f[i] &lt;span style="color:#f92672">*&lt;/span> fact[i] &lt;span style="color:#f92672">%&lt;/span> mod &lt;span style="color:#f92672">*&lt;/span> inv &lt;span style="color:#f92672">%&lt;/span> mod);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="第一类斯特林数">第一类斯特林数&lt;/h2>
+&lt;p>第一类斯特林数又称作斯特林轮换数，用 $\begin{bmatrix}n\m\end{bmatrix}$ 表示，读作“$n$ 轮换 $m$”。它的组合含义是，将 $n$ 个有标号物品分为 $m$ 个无标号轮换的方案数。&lt;/p>
+&lt;p>一个轮换就是一个首尾相接的环形排列。我们可以写出一个轮换$[A,B,C,D]$，并且我们认为 $[A,B,C,D]=[B,C,D,A]=[C,D,A,B]=[D,A,B,C]$，即，两个可以通过旋转而互相得到的轮换是等价的。注意，我们不认为两个可以通过翻转而相互得到的轮换等价，即 $[A,B,C,D]\neq[D,C,B,A]$。&lt;/p>
+&lt;p>不难发现，对于 $n&amp;gt;0$ 有 $\begin{bmatrix}n\1\end{bmatrix}=(n-1)!$；进一步，也有 $\begin{bmatrix}n\m\end{bmatrix}\geq \begin{Bmatrix}n\m\end{Bmatrix}$。&lt;/p>
+&lt;p>轮换和排列一一对应，如果对同一行的所有第二类斯特林数求和，我们也能得到排列的总数 $\sum\limits_{i=0}^k\begin{bmatrix}n\i\end{bmatrix}=n!$。这一点可以参考 &lt;em>具体数学&lt;/em>。&lt;/p>
+&lt;p>类似第二类斯特林数，我们也可以写出第一类斯特林数的递推公式&lt;/p>
+&lt;p>$$
+\begin{bmatrix}n\m\end{bmatrix}=(n-1)\begin{bmatrix}n-1\m\end{bmatrix}+\begin{bmatrix}n-1\m-1\end{bmatrix},n&amp;gt;0
+$$&lt;/p>
+&lt;h2 id="同一行第一类斯特林数的计算">同一行第一类斯特林数的计算&lt;/h2>
+&lt;p>类似第二类斯特林数，我们构造同行第一类斯特林数的生成函数，即&lt;/p>
+&lt;p>$$
+F_n(x)=\sum\limits_{i=0}^n\begin{bmatrix}n\i\end{bmatrix}x^i
+$$&lt;/p>
+&lt;p>根据递推公式，不难写出&lt;/p>
+&lt;p>$$
+F_n(x)=(n-1)F_{n-1}(x)+xF_{n-1}(x)
+$$&lt;/p>
+&lt;p>于是&lt;/p>
+&lt;p>$$
+F_n(x)=\prod\limits_{i=0}^{n-1}(x+i)=\dfrac{(x+n-1)!}{(x-1)!}
+$$&lt;/p>
+&lt;p>这其实是 $x$ 的 $n$ 次上升阶乘幂，记做 $x^{\overline n}$。这个东西自然是可以暴力分治乘 $O(n\log^2n)$ 求出的，但用上升幂相关做法可以 $O(n\log n)$ 求出。具体见下面有关阶乘幂的部分。&lt;/p>
+&lt;h2 id="同一列第一类斯特林数的计算">同一列第一类斯特林数的计算&lt;/h2>
+&lt;p>仿照第二类斯特林数的计算，我们可以用指数型生成函数解决该问题。注意，由于递推公式和行有关，我们不能利用递推公式计算同列的第一类斯特林数。&lt;/p>
+&lt;p>显然，单个轮换的指数型生成函数为&lt;/p>
+&lt;p>$$
+F(x)=\sum\limits_{i=1}^n\dfrac{(i-1)!x^i}{i!}=\sum\limits_{i=1}^n\dfrac{x^i}{i}
+$$&lt;/p>
+&lt;p>它的 $k$ 次幂就是 $\begin{bmatrix}i\k\end{bmatrix}$ 的指数型生成函数，$O(n\log n)$ 计算即可。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>(){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> scanf(&lt;span style="color:#e6db74">&amp;#34;%d%d&amp;#34;&lt;/span>, &lt;span style="color:#f92672">&amp;amp;&lt;/span>n, &lt;span style="color:#f92672">&amp;amp;&lt;/span>k);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> fact[&lt;span style="color:#ae81ff">0&lt;/span>] &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> i &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>; i &lt;span style="color:#f92672">&amp;lt;=&lt;/span> n; &lt;span style="color:#f92672">++&lt;/span>i) fact[i] &lt;span style="color:#f92672">=&lt;/span> (ll)fact[i &lt;span style="color:#f92672">-&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>] &lt;span style="color:#f92672">*&lt;/span> i &lt;span style="color:#f92672">%&lt;/span> mod;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ifact[n] &lt;span style="color:#f92672">=&lt;/span> qpow(fact[n], mod &lt;span style="color:#f92672">-&lt;/span> &lt;span style="color:#ae81ff">2&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> i &lt;span style="color:#f92672">=&lt;/span> n &lt;span style="color:#f92672">-&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>; i &lt;span style="color:#f92672">&amp;gt;=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>; &lt;span style="color:#f92672">--&lt;/span>i) ifact[i] &lt;span style="color:#f92672">=&lt;/span> (ll)ifact[i &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>] &lt;span style="color:#f92672">*&lt;/span> (i &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>) &lt;span style="color:#f92672">%&lt;/span> mod;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> fstdlib&lt;span style="color:#f92672">::&lt;/span>poly f(n &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> i &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>; i &lt;span style="color:#f92672">&amp;lt;=&lt;/span> n; &lt;span style="color:#f92672">++&lt;/span>i) f[i] &lt;span style="color:#f92672">=&lt;/span> (ll)fact[i &lt;span style="color:#f92672">-&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>] &lt;span style="color:#f92672">*&lt;/span> ifact[i] &lt;span style="color:#f92672">%&lt;/span> mod;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> f &lt;span style="color:#f92672">=&lt;/span> fstdlib&lt;span style="color:#f92672">::&lt;/span>exp(fstdlib&lt;span style="color:#f92672">::&lt;/span>log(f &lt;span style="color:#f92672">&amp;gt;&amp;gt;&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>) &lt;span style="color:#f92672">*&lt;/span> k) &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> k, f.resize(n &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> i &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>; i &lt;span style="color:#f92672">&amp;lt;=&lt;/span> n; &lt;span style="color:#f92672">++&lt;/span>i) printf(&lt;span style="color:#e6db74">&amp;#34;%lld &amp;#34;&lt;/span>, (ll)f[i] &lt;span style="color:#f92672">*&lt;/span> fact[i] &lt;span style="color:#f92672">%&lt;/span> mod &lt;span style="color:#f92672">*&lt;/span> ifact[k] &lt;span style="color:#f92672">%&lt;/span> mod);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="上升阶乘幂和下降阶乘幂">上升阶乘幂和下降阶乘幂&lt;/h2>
+&lt;p>之前我们提出了第一类斯特林数和上升阶乘幂的关系，即 $x$ 的 $n$ 次上升阶乘幂正是第 $n$ 行的第一类斯特林数的普通型生成函数。&lt;/p>
+&lt;p>$$
+F_n(x)=x^{\overline n}
+$$&lt;/p>
+&lt;p>接下来我们就介绍上升阶乘幂和与之类似的下降阶乘幂。&lt;/p>
+&lt;p>一般的，我们分别用 $x^{\overline n}$ 和 $x^{\underline n}$ 来表示 $x$ 的 $n$ 次上升阶乘幂和下降阶乘幂。它们可以被这样描述&lt;/p>
+&lt;p>$$
+x^{\overline n}=\prod\limits_{i=0}^{n-1}(x+i)=\dfrac{(x+n-1)!}{(x-1)!},x^{\underline n}=\prod\limits_{i=0}^{n-1}(x-i)=\dfrac{x!}{(x-n)!}
+$$&lt;/p>
+&lt;p>直观上看，上升幂和下降幂是对称的。我们可以写出&lt;/p>
+&lt;p>$$
+\begin{aligned}(-x)^{\overline n}&amp;amp;=\prod\limits_{i=0}^{n-1}(-x+i)\&amp;amp;=(-1)^n\prod_{i=0}^{n-1}(x-i)\&amp;amp;=(-1)^nx^{\underline n}\end{aligned}
+$$&lt;/p>
+&lt;p>同理，$(-x)^{\underline n}=(-1)^nx^{\overline n}$ 也是成立的。&lt;/p>
+&lt;p>我们还可以用下降阶乘幂表示二项式系数，这使得下降阶乘幂成为解决带组合数多项式的重要方法。&lt;/p>
+&lt;p>$$
+\binom{n}{m}=\dfrac{n!}{(n-m)!m!}=\dfrac{n^{\underline m}}{m!}
+$$&lt;/p>
+&lt;h2 id="阶乘幂和两类斯特林数的关系">阶乘幂和两类斯特林数的关系&lt;/h2>
+&lt;h3 id="阶乘幂和第二类斯特林数的关系">阶乘幂和第二类斯特林数的关系&lt;/h3>
+&lt;p>我们先研究阶乘幂与第二类斯特林数的关系。事实上它们之间有这样的关系&lt;/p>
+&lt;p>$$
+x^n=\sum\limits_{i=0}^n\begin{Bmatrix}n\i\end{Bmatrix}x^{\underline{i}},n\geq 0
+$$&lt;/p>
+&lt;p>我们用“生成函数”证明这一点。令&lt;/p>
+&lt;p>$$
+F_n(x)=\sum\limits_{i=0}^n\begin{Bmatrix}n\i\end{Bmatrix}x^{\underline i}
+$$&lt;/p>
+&lt;p>根据第二类斯特林数的递推公式 $\begin{Bmatrix}n\m\end{Bmatrix}=m\begin{Bmatrix}n-1\m\end{Bmatrix}+\begin{Bmatrix}n-1\m-1\end{Bmatrix}$ 可以写出&lt;/p>
+&lt;p>$$
+\begin{aligned}F_n(x)&amp;amp;=\sum\limits_{i=0}^{n-1}i\begin{Bmatrix}n-1\i\end{Bmatrix}x^{\underline i}+\sum\limits_{i=1}^{n}\begin{Bmatrix}n-1\i-1\end{Bmatrix}x^{\underline {i}}\&amp;amp;=\sum\limits_{i=0}^{n-1}i\begin{Bmatrix}n-1\i\end{Bmatrix}x^{\underline i}+\sum\limits_{i=0}^{n-1}\begin{Bmatrix}n-1\i\end{Bmatrix}x^{\underline {i+1}}\&amp;amp;=\sum\limits_{i=0}^{n-1}\begin{Bmatrix}n-1\i\end{Bmatrix}(i\cdot x^{\underline i}+x^{\underline {i+1}})\end{aligned}
+$$&lt;/p>
+&lt;p>由 $x^{\underline {i+1}}=(x-i)\cdot x^{\underline{i}}$ 知&lt;/p>
+&lt;p>$$
+\begin{aligned}i\cdot x^{\underline i}+x^{\underline {i+1}}&amp;amp;=i\cdot x^{\underline{i}}+(x-i)x^{\underline{i}}\&amp;amp;=x \cdot x^{\underline i}\end{aligned}
+$$&lt;/p>
+&lt;p>代入原式得&lt;/p>
+&lt;p>$$
+\begin{aligned}F_n(x)&amp;amp;=\sum\limits_{i=0}^{n-1}\begin{Bmatrix}n-1\i\end{Bmatrix}x\cdot x^{\underline i}\&amp;amp;=x\cdot\sum\limits_{i=0}^{n-1}\begin{Bmatrix}n-1\i\end{Bmatrix}x^{\underline i}\&amp;amp;=x\cdot F_{n-1}(x)\end{aligned}
+$$&lt;/p>
+&lt;p>由于 $F_0(x)=1$，因此 $F_n(x)=x^n$，得证。&lt;/p>
+&lt;p>当然，也可以根据上升、下降阶乘幂的关系，将其中的下降阶乘幂替换为上升阶乘幂&lt;/p>
+&lt;p>$$
+(-x)^n=\sum\limits_{i=0}^n\begin{Bmatrix}n\i\end{Bmatrix}(-1)^{i}x^{\overline i}
+$$&lt;/p>
+&lt;p>也就是&lt;/p>
+&lt;p>$$
+x^n=\sum\limits_{i=0}^n\begin{Bmatrix}n\i\end{Bmatrix}(-1)^{n-i}x^{\overline i}
+$$&lt;/p>
+&lt;p>第二类斯特林数建立了一般多项式向阶乘幂多项式转化的通道。它是一般多项式转上升、下降阶乘幂多项式的有力工具。&lt;/p>
+&lt;h3 id="阶乘幂和第一类斯特林数的关系">阶乘幂和第一类斯特林数的关系&lt;/h3>
+&lt;p>通过之前构造的生成函数，我们已经知道&lt;/p>
+&lt;p>$$
+x^{\overline n}=\sum\limits_{i=0}^n\begin{bmatrix}n\i\end{bmatrix}x^i,n\ge 0
+$$&lt;/p>
+&lt;p>同样，也可以写成下降幂的形式&lt;/p>
+&lt;p>$$
+x^{\underline n}=\sum\limits_{i=0}^n\begin{bmatrix}n\i\end{bmatrix}(-1)^{n-i}x^i
+$$&lt;/p>
+&lt;p>第一类斯特林数和第二类斯特林数的作用正好相反，用于将上升、下降幂多项式转化为一般多项式。&lt;/p>
+&lt;h2 id="下降阶乘幂在-oi-中的应用">下降阶乘幂在 OI 中的应用&lt;/h2>
+&lt;p>上升阶乘幂在 OI 中的应用较少，在此不做介绍；我们只研究下降阶乘幂。&lt;/p>
+&lt;h3 id="多项式下降阶乘幂表示与多项式点值表示的关系">多项式下降阶乘幂表示与多项式点值表示的关系&lt;/h3>
+&lt;p>在这里，多项式的下降阶乘幂表示就是用&lt;/p>
+&lt;p>$$
+f(x)=\sum\limits_{i=0}^nb_i{x^\underline i}
+$$&lt;/p>
+&lt;p>的形式表示一个多项式，而点值表示就是用 $n+1$ 个点&lt;/p>
+&lt;p>$$
+(i,a_i),i=0..n
+$$&lt;/p>
+&lt;p>来表示一个多项式。&lt;/p>
+&lt;p>显然，下降阶乘幂 $b$ 和点值 $a$ 间满足这样的关系：&lt;/p>
+&lt;p>$$
+a_k=\sum\limits_{i=0}^{n}b_ik^{\underline i}
+$$&lt;/p>
+&lt;p>即&lt;/p>
+&lt;p>$$
+\begin{aligned}a_k&amp;amp;=\sum\limits_{i=0}^{n}\dfrac{b_ik!}{(k-i)!}\\dfrac{a_k}{k!}&amp;amp;=\sum\limits_{i=0}^kb_i\dfrac{1}{(k-i)!}\end{aligned}
+$$&lt;/p>
+&lt;p>这显然是个卷积形式，我们可以在 $O(n\log n)$ 的时间复杂度内完成点值和下降阶乘幂的互相转化。&lt;/p></description></item><item><title>多项式中的 Newton's Method</title><link>https://www.flandre.love/zh/posts/newtons_method/</link><pubDate>Thu, 14 Jan 2021 21:00:43 +0800</pubDate><guid>https://www.flandre.love/zh/posts/newtons_method/</guid><description>&lt;p>Newton&amp;rsquo;s Method 是牛顿提出的一种将非线性方程线性化的近似方法。它也可以运用在多项式中，求关于多项式的非线性方程在模意义下的解。&lt;/p>
+&lt;p>要学习 Newton&amp;rsquo;s Method，得先了解泰勒级数。&lt;/p>
+&lt;h2 id="泰勒级数和麦克劳林级数">泰勒级数和麦克劳林级数&lt;/h2>
+&lt;p>泰勒级数用无限项连加式来表示函数。一般地，对于一个光滑函数 $f(x)$，有&lt;/p>
+&lt;p>$$
+f(x)=\sum\limits_{n=0}^{+\infty}\dfrac{f ^ {(n)}(a)} {i!}(x-a)^n
+$$&lt;/p>
+&lt;p>这个等式被称为 $f(x)$ 在 $a$ 处的泰勒展开式；等号右边的式子被称为 $f(x)$ 在 $a$ 处的泰勒级数。在 $0$ 处的泰勒展开式和泰勒级数也被称为麦克劳林展开式和麦克劳林级数。下面给出了一些常用的麦克劳林级数，有的在生成函数中常用：&lt;/p>
+&lt;p>$$
+\begin{aligned}
+(1-x)^{-1}&amp;amp;=\sum\limits_{n=0}^{+\infty}x^n\newline
+(1-x)^{-m}&amp;amp;=\sum\limits_{n=0}^{+\infty}\binom{n+m-1}{n}x^n\newline
+(1+x)^{m}&amp;amp;=\sum\limits_{n=0}^{+\infty}\binom{m}{n}x^n\newline
+\ln(1-x)&amp;amp;=-\sum\limits_{n=1}^{+\infty}\dfrac{x^n}{n}\newline
+\ln(1+x)&amp;amp;=-\sum\limits_{n=1}^{+\infty}\dfrac{(-1)^{n}x^n}{n}\newline
+\exp x&amp;amp;=-\sum\limits_{n=0}^{+\infty}\dfrac{x^n}{n!}
+\end{aligned}
+$$&lt;/p>
+&lt;blockquote>
+&lt;p>泰勒展开式并非对于 $f(x)$ 定义域内所有 $x$ 都成立。比如，将 $x=10$ 代入 $(1-x)^{-1}=\sum\limits_{n=0}^{+\infty}x^n$，很容易发现这个式子根本不成立。事实上，$(1-x)^{-1}=\sum\limits_{n=0}^{+\infty}x^n$ 这个式子只对 $|x|&amp;lt;1$ 成立。&lt;/p>
+&lt;p>其他函数的泰勒展开式有的也有类似的限制。但在 OI 中我们只关心展开式的系数，不关心 $x$ 的值，可以认为这些泰勒展开式在我们研究的范围内总是成立的。&lt;/p>
+&lt;/blockquote>
+&lt;p>了解了泰勒级数，我们可以开始学习 Newton&amp;rsquo;s Method 了：&lt;/p>
+&lt;h2 id="一般的-newtons-method">一般的 Newton&amp;rsquo;s Method&lt;/h2>
+&lt;p>Newton&amp;rsquo;s Method 一般被用于求解非线性方程。它是这样求 $f(x)=0$ 的根的：&lt;/p>
+&lt;ul>
+&lt;li>选取合适一个数作为 $x_0$&lt;/li>
+&lt;li>将 $f(x)$ 在 $x_0$ 处展开，即 $f(x)=\sum\limits_{n=0}^{+\infty}\dfrac{f ^ {(n)}(x_0)} {n!}(x-x_0)^n$&lt;/li>
+&lt;li>取其常数项和线性项，令其值为 $0$，即 $f(x_0)+f^\prime(x_0)\cdot(x-x_0)=0$&lt;/li>
+&lt;li>解得这个近似方程的根 $x_1$，并在 $x_1$ 处将 $f(x)$ 泰勒展开，重复上述过程得到 $x_2,x_3,x_4,&amp;hellip;$ 可以证明，每一个新解都更加接近 $f(x)=0$ 的根&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">double&lt;/span> &lt;span style="color:#a6e22e">f&lt;/span>(&lt;span style="color:#66d9ef">double&lt;/span> x);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">double&lt;/span> &lt;span style="color:#a6e22e">fd&lt;/span>(&lt;span style="color:#66d9ef">double&lt;/span> x);&lt;span style="color:#75715e">//fd 是 f 的导数，即 f&amp;#39;
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">double&lt;/span> &lt;span style="color:#a6e22e">newtonsMethod&lt;/span>(&lt;span style="color:#66d9ef">double&lt;/span> x0, &lt;span style="color:#66d9ef">int&lt;/span> d){ &lt;span style="color:#75715e">//d 代表迭代次数
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#75715e">//f(x_0)+fd(x0)*(x-x0)=0 -&amp;gt; x=-f(x0)/fd(x0)+x0
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">while&lt;/span>(d&lt;span style="color:#f92672">--&lt;/span>) x0 &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#f92672">-&lt;/span>f(x0) &lt;span style="color:#f92672">/&lt;/span> fd(x0) &lt;span style="color:#f92672">+&lt;/span> x0;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> x0;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>这样看来，我们只能无限逼近 $f(x)=0$ 的根，而无法绝对准确地取到根。我们求多项式，是否也无法得到精确的解呢？担心是多余的，我们本来就不需要求“绝对精确”的解，只需要求模意义下的“精确”的解。&lt;/p>
+&lt;h2 id="newtons-method-在多项式中的-methodology">Newton&amp;rsquo;s Method 在多项式中的 Methodology&lt;/h2>
+&lt;blockquote>
+&lt;p>求一个关于 $x$ 的多项式 $f(x)$，使得对于一给定的关于 $f(x)$ 的函数 $g(f(x))$，$g(f(x))\equiv 0\pmod {x^n}$ 成立。&lt;/p>
+&lt;/blockquote>
+&lt;p>这是 Newton&amp;rsquo;s Method 求解的问题的通式。对于多项式 $h(x)$，求逆时 $g(f(x))=h(x)-f^{-1}(x)$，开根时 $g(f(x))=h(x)-f^{2}(x)$，求指数时 $g(f(x))=h(x)-\ln f(x)$。下面就讲述 Newton&amp;rsquo;s Method 是如何逼近根的：&lt;/p>
+&lt;p>选择一个满足 $g(f(x))\equiv0\pmod{x^1}$ 的多项式作为初始根。&lt;/p>
+&lt;p>设我们已经求出了模 $x^{\lceil\frac{n}{2}\rceil}$ 下的根 $f_0(x)$，将 $g(f(x))$ 在 $f_0(x)$ 处泰勒展开：&lt;/p>
+&lt;p>$$
+g(f(x))\equiv\sum\limits_{i=0}^{+\infty}\dfrac{g ^ {(i)}(f_0(x))} {i!}(f(x)-f_0(x))^i\equiv 0\pmod{x^n}
+$$&lt;/p>
+&lt;p>将 $f(x)=f_0(x)+x^{\lceil\frac{n}{2}\rceil}\cdot h(x)$ 代入&lt;/p>
+&lt;p>$$
+\sum\limits_{i=0}^{+\infty}\dfrac{g ^ {(i)}(f_0(x))} {i!}(f_0(x)+x^{\lceil\frac{n}{2}\rceil}\cdot h(x)-f_0(x))^i\equiv 0\pmod{x^{n}}
+$$&lt;/p>
+&lt;p>即&lt;/p>
+&lt;p>$$
+\sum\limits_{i=0}^{+\infty}\dfrac{g ^ {(i)}(f_0(x))} {i!}\cdot x^{i\cdot\lceil\frac{n}{2}\rceil}\cdot h^i(x)\equiv 0\pmod{x^{n}}
+$$&lt;/p>
+&lt;p>其中，对于 $x^{i\cdot\lceil\frac{n}{2}\rceil}\cdot h^i(x)$ 这一部分，显然当 $i\ge 2$ 时有 $x^{i\cdot\lceil\frac{n}{2}\rceil}\cdot h^i(x)\equiv 0\pmod{x^n}$。则在此处模 $x^n$ 意义下的泰勒级数，从第三项开始全部为 $0$，于是只需保留前两项：&lt;/p>
+&lt;p>$$
+g(f_0(x))+g^\prime(f_0(x))\cdot (x^{\lceil\frac{n}{2}\rceil}\cdot h(x))\equiv 0\pmod{x^n}
+$$&lt;/p>
+&lt;p>解得&lt;/p>
+&lt;p>$$
+h(x)\equiv -x^{-\lceil\frac{n}{2}\rceil}\dfrac{g(f_0(x))}{g^\prime(f_0(x))}\pmod{x^n}
+$$&lt;/p>
+&lt;p>在 $h(x)$ 存在的情况下回代得 $f(x)\equiv f_0(x)-\dfrac{g(f_0(x))}{g^\prime(f_0(x))}\pmod{x^n}$，完成了一次迭代。如果迭代 $a$ 次，我们就可以得到在模 $x^{2^a}$ 意义下的解了。&lt;/p>
+&lt;p>有一个问题尚未解决：$h(x)$ 是否总是存在？我们发现，$-x^{-\lceil\frac{n}{2}\rceil}\dfrac{g(f_0(x))}{g^\prime(f_0(x))}$ 在模 $x^n$ 意义下存在，当且仅当它只包含 $x$ 的自然数幂次项，而 $g(f_0(x))\equiv 0\pmod{x^{\lceil\frac{n}{2}\rceil}}$，于是在模 $x^n$ 意义下的 $\dfrac{g(f_0(x))}{g^\prime(f_0(x))}$ 总是存在，且其前 $\lceil\frac{n}{2}\rceil$ 总是为零。于是 $-x^{-\lceil\frac{n}{2}\rceil}\dfrac{g(f_0(x))}{g^\prime(f_0(x))}$ 总是一个只包含 $x$ 的自然数幂的式子，$h(x)$ 总是存在。&lt;/p>
+&lt;p>由上述过程可知，Newton&amp;rsquo;s Method 可应用于解 $g(f(x))=0$ 模 $x^n$ 意义下的根，当且仅当 $g(f(x))$ 无限可微。$g(f(x))\equiv0\pmod{x^n}$ 的根存在，当且仅当这个同余方程在模 $x^1$ 意义下的根 $f_0$ 存在，并且每个 $f_0$ 都对应着唯一的一个模 $x^n$ 的根。除此之外，对于第 $a$ 次和第 $a+1$ 次迭代的根 $f_{a}(x),f_{a+1}(x)$，有 $f_a(x)\equiv f_{a+1}(x)\pmod{x^{2^a}}$。&lt;/p>
+&lt;p>下面将就几个具体的 $g(f(x))$ 讲解 Newton&amp;rsquo;s Method 的应用。&lt;/p>
+&lt;h2 id="newtons-method-求多项式的逆">Newton&amp;rsquo;s Method 求多项式的逆&lt;/h2>
+&lt;p>对于原多项式 $h(x)$，它在模 $x^n$ 意义下的逆 $f(x)$ 满足 $h(x)\cdot g(x)\equiv0\pmod{x^n}$。则 $g(f(x))$ 可以写作 $g(f(x))=h(x)-\dfrac{1}{f(x)}$。代入 Newton&amp;rsquo;s Method 得&lt;/p>
+&lt;p>$$
+f(x)\equiv f_0(x)-\dfrac{h(x)-\dfrac{1}{f_0(x)}}{f_0^{-2}(x)}\pmod{x^n}
+$$&lt;/p>
+&lt;p>注意这里 $g(f(x))$ 不是关于 $x$ 的复合函数，而是一个关于 $f(x)$ 的函数。它的导数要视作 $\dfrac{\mathrm{d}g(f(x))}{\mathrm{d}f(x)}$。&lt;/p>
+&lt;p>即&lt;/p>
+&lt;p>$$
+f(x)\equiv f_0(x)\cdot\left(2-f_0(x)\cdot h(x)\right)\pmod{x^n}
+$$&lt;/p>
+&lt;p>运用 FNTT，单次迭代复杂度为 $O(n\log n)$。运用主定理可得总时间复杂度为 $T(n)=T\left(\dfrac{n}{2}\right)+O(n\log n)=O(n\log n)$。我们一般用倍增法实现代码。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">void&lt;/span> &lt;span style="color:#a6e22e">polyinv&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#f92672">*&lt;/span>f, &lt;span style="color:#66d9ef">const&lt;/span> &lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#f92672">*&lt;/span>h, &lt;span style="color:#66d9ef">int&lt;/span> n){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">int&lt;/span> N &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>; &lt;span style="color:#66d9ef">while&lt;/span>(N &lt;span style="color:#f92672">&amp;lt;&lt;/span> n &lt;span style="color:#f92672">+&lt;/span> n &lt;span style="color:#f92672">-&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>) N &lt;span style="color:#f92672">&amp;lt;&amp;lt;=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">static&lt;/span> &lt;span style="color:#66d9ef">int&lt;/span> d[maxn], g[maxn];
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> memcpy(d, h, n &lt;span style="color:#f92672">*&lt;/span> &lt;span style="color:#66d9ef">sizeof&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span>)), memset(d &lt;span style="color:#f92672">+&lt;/span> n, &lt;span style="color:#ae81ff">0&lt;/span>, (N &lt;span style="color:#f92672">-&lt;/span> n) &lt;span style="color:#f92672">*&lt;/span> &lt;span style="color:#66d9ef">sizeof&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span>));
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> memset(f, &lt;span style="color:#ae81ff">0&lt;/span>, N &lt;span style="color:#f92672">*&lt;/span> &lt;span style="color:#66d9ef">sizeof&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span>)), memset(g, &lt;span style="color:#ae81ff">0&lt;/span>, N &lt;span style="color:#f92672">*&lt;/span> &lt;span style="color:#66d9ef">sizeof&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span>)), f[&lt;span style="color:#ae81ff">0&lt;/span>] &lt;span style="color:#f92672">=&lt;/span> qpow(h[&lt;span style="color:#ae81ff">0&lt;/span>], mod &lt;span style="color:#f92672">-&lt;/span> &lt;span style="color:#ae81ff">2&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> w &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">2&lt;/span>; w &lt;span style="color:#f92672">/&lt;/span> &lt;span style="color:#ae81ff">2&lt;/span> &lt;span style="color:#f92672">&amp;lt;&lt;/span> n; w &lt;span style="color:#f92672">&amp;lt;&amp;lt;=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> memcpy(g, d, w &lt;span style="color:#f92672">*&lt;/span> &lt;span style="color:#66d9ef">sizeof&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span>));
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> i &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>; i &lt;span style="color:#f92672">&amp;lt;&lt;/span> w &lt;span style="color:#f92672">*&lt;/span> &lt;span style="color:#ae81ff">2&lt;/span>; &lt;span style="color:#f92672">++&lt;/span>i) rev[i] &lt;span style="color:#f92672">=&lt;/span> (rev[i &lt;span style="color:#f92672">&amp;gt;&amp;gt;&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>] &lt;span style="color:#f92672">&amp;gt;&amp;gt;&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>) &lt;span style="color:#f92672">|&lt;/span> (i &lt;span style="color:#f92672">&amp;amp;&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span> &lt;span style="color:#f92672">?&lt;/span> w : &lt;span style="color:#ae81ff">0&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> dft(f, w &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>, &lt;span style="color:#ae81ff">1&lt;/span>), dft(g, w &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>, &lt;span style="color:#ae81ff">1&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> i &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>; i &lt;span style="color:#f92672">&amp;lt;&lt;/span> w &lt;span style="color:#f92672">*&lt;/span> &lt;span style="color:#ae81ff">2&lt;/span>; &lt;span style="color:#f92672">++&lt;/span>i) f[i] &lt;span style="color:#f92672">=&lt;/span> (ll)f[i] &lt;span style="color:#f92672">*&lt;/span> (&lt;span style="color:#ae81ff">2&lt;/span> &lt;span style="color:#f92672">-&lt;/span> (ll)f[i] &lt;span style="color:#f92672">*&lt;/span> g[i] &lt;span style="color:#f92672">%&lt;/span> mod) &lt;span style="color:#f92672">%&lt;/span> mod;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> dft(f, w &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>, &lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> i &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>, inv &lt;span style="color:#f92672">=&lt;/span> qpow(w &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>, mod &lt;span style="color:#f92672">-&lt;/span> &lt;span style="color:#ae81ff">2&lt;/span>); i &lt;span style="color:#f92672">&amp;lt;&lt;/span> w; &lt;span style="color:#f92672">++&lt;/span>i) f[i] &lt;span style="color:#f92672">=&lt;/span> (ll)f[i] &lt;span style="color:#f92672">*&lt;/span> inv &lt;span style="color:#f92672">%&lt;/span> mod;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> memset(f &lt;span style="color:#f92672">+&lt;/span> w, &lt;span style="color:#ae81ff">0&lt;/span>, w &lt;span style="color:#f92672">*&lt;/span> &lt;span style="color:#66d9ef">sizeof&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span>));
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> memset(f &lt;span style="color:#f92672">+&lt;/span> n, &lt;span style="color:#ae81ff">0&lt;/span>, (N &lt;span style="color:#f92672">-&lt;/span> n) &lt;span style="color:#f92672">*&lt;/span> &lt;span style="color:#66d9ef">sizeof&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span>));
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="newtons-method-求多项式平方根">Newton&amp;rsquo;s Method 求多项式平方根&lt;/h2>
+&lt;p>对于多项式 $h(x)$，它的平方根 $f(x)$ 满足 $f^2(x)\equiv h(x)\pmod{x^n}$，我们可以写出 $g(f(x))\equiv h(x)-f^2(x)\pmod{x^n}$。代入 Newton&amp;rsquo;s Method 得&lt;/p>
+&lt;p>$$
+\begin{aligned}
+f(x)&amp;amp;\equiv f_0(x)-\dfrac{h(x)-f_0^2(x)}{-2f_0(x)}\newline
+&amp;amp;\equiv f_0(x)+\dfrac{1}{2}\left(h(x)\cdot f_0^{-1}(x)-f_0(x)\right)\newline
+&amp;amp;\equiv \dfrac{1}{2}\left(f_0(x)+f_0^{-1}(x)\cdot h(x)\right)
+\end{aligned}\pmod{x^n}
+$$&lt;/p>
+&lt;p>单次迭代仍为 $O(n\log n)$，故总复杂度也为 $O(n\log n)$。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">void&lt;/span> &lt;span style="color:#a6e22e">polysqrt&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#f92672">*&lt;/span>f, &lt;span style="color:#66d9ef">const&lt;/span> &lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#f92672">*&lt;/span>h, &lt;span style="color:#66d9ef">int&lt;/span> n){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">int&lt;/span> N &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>; &lt;span style="color:#66d9ef">while&lt;/span>(N &lt;span style="color:#f92672">&amp;lt;&lt;/span> n &lt;span style="color:#f92672">+&lt;/span> n &lt;span style="color:#f92672">-&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>) N &lt;span style="color:#f92672">&amp;lt;&amp;lt;=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">static&lt;/span> &lt;span style="color:#66d9ef">int&lt;/span> d[maxn], g[maxn], f_inv[maxn];
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> memcpy(d, h, n &lt;span style="color:#f92672">*&lt;/span> &lt;span style="color:#66d9ef">sizeof&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span>)), memset(d &lt;span style="color:#f92672">+&lt;/span> n, &lt;span style="color:#ae81ff">0&lt;/span>, (N &lt;span style="color:#f92672">-&lt;/span> n) &lt;span style="color:#f92672">*&lt;/span> &lt;span style="color:#66d9ef">sizeof&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span>));
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> memset(f, &lt;span style="color:#ae81ff">0&lt;/span>, N &lt;span style="color:#f92672">*&lt;/span> &lt;span style="color:#66d9ef">sizeof&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span>)), memset(g, &lt;span style="color:#ae81ff">0&lt;/span>, N &lt;span style="color:#f92672">*&lt;/span> &lt;span style="color:#66d9ef">sizeof&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span>)), f[&lt;span style="color:#ae81ff">0&lt;/span>] &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> w &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">2&lt;/span>; w &lt;span style="color:#f92672">/&lt;/span> &lt;span style="color:#ae81ff">2&lt;/span> &lt;span style="color:#f92672">&amp;lt;&lt;/span> n; w &lt;span style="color:#f92672">&amp;lt;&amp;lt;=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> memcpy(g, d, w &lt;span style="color:#f92672">*&lt;/span> &lt;span style="color:#66d9ef">sizeof&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span>)), polyinv(f_inv, f, w);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> i &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>; i &lt;span style="color:#f92672">&amp;lt;&lt;/span> w &lt;span style="color:#f92672">*&lt;/span> &lt;span style="color:#ae81ff">2&lt;/span>; &lt;span style="color:#f92672">++&lt;/span>i) rev[i] &lt;span style="color:#f92672">=&lt;/span> (rev[i &lt;span style="color:#f92672">&amp;gt;&amp;gt;&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>] &lt;span style="color:#f92672">&amp;gt;&amp;gt;&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>) &lt;span style="color:#f92672">|&lt;/span> (i &lt;span style="color:#f92672">&amp;amp;&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span> &lt;span style="color:#f92672">?&lt;/span> w : &lt;span style="color:#ae81ff">0&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> dft(g, w &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>, &lt;span style="color:#ae81ff">1&lt;/span>), dft(f, w &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>, &lt;span style="color:#ae81ff">1&lt;/span>), dft(f_inv, w &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>, &lt;span style="color:#ae81ff">1&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> i &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>; i &lt;span style="color:#f92672">&amp;lt;&lt;/span> w &lt;span style="color:#f92672">*&lt;/span> &lt;span style="color:#ae81ff">2&lt;/span>; &lt;span style="color:#f92672">++&lt;/span>i) f[i] &lt;span style="color:#f92672">=&lt;/span> (f[i] &lt;span style="color:#f92672">+&lt;/span> (ll)f_inv[i] &lt;span style="color:#f92672">*&lt;/span> g[i] &lt;span style="color:#f92672">%&lt;/span> mod) &lt;span style="color:#f92672">%&lt;/span> mod;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> dft(f, w &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>, &lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> i &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>, inv &lt;span style="color:#f92672">=&lt;/span> qpow(w &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> &lt;span style="color:#ae81ff">2&lt;/span>, mod &lt;span style="color:#f92672">-&lt;/span> &lt;span style="color:#ae81ff">2&lt;/span>); i &lt;span style="color:#f92672">&amp;lt;&lt;/span> w; &lt;span style="color:#f92672">++&lt;/span>i) f[i] &lt;span style="color:#f92672">=&lt;/span> (ll)f[i] &lt;span style="color:#f92672">*&lt;/span> inv &lt;span style="color:#f92672">%&lt;/span> mod;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> memset(f &lt;span style="color:#f92672">+&lt;/span> w, &lt;span style="color:#ae81ff">0&lt;/span>, w &lt;span style="color:#f92672">*&lt;/span> &lt;span style="color:#66d9ef">sizeof&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span>));
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> memset(f &lt;span style="color:#f92672">+&lt;/span> n, &lt;span style="color:#ae81ff">0&lt;/span>, (N &lt;span style="color:#f92672">-&lt;/span> n) &lt;span style="color:#f92672">*&lt;/span> &lt;span style="color:#66d9ef">sizeof&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span>));
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="newtons-method-求多项式指数函数">Newton&amp;rsquo;s Method 求多项式指数函数&lt;/h2>
+&lt;p>多项式的对数函数和指数函数都是用麦克劳林级数定义的。要用 Newton&amp;rsquo;s Method 求多项式指数函数，得先会求&lt;a href="https://www.flandre.love/zh/posts/polylog">多项式对数函数&lt;/a>。&lt;/p>
+&lt;p>对于多项式 $h(x)$，它的指数函数 $f(x)\equiv\exp h(x)\pmod{x^n}$ 满足 $h(x)\equiv\ln f(x)\pmod{x^n}$，我们可以写出 $g(f(x))=h(x)-\ln f(x)$。代入 Newton&amp;rsquo;s Method 得&lt;/p>
+&lt;p>$$
+\begin{aligned}
+f(x)&amp;amp;\equiv f_0(x)-\dfrac{h(x)-\ln f_0(x)}{-\dfrac{1}{f_0(x)}}\newline
+&amp;amp;\equiv f_0(x)+f_0(x)\cdot\left(h(x)-\ln f_0(x)\right)\newline
+&amp;amp;\equiv f_0(x)\cdot(1+h(x)-\ln f_0(x))
+\end{aligned}\pmod{x^n}
+$$&lt;/p>
+&lt;p>单次迭代仍为 $O(n\log n)$，故总复杂度也为 $O(n\log n)$。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">void&lt;/span> &lt;span style="color:#a6e22e">polyexp&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#f92672">*&lt;/span>f, &lt;span style="color:#66d9ef">const&lt;/span> &lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#f92672">*&lt;/span>h, &lt;span style="color:#66d9ef">int&lt;/span> n){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">int&lt;/span> N &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>; &lt;span style="color:#66d9ef">while&lt;/span>(N &lt;span style="color:#f92672">&amp;lt;&lt;/span> n &lt;span style="color:#f92672">+&lt;/span> n &lt;span style="color:#f92672">-&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>) N &lt;span style="color:#f92672">&amp;lt;&amp;lt;=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">static&lt;/span> &lt;span style="color:#66d9ef">int&lt;/span> d[maxn], g[maxn], lg[maxn]; memset(lg, &lt;span style="color:#ae81ff">0&lt;/span>, N &lt;span style="color:#f92672">*&lt;/span> &lt;span style="color:#66d9ef">sizeof&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span>));
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> memcpy(d, h, n &lt;span style="color:#f92672">*&lt;/span> &lt;span style="color:#66d9ef">sizeof&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span>)), memset(d &lt;span style="color:#f92672">+&lt;/span> n, &lt;span style="color:#ae81ff">0&lt;/span>, (N &lt;span style="color:#f92672">-&lt;/span> n) &lt;span style="color:#f92672">*&lt;/span> &lt;span style="color:#66d9ef">sizeof&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span>));
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> memset(g, &lt;span style="color:#ae81ff">0&lt;/span>, N &lt;span style="color:#f92672">*&lt;/span> &lt;span style="color:#66d9ef">sizeof&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span>)), memset(f, &lt;span style="color:#ae81ff">0&lt;/span>, N &lt;span style="color:#f92672">*&lt;/span> &lt;span style="color:#66d9ef">sizeof&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span>)), f[&lt;span style="color:#ae81ff">0&lt;/span>] &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> w &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">2&lt;/span>; w &lt;span style="color:#f92672">/&lt;/span> &lt;span style="color:#ae81ff">2&lt;/span> &lt;span style="color:#f92672">&amp;lt;&lt;/span> n; w &lt;span style="color:#f92672">&amp;lt;&amp;lt;=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> memcpy(g, d, w &lt;span style="color:#f92672">*&lt;/span> &lt;span style="color:#66d9ef">sizeof&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span>)), polylog(lg, f, w);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> i &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>; i &lt;span style="color:#f92672">&amp;lt;&lt;/span> w &lt;span style="color:#f92672">*&lt;/span> &lt;span style="color:#ae81ff">2&lt;/span>; &lt;span style="color:#f92672">++&lt;/span>i) rev[i] &lt;span style="color:#f92672">=&lt;/span> (rev[i &lt;span style="color:#f92672">&amp;gt;&amp;gt;&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>] &lt;span style="color:#f92672">&amp;gt;&amp;gt;&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>) &lt;span style="color:#f92672">|&lt;/span> (i &lt;span style="color:#f92672">&amp;amp;&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span> &lt;span style="color:#f92672">?&lt;/span> w : &lt;span style="color:#ae81ff">0&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> dft(g, w &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>, &lt;span style="color:#ae81ff">1&lt;/span>), dft(f, w &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>, &lt;span style="color:#ae81ff">1&lt;/span>), dft(lg, w &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>, &lt;span style="color:#ae81ff">1&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> i &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>; i &lt;span style="color:#f92672">&amp;lt;&lt;/span> w &lt;span style="color:#f92672">*&lt;/span> &lt;span style="color:#ae81ff">2&lt;/span>; &lt;span style="color:#f92672">++&lt;/span>i) f[i] &lt;span style="color:#f92672">=&lt;/span> (ll)f[i] &lt;span style="color:#f92672">*&lt;/span> (&lt;span style="color:#ae81ff">1&lt;/span> &lt;span style="color:#f92672">+&lt;/span> g[i] &lt;span style="color:#f92672">-&lt;/span> lg[i]) &lt;span style="color:#f92672">%&lt;/span> mod;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> dft(f, w &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>, &lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> i &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>, inv &lt;span style="color:#f92672">=&lt;/span> qpow(w &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>, mod &lt;span style="color:#f92672">-&lt;/span> &lt;span style="color:#ae81ff">2&lt;/span>); i &lt;span style="color:#f92672">&amp;lt;&lt;/span> w; &lt;span style="color:#f92672">++&lt;/span>i) f[i] &lt;span style="color:#f92672">=&lt;/span> (ll)f[i] &lt;span style="color:#f92672">*&lt;/span> inv &lt;span style="color:#f92672">%&lt;/span> mod;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> memset(f &lt;span style="color:#f92672">+&lt;/span> w, &lt;span style="color:#ae81ff">0&lt;/span>, w &lt;span style="color:#f92672">*&lt;/span> &lt;span style="color:#66d9ef">sizeof&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span>));
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> memset(f &lt;span style="color:#f92672">+&lt;/span> n, &lt;span style="color:#ae81ff">0&lt;/span>, (N &lt;span style="color:#f92672">-&lt;/span> n) &lt;span style="color:#f92672">*&lt;/span> &lt;span style="color:#66d9ef">sizeof&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span>));
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>一个有趣的事实是，要写多项式指数函数就必须先写一个多项式对数函数；要写多项式对数函数就必须先写一个多项式求逆&amp;hellip;&amp;hellip;这些东西加起来有七八十行，还是不太好写的。&lt;/p></description></item><item><title>多项式的逆</title><link>https://www.flandre.love/zh/posts/polyinv/</link><pubDate>Wed, 13 Jan 2021 22:13:23 +0800</pubDate><guid>https://www.flandre.love/zh/posts/polyinv/</guid><description>&lt;p>数学中很多元素在一定条件下都存在逆元。多项式的逆元是什么呢？&lt;/p>
+&lt;p>从乘法逆元出发，一个简单的想法是，多项式 $g(x)$ 是 $f(x)$ 的逆元当且仅当 $f(x)\cdot g(x)=1$。遗憾的是，当且仅当 $f(x)$ 只含常数项时才存在满足条件的多项式 $g(x)$，否则 $g(x)$ 必须为无穷的幂级数。因此，我们在模的意义下考虑多项式的逆，得到多项式逆元的定义：&lt;/p>
+&lt;blockquote>
+&lt;p>$f(x)$ 的逆元 $g(x)$ 是一个满足 $f(x)\cdot g(x)\equiv 1\pmod{x^n}$ 的多项式。&lt;/p>
+&lt;/blockquote>
+&lt;p>分别用 $f_{0..n-1}$ 和 $g_{0..n-1}$ 来表示 $f(x)$ 和 $g(x)$ 的系数，把 $f(x)\cdot g(x)$ 写下来：&lt;/p>
+&lt;p>$$
+f(x)\cdot g(x)\equiv \sum\limits_{i=0}^{n-1}\sum\limits_{j=0}^{i}f_{j}g_{i-j}\cdot x^{i}
+$$&lt;/p>
+&lt;p>要满足上面的定义，$f(x)\cdot g(x)$ 就是 $x^0$ 项为 $1$，其余项为 $0$ 的多项式，即&lt;/p>
+&lt;p>$$
+f_0g_0=1
+$$&lt;/p>
+&lt;p>和&lt;/p>
+&lt;p>$$
+\forall i\ge 1: \sum\limits_{j=0}^{i}f_{j}g_{i-j}=0
+$$&lt;/p>
+&lt;p>这两个条件都成立，$g(x)$ 才是 $f(x)$ 的逆元。由第一个条件可知，若 $f(x)$ 的常数项为 $0$，则 $g(x)$ 一定不存在（$0$ 不存在逆元）。若 $f(x)$ 的常数项不为零，是否就一定存在满足第二个条件的 $g(x)$ 呢？&lt;/p>
+&lt;p>考虑把上面的式子视作一个 $n$ 元一次方程组，$f_{0..n-1}$ 是已知系数，$g_{0..n-1}$ 是未知数。由于我们有 $n$ 个关于 $n$ 个未知数的次数上升的方程，$g_{0..n-1}$ 一定有唯一解。&lt;/p>
+&lt;p>$$
+\begin{cases}f_0g_0&amp;amp;=1\newline f_0g_1+f_1g_0&amp;amp;=0\newline f_0g_2+f_1g_1+f_2g_0&amp;amp;=0\newline f_0g_3+f_1g_2+f_2g_1+f_3g_0&amp;amp;=0\newline \ldots\newline f_0g_{n-1}+f_1g_{n-2}+f_2g_{n-3}+\ldots+f_{n-1}g_0&amp;amp;=0\end{cases}
+$$&lt;/p>
+&lt;p>也就是说， &lt;strong>$f(x)$ 在模 $x^n$ 意义下存在逆元，当且仅当 $f(x)$ 的常数项非零；在 $f(x)$ 逆元存在的情况下，$f(x)$ 的逆元唯一&lt;/strong>。&lt;/p>
+&lt;p>根据上述方程组求逆的时间复杂度是 $O(n^2)$，更快的 $O(n\log n)$ 算法请参考 &lt;a href="https://www.flandre.love/zh/posts/newtons_method">Newton&amp;rsquo;s Method&lt;/a>。&lt;/p></description></item><item><title>任意模数多项式乘法</title><link>https://www.flandre.love/zh/posts/arbitrary_modulo/</link><pubDate>Thu, 24 Sep 2020 11:19:29 +0800</pubDate><guid>https://www.flandre.love/zh/posts/arbitrary_modulo/</guid><description>&lt;p>由于 NTT 的数学原理，它只能用于计算模特定模数意义下的多项式乘法。如何计算任意模数的多项式乘法呢？&lt;/p>
+&lt;p>一种简单的想法是利用中国剩余定理。一般我们计算两个长度在 $10^5$ 级别、系数在 $10^9$ 级别的多项式的卷积，其结果的系数不会超过 $10^{23}$ 级别。只要选取三个乘积超过 $10^{23}$ 的 NTT 模数，分别乘一次，再用中国剩余定理合并答案即可。这种方法常数极大。&lt;/p>
+&lt;p>而我们要介绍的做法是拆系数 FFT。合理的拆系数 FFT 实现消耗的时间仅仅是普通多项式乘法的四倍左右，是一种很优秀的任意模数多项式乘法计算方法。&lt;/p>
+&lt;h2 id="拆系数-fft">拆系数 FFT&lt;/h2>
+&lt;p>假定我们卷积的模数为 $p$，选取一个 $\sqrt{p}$ 级别的数 $d$。在 OI 中，$p$ 一般至多为 $2^{30}$ 级别的数。&lt;/p>
+&lt;p>把多项式 $F$ 每一项的系数 $F_i$ 分解为 $F_i=d\cdot G_i+H_i$，得到 $F=d\cdot G+H$。由于 $d$ 是 $\sqrt{p}$ 级别的，我们可以保证 $G$ 和 $H$ 的系数也是 $\sqrt{p}$ 级别的，相乘不会超过 &lt;code>double&lt;/code> 的精度。&lt;/p>
+&lt;p>于是&lt;/p>
+&lt;p>$$
+\begin{aligned}F\cdot G&amp;amp;=\left(d\cdot A+B\right)\cdot\left(d\cdot C+D\right)\newline &amp;amp;=d^2\cdot AC+d\cdot(AD+BC)+BD\end{aligned}
+$$&lt;/p>
+&lt;p>使用“三次变两次”的思想优化，可以在七次 DFT 变换内得到结果 $F\cdot G$。这就是拆系数 FFT 了。&lt;/p>
+&lt;h2 id="优化">优化&lt;/h2>
+&lt;p>根据国家集训队论文《再谈快速傅里叶变换》，存在一种四次 DFT 计算任意模数卷积的算法。&lt;/p>
+&lt;p>设 $F=G+i\cdot H$，对于 FFT 选取的每一个点 $\left(\omega_n^k,F\left(\omega_n^k\right)\right)$，都有&lt;/p>
+&lt;p>$$
+\begin{aligned}F\left(\omega_n^k\right)&amp;amp;= G\left(\omega_n^k\right)+i\cdot H\left(\omega_n^k\right)\newline
+&amp;amp;=\sum\limits_{j=0}^{n-1}\left(G_j\cdot\omega_n^{jk}+i\cdot H_j\cdot\omega_n^{jk}\right)\newline
+&amp;amp;=\sum\limits_{j=0}^{n-1}\omega_{n}^{jk}\cdot\left(G_j+i\cdot H_j\right)\newline
+&amp;amp;=\sum\limits_{j=0}^{n-1}\left(\cos\dfrac{kj\cdot 2\pi}{n}+i\cdot\sin\dfrac{kj\cdot 2\pi}{n}\right)\cdot\left(G_j+i\cdot H_j\right)\end{aligned}
+$$&lt;/p>
+&lt;p>再设 $\overline{F}=G-i\cdot H$，我们有&lt;/p>
+&lt;p>$$
+\begin{aligned}\overline{F}\left(\omega_n^k\right)&amp;amp;=\sum\limits_{j=0}^{n-1}\left(\cos\dfrac{kj\cdot 2\pi}{n}+i\cdot\sin\dfrac{kj\cdot 2\pi}{n}\right)\cdot\left(G_j-i\cdot H_j\right)\newline
+&amp;amp;=\sum\limits_{j=0}^{n-1}\left(\left(G_j\cdot\cos\dfrac{kj\cdot 2\pi}{n}+H_j\cdot\sin\dfrac{kj\cdot 2\pi}{n}\right)+i\cdot\left(G_j\cdot\sin\dfrac{kj\cdot 2\pi}{n}-H_j\cdot\cos\dfrac{kj\cdot 2\pi}{n}\right)\right)\newline
+&amp;amp;=\sum\limits_{j=0}^{n-1}\left(\left(G_j\cdot\cos\left(-\dfrac{kj\cdot 2\pi}{n}\right)-H_j\cdot\sin\left(-\dfrac{kj\cdot 2\pi}{n}\right)\right)-i\cdot\left(G_j\cdot\sin\left(-\dfrac{kj\cdot 2\pi}{n}\right)+H_j\cdot\cos\left(-\dfrac{kj\cdot 2\pi}{n}\right)\right)\right)\newline
+&amp;amp;=\sum\limits_{j=0}^{n-1}\left(\left(G_j\cdot\cos\dfrac{(nj-kj)\cdot 2\pi}{n}-H_j\cdot\sin\dfrac{(nj-kj)\cdot 2\pi}{n}\right)-i\cdot\left(G_j\cdot\sin\dfrac{(nj-kj)\cdot 2\pi}{n}+H_j\cdot\cos\dfrac{(nj-kj)\cdot 2\pi}{n}\right)\right)\newline
+&amp;amp;=\overline{\sum\limits_{j=0}^{n-1}\left(\left(G_j\cdot\cos\dfrac{(nj-kj)\cdot 2\pi}{n}-H_j\cdot\sin\dfrac{(nj-kj)\cdot 2\pi}{n}\right)+i\cdot\left(G_j\cdot\sin\dfrac{(nj-kj)\cdot 2\pi}{n}+H_j\cdot\cos\dfrac{(nj-kj)\cdot 2\pi}{n}\right)\right)}\newline
+&amp;amp;=\overline{\sum\limits_{j=0}^{n-1}\left(\cos\dfrac{(nj-kj)\cdot 2\pi}{n}+i\cdot\sin\dfrac{(nj-kj)\cdot 2\pi}{n}\right)\cdot\left(G_j+i\cdot H_j\right)}\&amp;amp;=\overline{G\left(\omega_n^{n-k}\right)+i\cdot H\left(\omega_n^{n-k}\right)}\newline
+&amp;amp;=\overline{F\left(\omega_n^{n-k}\right)}\end{aligned}
+$$&lt;/p>
+&lt;p>因此，只要求出 $F$ 的点值，就可 $O(n)$ 地推出 $\overline{F}$ 的点值，解出 $G,H$ 的点值。即&lt;/p>
+&lt;p>$$
+\begin{aligned}
+\text{DFT}(G)&amp;amp;=\dfrac{\text{DFT}(F)+\text{DFT}(\overline{F})}{2}\newline
+\text{DFT}(H)&amp;amp;=\dfrac{\text{DFT}(F)-\text{DFT}(\overline{F})}{2i}
+\end{aligned}
+$$&lt;/p>
+&lt;p>这样，一共只需要两次 DFT 就可以得到四个多项式的点值。&lt;/p>
+&lt;p>还原系数表达（IDFT）时，也可以用“三次变两次”的思想，将两个多项式分虚实放在一起 IDFT，做到两次 IDFT 还原。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;cstdio&amp;gt;&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;cmath&amp;gt;&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;vector&amp;gt;&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;complex&amp;gt;&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#define double long double
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">const&lt;/span> &lt;span style="color:#66d9ef">double&lt;/span> PI &lt;span style="color:#f92672">=&lt;/span> std&lt;span style="color:#f92672">::&lt;/span>acos(&lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">namespace&lt;/span> __fft{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">typedef&lt;/span> std&lt;span style="color:#f92672">::&lt;/span>complex&lt;span style="color:#f92672">&amp;lt;&lt;/span>&lt;span style="color:#66d9ef">double&lt;/span>&lt;span style="color:#f92672">&amp;gt;&lt;/span> comp;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> std&lt;span style="color:#f92672">::&lt;/span>vector&lt;span style="color:#f92672">&amp;lt;&lt;/span>comp&lt;span style="color:#f92672">&amp;gt;&lt;/span> tmp;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> std&lt;span style="color:#f92672">::&lt;/span>vector&lt;span style="color:#f92672">&amp;lt;&lt;/span>&lt;span style="color:#66d9ef">int&lt;/span>&lt;span style="color:#f92672">&amp;gt;&lt;/span> rev;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">void&lt;/span> &lt;span style="color:#a6e22e">init&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> n){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> tmp.resize(n), rev.resize(n);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> i &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>; i &lt;span style="color:#f92672">&amp;lt;&lt;/span> n; &lt;span style="color:#f92672">++&lt;/span>i){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> rev[i] &lt;span style="color:#f92672">=&lt;/span> rev[i &lt;span style="color:#f92672">&amp;gt;&amp;gt;&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>] &lt;span style="color:#f92672">&amp;gt;&amp;gt;&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span>(i &lt;span style="color:#f92672">&amp;amp;&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>) rev[i] &lt;span style="color:#f92672">|=&lt;/span> n &lt;span style="color:#f92672">&amp;gt;&amp;gt;&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">void&lt;/span> &lt;span style="color:#a6e22e">fft&lt;/span>(std&lt;span style="color:#f92672">::&lt;/span>vector&lt;span style="color:#f92672">&amp;lt;&lt;/span>comp&lt;span style="color:#f92672">&amp;gt;::&lt;/span>iterator f, &lt;span style="color:#66d9ef">int&lt;/span> n, &lt;span style="color:#66d9ef">int&lt;/span> b){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> i &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>; i &lt;span style="color:#f92672">&amp;lt;&lt;/span> n; &lt;span style="color:#f92672">++&lt;/span>i)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span>(i &lt;span style="color:#f92672">&amp;lt;&lt;/span> rev[i]) std&lt;span style="color:#f92672">::&lt;/span>swap(f[i], f[rev[i]]);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> i &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">2&lt;/span>; i &lt;span style="color:#f92672">&amp;lt;=&lt;/span> n; i &lt;span style="color:#f92672">&amp;lt;&amp;lt;=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> comp w(std&lt;span style="color:#f92672">::&lt;/span>cos(&lt;span style="color:#ae81ff">2&lt;/span> &lt;span style="color:#f92672">*&lt;/span> PI &lt;span style="color:#f92672">/&lt;/span> i), b &lt;span style="color:#f92672">*&lt;/span> std&lt;span style="color:#f92672">::&lt;/span>sin(&lt;span style="color:#ae81ff">2&lt;/span> &lt;span style="color:#f92672">*&lt;/span> PI &lt;span style="color:#f92672">/&lt;/span> i));
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> j &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>; j &lt;span style="color:#f92672">&amp;lt;&lt;/span> n; j &lt;span style="color:#f92672">+=&lt;/span> i){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> comp wn(&lt;span style="color:#ae81ff">1&lt;/span>, &lt;span style="color:#ae81ff">0&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> std&lt;span style="color:#f92672">::&lt;/span>vector&lt;span style="color:#f92672">&amp;lt;&lt;/span>comp&lt;span style="color:#f92672">&amp;gt;::&lt;/span>iterator g &lt;span style="color:#f92672">=&lt;/span> f &lt;span style="color:#f92672">+&lt;/span> j, h &lt;span style="color:#f92672">=&lt;/span> f &lt;span style="color:#f92672">+&lt;/span> j &lt;span style="color:#f92672">+&lt;/span> i &lt;span style="color:#f92672">/&lt;/span> &lt;span style="color:#ae81ff">2&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> k &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>; k &lt;span style="color:#f92672">&amp;lt;&lt;/span> i &lt;span style="color:#f92672">/&lt;/span> &lt;span style="color:#ae81ff">2&lt;/span>; &lt;span style="color:#f92672">++&lt;/span>k){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> tmp[k] &lt;span style="color:#f92672">=&lt;/span> g[k] &lt;span style="color:#f92672">+&lt;/span> h[k] &lt;span style="color:#f92672">*&lt;/span> wn;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> tmp[k &lt;span style="color:#f92672">+&lt;/span> i &lt;span style="color:#f92672">/&lt;/span> &lt;span style="color:#ae81ff">2&lt;/span>] &lt;span style="color:#f92672">=&lt;/span> g[k] &lt;span style="color:#f92672">-&lt;/span> h[k] &lt;span style="color:#f92672">*&lt;/span> wn;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> wn &lt;span style="color:#f92672">=&lt;/span> wn &lt;span style="color:#f92672">*&lt;/span> w;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> k &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>; k &lt;span style="color:#f92672">&amp;lt;&lt;/span> i; &lt;span style="color:#f92672">++&lt;/span>k) f[j &lt;span style="color:#f92672">+&lt;/span> k] &lt;span style="color:#f92672">=&lt;/span> tmp[k];
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">int&lt;/span> n, m, p;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>std&lt;span style="color:#f92672">::&lt;/span>vector&lt;span style="color:#f92672">&amp;lt;&lt;/span>&lt;span style="color:#66d9ef">int&lt;/span>&lt;span style="color:#f92672">&amp;gt;&lt;/span> F, G;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>std&lt;span style="color:#f92672">::&lt;/span>vector&lt;span style="color:#f92672">&amp;lt;&lt;/span>&lt;span style="color:#66d9ef">int&lt;/span>&lt;span style="color:#f92672">&amp;gt;&lt;/span> mtt(std&lt;span style="color:#f92672">::&lt;/span>vector&lt;span style="color:#f92672">&amp;lt;&lt;/span>&lt;span style="color:#66d9ef">int&lt;/span>&lt;span style="color:#f92672">&amp;gt;&lt;/span> F, std&lt;span style="color:#f92672">::&lt;/span>vector&lt;span style="color:#f92672">&amp;lt;&lt;/span>&lt;span style="color:#66d9ef">int&lt;/span>&lt;span style="color:#f92672">&amp;gt;&lt;/span> G, &lt;span style="color:#66d9ef">int&lt;/span> len){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">typedef&lt;/span> &lt;span style="color:#66d9ef">long&lt;/span> &lt;span style="color:#66d9ef">long&lt;/span> ll;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">using&lt;/span> __fft&lt;span style="color:#f92672">::&lt;/span>comp;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> __fft&lt;span style="color:#f92672">::&lt;/span>init(len);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">int&lt;/span> d &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span> &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> &lt;span style="color:#ae81ff">15&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> std&lt;span style="color:#f92672">::&lt;/span>vector&lt;span style="color:#f92672">&amp;lt;&lt;/span>comp&lt;span style="color:#f92672">&amp;gt;&lt;/span> A(len), B(len);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> std&lt;span style="color:#f92672">::&lt;/span>vector&lt;span style="color:#f92672">&amp;lt;&lt;/span>comp&lt;span style="color:#f92672">&amp;gt;&lt;/span> C(len), D(len);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> i &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>; i &lt;span style="color:#f92672">&amp;lt;&lt;/span> len; &lt;span style="color:#f92672">++&lt;/span>i)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> A[i] &lt;span style="color:#f92672">=&lt;/span> comp(F[i] &lt;span style="color:#f92672">/&lt;/span> d, &lt;span style="color:#ae81ff">0&lt;/span>), B[i] &lt;span style="color:#f92672">=&lt;/span> comp(F[i] &lt;span style="color:#f92672">%&lt;/span> d, &lt;span style="color:#ae81ff">0&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> i &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>; i &lt;span style="color:#f92672">&amp;lt;&lt;/span> len; &lt;span style="color:#f92672">++&lt;/span>i)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> C[i] &lt;span style="color:#f92672">=&lt;/span> comp(G[i] &lt;span style="color:#f92672">/&lt;/span> d, &lt;span style="color:#ae81ff">0&lt;/span>), D[i] &lt;span style="color:#f92672">=&lt;/span> comp(G[i] &lt;span style="color:#f92672">%&lt;/span> d, &lt;span style="color:#ae81ff">0&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> std&lt;span style="color:#f92672">::&lt;/span>vector&lt;span style="color:#f92672">&amp;lt;&lt;/span>comp&lt;span style="color:#f92672">&amp;gt;&lt;/span> H(len), I(len);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> i &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>; i &lt;span style="color:#f92672">&amp;lt;&lt;/span> len; &lt;span style="color:#f92672">++&lt;/span>i)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> H[i] &lt;span style="color:#f92672">=&lt;/span> comp(A[i].real(), B[i].real());
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> __fft&lt;span style="color:#f92672">::&lt;/span>fft(H.begin(), len, &lt;span style="color:#ae81ff">1&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> i &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>; i &lt;span style="color:#f92672">&amp;lt;&lt;/span> len; &lt;span style="color:#f92672">++&lt;/span>i)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> I[i] &lt;span style="color:#f92672">=&lt;/span> conj(H[(len &lt;span style="color:#f92672">-&lt;/span> i) &lt;span style="color:#f92672">%&lt;/span> len]);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> i &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>; i &lt;span style="color:#f92672">&amp;lt;&lt;/span> len; &lt;span style="color:#f92672">++&lt;/span>i){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> A[i] &lt;span style="color:#f92672">=&lt;/span> (H[i] &lt;span style="color:#f92672">+&lt;/span> I[i]) &lt;span style="color:#f92672">*&lt;/span> comp(&lt;span style="color:#ae81ff">0.5&lt;/span>, &lt;span style="color:#ae81ff">0&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> B[i] &lt;span style="color:#f92672">=&lt;/span> (H[i] &lt;span style="color:#f92672">-&lt;/span> I[i]) &lt;span style="color:#f92672">*&lt;/span> comp(&lt;span style="color:#ae81ff">0&lt;/span>, &lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#ae81ff">0.5&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> i &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>; i &lt;span style="color:#f92672">&amp;lt;&lt;/span> len; &lt;span style="color:#f92672">++&lt;/span>i)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> H[i] &lt;span style="color:#f92672">=&lt;/span> comp(C[i].real(), D[i].real());
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> __fft&lt;span style="color:#f92672">::&lt;/span>fft(H.begin(), len, &lt;span style="color:#ae81ff">1&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> i &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>; i &lt;span style="color:#f92672">&amp;lt;&lt;/span> len; &lt;span style="color:#f92672">++&lt;/span>i)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> I[i] &lt;span style="color:#f92672">=&lt;/span> conj(H[(len &lt;span style="color:#f92672">-&lt;/span> i) &lt;span style="color:#f92672">%&lt;/span> len]);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> i &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>; i &lt;span style="color:#f92672">&amp;lt;&lt;/span> len; &lt;span style="color:#f92672">++&lt;/span>i){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> C[i] &lt;span style="color:#f92672">=&lt;/span> (H[i] &lt;span style="color:#f92672">+&lt;/span> I[i]) &lt;span style="color:#f92672">*&lt;/span> comp(&lt;span style="color:#ae81ff">0.5&lt;/span>, &lt;span style="color:#ae81ff">0&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> D[i] &lt;span style="color:#f92672">=&lt;/span> (H[i] &lt;span style="color:#f92672">-&lt;/span> I[i]) &lt;span style="color:#f92672">*&lt;/span> comp(&lt;span style="color:#ae81ff">0&lt;/span>, &lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#ae81ff">0.5&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> std&lt;span style="color:#f92672">::&lt;/span>vector&lt;span style="color:#f92672">&amp;lt;&lt;/span>comp&lt;span style="color:#f92672">&amp;gt;&lt;/span> P(len), Q(len);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> i &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>; i &lt;span style="color:#f92672">&amp;lt;&lt;/span> len; &lt;span style="color:#f92672">++&lt;/span>i){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> P[i] &lt;span style="color:#f92672">=&lt;/span> A[i] &lt;span style="color:#f92672">*&lt;/span> C[i] &lt;span style="color:#f92672">+&lt;/span> comp(&lt;span style="color:#ae81ff">0&lt;/span>, &lt;span style="color:#ae81ff">1&lt;/span>) &lt;span style="color:#f92672">*&lt;/span> (A[i] &lt;span style="color:#f92672">*&lt;/span> D[i] &lt;span style="color:#f92672">+&lt;/span> B[i] &lt;span style="color:#f92672">*&lt;/span> C[i]);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Q[i] &lt;span style="color:#f92672">=&lt;/span> B[i] &lt;span style="color:#f92672">*&lt;/span> D[i];
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> __fft&lt;span style="color:#f92672">::&lt;/span>fft(P.begin(), len, &lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>), __fft&lt;span style="color:#f92672">::&lt;/span>fft(Q.begin(), len, &lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> i &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>; i &lt;span style="color:#f92672">&amp;lt;&lt;/span> len; &lt;span style="color:#f92672">++&lt;/span>i){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> F[i] &lt;span style="color:#f92672">=&lt;/span> (ll)(P[i].real() &lt;span style="color:#f92672">/&lt;/span> len &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#ae81ff">0.9&lt;/span>) &lt;span style="color:#f92672">*&lt;/span> d &lt;span style="color:#f92672">%&lt;/span> p &lt;span style="color:#f92672">*&lt;/span> d &lt;span style="color:#f92672">%&lt;/span> p;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> F[i] &lt;span style="color:#f92672">=&lt;/span> (F[i] &lt;span style="color:#f92672">+&lt;/span> (ll)(P[i].imag() &lt;span style="color:#f92672">/&lt;/span> len &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#ae81ff">0.9&lt;/span>) &lt;span style="color:#f92672">*&lt;/span> d) &lt;span style="color:#f92672">%&lt;/span> p;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> F[i] &lt;span style="color:#f92672">=&lt;/span> (F[i] &lt;span style="color:#f92672">+&lt;/span> (ll)(Q[i].real() &lt;span style="color:#f92672">/&lt;/span> len &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#ae81ff">0.9&lt;/span>)) &lt;span style="color:#f92672">%&lt;/span> p;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> F[i] &lt;span style="color:#f92672">=&lt;/span> (F[i] &lt;span style="color:#f92672">+&lt;/span> p) &lt;span style="color:#f92672">%&lt;/span> p;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> F;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>(){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> std&lt;span style="color:#f92672">::&lt;/span>scanf(&lt;span style="color:#e6db74">&amp;#34;%d%d%d&amp;#34;&lt;/span>, &lt;span style="color:#f92672">&amp;amp;&lt;/span>n, &lt;span style="color:#f92672">&amp;amp;&lt;/span>m, &lt;span style="color:#f92672">&amp;amp;&lt;/span>p);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> F.resize(n &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>), G.resize(m &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> i &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>; i &lt;span style="color:#f92672">&amp;lt;=&lt;/span> n; &lt;span style="color:#f92672">++&lt;/span>i) std&lt;span style="color:#f92672">::&lt;/span>scanf(&lt;span style="color:#e6db74">&amp;#34;%d&amp;#34;&lt;/span>, &lt;span style="color:#f92672">&amp;amp;&lt;/span>F[i]), F[i] &lt;span style="color:#f92672">%=&lt;/span> p;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> i &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>; i &lt;span style="color:#f92672">&amp;lt;=&lt;/span> m; &lt;span style="color:#f92672">++&lt;/span>i) std&lt;span style="color:#f92672">::&lt;/span>scanf(&lt;span style="color:#e6db74">&amp;#34;%d&amp;#34;&lt;/span>, &lt;span style="color:#f92672">&amp;amp;&lt;/span>G[i]), G[i] &lt;span style="color:#f92672">%=&lt;/span> p;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">int&lt;/span> len &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> i &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>; i &lt;span style="color:#f92672">&amp;lt;=&lt;/span> &lt;span style="color:#ae81ff">20&lt;/span>; &lt;span style="color:#f92672">++&lt;/span>i)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span>((&lt;span style="color:#ae81ff">1&lt;/span> &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> i) &lt;span style="color:#f92672">&amp;gt;=&lt;/span> n &lt;span style="color:#f92672">+&lt;/span> m &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> len &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span> &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> i; &lt;span style="color:#66d9ef">break&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> F.resize(len), G.resize(len);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> std&lt;span style="color:#f92672">::&lt;/span>vector&lt;span style="color:#f92672">&amp;lt;&lt;/span>&lt;span style="color:#66d9ef">int&lt;/span>&lt;span style="color:#f92672">&amp;gt;&lt;/span> ans(mtt(F, G, len));
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> i &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>; i &lt;span style="color:#f92672">&amp;lt;=&lt;/span> n &lt;span style="color:#f92672">+&lt;/span> m; &lt;span style="color:#f92672">++&lt;/span>i) std&lt;span style="color:#f92672">::&lt;/span>printf(&lt;span style="color:#e6db74">&amp;#34;%d &amp;#34;&lt;/span>, ans[i]);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>以上是我早年间的实现，效率极其低下（$10^5$ 卷积运算耗时 $1109$ ms）。更好的实现可以参考我的项目 &lt;a href="https://github.com/fei0319/poly.h">fstdlib&lt;/a>。&lt;/p>
+&lt;p>拆系数 FFT 是无法通过 &lt;a href="https://judge.yosupo.jp/problem/convolution_mod_1000000007">Library Checker&lt;/a> 的，因为 Library Checker 的多项式长度达到了 $524288$，纵使是 &lt;code>long double&lt;/code> 也无法保证精度。正常情况下不会有题目考察规模如此之大的任意模数卷积。&lt;/p></description></item></channel></rss>

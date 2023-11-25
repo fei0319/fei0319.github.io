@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>最小瓶颈路 on 绯想天</title><link>https://www.flandre.love/zh/tags/%E6%9C%80%E5%B0%8F%E7%93%B6%E9%A2%88%E8%B7%AF/</link><description>Recent content in 最小瓶颈路 on 绯想天</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>Copyright © 2020 - 2023 Fei Pan</copyright><lastBuildDate>Mon, 01 Aug 2022 16:01:25 +0800</lastBuildDate><atom:link href="https://www.flandre.love/zh/tags/%E6%9C%80%E5%B0%8F%E7%93%B6%E9%A2%88%E8%B7%AF/index.xml" rel="self" type="application/rss+xml"/><item><title>最小生成树上路径为最小瓶颈路的证明</title><link>https://www.flandre.love/zh/posts/proof_mbp_mst/</link><pubDate>Mon, 01 Aug 2022 16:01:25 +0800</pubDate><guid>https://www.flandre.love/zh/posts/proof_mbp_mst/</guid><description>&lt;p>对于无向图 $G$，$x$ 到 $y$ 的最小瓶颈路定义为它们间所有简单路径中最大边权最小的路径。显然，$x$ 到 $y$ 的最小瓶颈路不一定只有唯一一条。&lt;/p>
+&lt;p>一个广为人知的结论是，$G$ 的一个最小生成树上 $x$ 到 $y$ 的路径是它们间的一个最小瓶颈路。下面给出两个证明。&lt;/p>
+&lt;h2 id="从构造方法证明">从构造方法证明&lt;/h2>
+&lt;p>假定我们的最小生成树由 Kruskal 算法构造。&lt;/p>
+&lt;p>设 $x$ 到 $y$ 最小瓶颈路上的最大边权为 $m$。由于 $x$ 到 $y$ 最小瓶颈路上的最大边权为 $m$，一定可以仅通过边权小于等于 $m$ 的边使 $x$ 和 $y$ 联通，则在 Kruskal 算法仅处理完边权小于等于 $m$ 的边时，$x$ 和 $y$ 已在生成树中联通，即最小生成树中 $x$ 到 $y$ 的路径上的最大边权小于等于 $m$。&lt;/p>
+&lt;p>类似地，也可以说明 Prim 算法构造的最小生成树具有该性质。这样不能证明其他最小生成树也具有性质。&lt;/p>
+&lt;h2 id="反证法">反证法&lt;/h2>
+&lt;p>设 $x$ 到 $y$ 最小瓶颈路上的最大边权为 $m$。假设最小生成树 $T = (V, E)$ 上 $x$ 到 $y$ 的路径上存在边权大于 $m$ 的边，则我们去除 $T$ 中所有边权大于 $m$ 的边 (记作 $V_m$)，$T$ 中剩余的边与顶点形成的图 $T_m = (\complement_VV_m, E)$ 中含超过一个连通块。&lt;/p>
+&lt;p>由于 $x$ 到 $y$ 存在一条所有边的边权都不超过 $m$ 的路径，一定可以加入 $p$ 条边权不大于 $m$ 的边，使得包含 $x$ 所在连通块和 $y$ 所在连通块的一系列共 $p + 1$ 个连通块连通。之后再加入 $|V_m| - p$ 个 $V_m$ 中的边，即可形成一个新的生成树 $T^\prime$。&lt;/p>
+&lt;p>比较 $T$ 和 $T^\prime$，发现 $T^\prime$ 以一些边权不大于 $m$ 的边替换了 $T$ 中边权大于 $m$ 的边，故 $T^\prime$ 的边权和比 $T$ 的更小，$T$ 不是最小生成树，与假设矛盾。&lt;/p></description></item></channel></rss>
