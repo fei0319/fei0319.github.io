@@ -1,4 +1,22 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>矩阵 on 绯想天</title><link>https://www.flandre.love/zh/tags/%E7%9F%A9%E9%98%B5/</link><description>Recent content in 矩阵 on 绯想天</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>Copyright © 2020 - 2023 Fei Pan</copyright><lastBuildDate>Tue, 12 May 2020 16:18:59 +0800</lastBuildDate><atom:link href="https://www.flandre.love/zh/tags/%E7%9F%A9%E9%98%B5/index.xml" rel="self" type="application/rss+xml"/><item><title>多项式时间复杂度计算行列式</title><link>https://www.flandre.love/zh/posts/det/</link><pubDate>Tue, 12 May 2020 16:18:59 +0800</pubDate><guid>https://www.flandre.love/zh/posts/det/</guid><description>&lt;p>矩阵的行列式在诸多领域有着广泛的应用。其最广为人知的应用便是在 Matrix-Tree 定理中求基尔霍夫矩阵的代数余子式。&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>矩阵 on 绯想天</title><link>https://www.flandre.love/zh/tags/%E7%9F%A9%E9%98%B5/</link><description>Recent content in 矩阵 on 绯想天</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>Copyright © 2020 - 2023 Fei Pan</copyright><lastBuildDate>Thu, 25 Jan 2024 01:27:31 +0800</lastBuildDate><atom:link href="https://www.flandre.love/zh/tags/%E7%9F%A9%E9%98%B5/index.xml" rel="self" type="application/rss+xml"/><item><title>定阶矩阵计数</title><link>https://www.flandre.love/zh/posts/matrix_rank/</link><pubDate>Thu, 25 Jan 2024 01:27:31 +0800</pubDate><guid>https://www.flandre.love/zh/posts/matrix_rank/</guid><description>&lt;p>考虑这样一类问题：有多少个在模 $p$ 的剩余系中的 $n \times m$（$n \ge m$）矩阵阶为 $r$？容易设计一个 $O(nr)$ 的动态规划来解决该问题，而本文将介绍一个 $O(r)$ 的算法。&lt;/p>
+&lt;p>原题等价于在 $n$ 维向量空间中确定 $m$ 个向量，使其线性生成空间的维度为 $r$。则可以通过先确定 $n$ 维空间的一个 $r$ 维子空间，再在 $r$ 维子空间中确定包含 $m$ 个向量的秩为 $r$ 的向量组。于是原题的答案为以下两个子问题的答案的积：&lt;/p>
+&lt;ol>
+&lt;li>$n$ 维向量空间有多少个不同的 $r$ 维子空间？&lt;/li>
+&lt;li>$r$ 维空间中有多少个秩为 $r$、大小为 $m$ 的向量组？&lt;/li>
+&lt;/ol>
+&lt;h2 id="子问题-1">子问题 1&lt;/h2>
+&lt;p>要在 $n$ 维空间中确定一个 $r$ 维子空间，不妨先确定一组大小为 $r$ 的基向量。对于该组基向量中的第 $i$ 个向量 $v_i$，其不能表示为 $v_1, v_2, \ldots, v_{i-1}$ 的线性组合，但可以取任意其他值，于是其可选的值有 $p^n - p^{i-1}$ 个，于是 $n$ 维向量空间中总共有 $\prod_{i=1}^r \left(p^n - p^{i-1}\right)$ 组基。&lt;/p>
+&lt;p>不过这并不是 $r$ 维子空间的个数，因为每个 $r$ 维子空间都可以被不止一组基确认。具体地，每个 $r$ 维子空间都可以被 $\prod_{i=1}^r \left(p^r - p^{i-1}\right)$ 组基确定，于是 $n$ 维向量空间中的 $r$ 维子空间个数为&lt;/p>
+&lt;p>$$
+\dfrac{\prod_{i=1}^r \left(p^n - p^{i-1}\right)}{\prod_{i=1}^r \left(p^r - p^{i-1}\right)}
+$$&lt;/p>
+&lt;h2 id="子问题-2">子问题 2&lt;/h2>
+&lt;p>该子问题等价于求秩为 $r$ 的 $m \times r$ 矩阵个数。类似于子问题 1，该矩阵的第 $i$ 列要与前 $i-1$ 列线性无关，有 $p^m - p^{i-1}$ 种取值；矩阵总个数为 $\prod_{i=1}^r \left(p^m - p^{i-1}\right)$。&lt;/p>
+&lt;p>整合上述两问题的结果，得到原题的答案为&lt;/p>
+&lt;p>$$
+\dfrac{\prod_{i=1}^r \left(p^n - p^{i-1}\right)\prod_{i=1}^r \left(p^m - p^{i-1}\right)}{\prod_{i=1}^r \left(p^r - p^{i-1}\right)}
+$$&lt;/p>
+&lt;p>如果将求逆元视作常数复杂度的，则该数可 $O(r)$ 求出。稍作处理，亦可 $O(n)$ 时间内求出 $r=1,2,\ldots,n$ 时的所有答案；见 &lt;a href="https://codeforces.com/contest/1916/problem/H2">CF1916H2&lt;/a>。&lt;/p></description></item><item><title>多项式时间复杂度计算行列式</title><link>https://www.flandre.love/zh/posts/det/</link><pubDate>Tue, 12 May 2020 16:18:59 +0800</pubDate><guid>https://www.flandre.love/zh/posts/det/</guid><description>&lt;p>矩阵的行列式在诸多领域有着广泛的应用。其最广为人知的应用便是在 Matrix-Tree 定理中求基尔霍夫矩阵的代数余子式。&lt;/p>
 &lt;p>根据行列式的定义，求其值的时间复杂度可达 $O(n\cdot n!)$。下面介绍一个能以多项式时间复杂度计算行列式的算法。&lt;/p>
 &lt;h2 id="一些约定">一些约定&lt;/h2>
 &lt;ul>
