@@ -1,4 +1,4 @@
-baseURL = 'https://www.flandre.love/'
+baseURL = 'https://blog.fei.ac/'
 languageCode = 'en-us'
 title = '绯想天'
 theme = 'tokiwa'
