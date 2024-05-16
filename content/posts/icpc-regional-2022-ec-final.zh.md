@@ -5,7 +5,7 @@ tags: ["ICPC", "游记"]
 categories: ["杂谈"]
 series: ["赛事"]
 math: true
-description: "炼铜"
+description: "铜"
 ---
 
 因为之前南京区域赛发挥不错，我们队得到了参加 EC-Final 的名额。
