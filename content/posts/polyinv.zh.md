@@ -40,4 +40,4 @@ $$
 
 也就是说， **$f(x)$ 在模 $x^n$ 意义下存在逆元，当且仅当 $f(x)$ 的常数项非零；在 $f(x)$ 逆元存在的情况下，$f(x)$ 的逆元唯一**。
 
-根据上述方程组求逆的时间复杂度是 $O(n^2)$，更快的 $O(n\log n)$ 算法请参考 [Newton's Method](/zh/posts/newtons_method)。
+根据上述方程组求逆的时间复杂度是 $O(n^2)$，更快的 $O(n\log n)$ 算法请参考 [Newton's Method](/zh/posts/newtons-method)。
