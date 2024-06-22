@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>离散数学 on 绯想天</title><link>https://blog.fei.ac/zh/categories/%E7%A6%BB%E6%95%A3%E6%95%B0%E5%AD%A6/</link><description>Recent content in 离散数学 on 绯想天</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>Copyright © 2020 - 2023 Fei Pan</copyright><lastBuildDate>Sun, 06 Aug 2023 13:10:58 +0800</lastBuildDate><atom:link href="https://blog.fei.ac/zh/categories/%E7%A6%BB%E6%95%A3%E6%95%B0%E5%AD%A6/index.xml" rel="self" type="application/rss+xml"/><item><title>生成函数幂科技</title><link>https://blog.fei.ac/zh/posts/power_of_gf/</link><pubDate>Sun, 06 Aug 2023 13:10:58 +0800</pubDate><guid>https://blog.fei.ac/zh/posts/power_of_gf/</guid><description>&lt;p>给定 $F(z) = \sum\limits_{i=0}^n f_i x^i$，如何求出 $F^k \bmod x^m$？这样一个问题可以用快速幂在 $O(m\log m\log k)$ 的时间复杂度内解决，亦可以通过&lt;a href="https://blog.fei.ac/zh/posts/polylog/">多项式对数指数&lt;/a>在 $O(m \log m)$ 的时间复杂度内解决。但假定 $m$ 特别大，$n$ 特别小（$m=10^7,n=5$），那我们如何解决？&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>离散数学 on 绯想天</title><link>https://blog.fei.ac/zh/categories/%E7%A6%BB%E6%95%A3%E6%95%B0%E5%AD%A6/</link><description>Recent content in 离散数学 on 绯想天</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>Copyright © 2020 - 2023 Fei Pan</copyright><lastBuildDate>Sun, 06 Aug 2023 13:10:58 +0800</lastBuildDate><atom:link href="https://blog.fei.ac/zh/categories/%E7%A6%BB%E6%95%A3%E6%95%B0%E5%AD%A6/index.xml" rel="self" type="application/rss+xml"/><item><title>生成函数幂科技</title><link>https://blog.fei.ac/zh/posts/power-of-gf/</link><pubDate>Sun, 06 Aug 2023 13:10:58 +0800</pubDate><guid>https://blog.fei.ac/zh/posts/power-of-gf/</guid><description>&lt;p>给定 $F(z) = \sum\limits_{i=0}^n f_i x^i$，如何求出 $F^k \bmod x^m$？这样一个问题可以用快速幂在 $O(m\log m\log k)$ 的时间复杂度内解决，亦可以通过&lt;a href="https://blog.fei.ac/zh/posts/polylog/">多项式对数指数&lt;/a>在 $O(m \log m)$ 的时间复杂度内解决。但假定 $m$ 特别大，$n$ 特别小（$m=10^7,n=5$），那我们如何解决？&lt;/p>
 &lt;p>这就需要这样一个 $O(nm)$ 的生成函数幂科技了。令 $G=F^k$，我们有 $G^\prime=kF^\prime F^{k-1}$，故 $FG^\prime = kF^\prime G$。考虑 $x^i$ 项的系数，有&lt;/p>
 &lt;p>$$
 \sum_{j=0}^{i+1} jf_{i-j+1} g_{j} = \sum_{j=0}^{i+1}k(i-j+1)f_{i-j+1} g_{j}
@@ -16,7 +16,7 @@ $$&lt;/p>
 $$&lt;/p>
 &lt;p>事实上任何满足 $p(xy) = p(x) + p(y)$ 且 $\forall x &amp;gt; 0, p(x) \neq 0$ 的数论函数都可用于取代 $\Omega$。&lt;/p>
 &lt;h2 id="credits">Credits&lt;/h2>
-&lt;p>&lt;em>&lt;a href="https://codeforces.com/blog/entry/76447">A problem collection of ODE and differential technique&lt;/a>&lt;/em>, amiya&lt;/p></description></item><item><title>从概率生成函数出发研究离散概率</title><link>https://blog.fei.ac/zh/posts/pgf_discrete_possibility/</link><pubDate>Sun, 17 Jul 2022 20:16:44 +0800</pubDate><guid>https://blog.fei.ac/zh/posts/pgf_discrete_possibility/</guid><description>&lt;p>概率生成函数是一种特殊的生成函数，其导数和卷积在离散概率的研究中都有意义。&lt;/p>
+&lt;p>&lt;em>&lt;a href="https://codeforces.com/blog/entry/76447">A problem collection of ODE and differential technique&lt;/a>&lt;/em>, amiya&lt;/p></description></item><item><title>从概率生成函数出发研究离散概率</title><link>https://blog.fei.ac/zh/posts/pgf-discrete-possibility/</link><pubDate>Sun, 17 Jul 2022 20:16:44 +0800</pubDate><guid>https://blog.fei.ac/zh/posts/pgf-discrete-possibility/</guid><description>&lt;p>概率生成函数是一种特殊的生成函数，其导数和卷积在离散概率的研究中都有意义。&lt;/p>
 &lt;h2 id="一些基础概念">一些基础概念&lt;/h2>
 &lt;p>对于一个仅取非负实数值的随机变量 $X$，我们定义其概率生成函数为&lt;/p>
 &lt;p>$$
@@ -178,7 +178,7 @@ $$&lt;/p>
 $$&lt;/p>
 &lt;p>只要对 $g(x)$ 求导，再乘上 $\dfrac{1}{g(x)}$ 就能够得到 $\ln g(x)$ 的导数，这个导数的积分就是 $\ln(g(x))$。多项式求导、积分都是非常容易的事情，但是，$\dfrac{g(x)^\prime}{g(x)}$ 的不定积分随常数项的不同有无穷多个，我们应该取哪一个呢？我们取常数项为 $0$ 的那个作为答案，因为只有常数项为 $0$ 的多项式在模意义下存在指数函数。&lt;/p>
 &lt;h2 id="多项式指数函数">多项式指数函数&lt;/h2>
-&lt;p>上面我们提到，多项式 $g(x)$ 在模 $x^n$ 意义下的指数函数存在，当且仅当其常数项为 $0$，否则它对应的泰勒级数也一样不收敛。由于 $\exp f(x)$ 的导数里还是存在 $\exp f(x)$，我们只能用分治 FFT 的方法 $O\left(n\log^2n\right)$ 求出。这种方法由于比较缓慢而不常使用，通常我们使用 &lt;a href="https://blog.fei.ac/zh/posts/newtons_method/">Newton&amp;rsquo;s Method&lt;/a> $O(n\log n)$ 求。&lt;/p>
+&lt;p>上面我们提到，多项式 $g(x)$ 在模 $x^n$ 意义下的指数函数存在，当且仅当其常数项为 $0$，否则它对应的泰勒级数也一样不收敛。由于 $\exp f(x)$ 的导数里还是存在 $\exp f(x)$，我们只能用分治 FFT 的方法 $O\left(n\log^2n\right)$ 求出。这种方法由于比较缓慢而不常使用，通常我们使用 &lt;a href="https://blog.fei.ac/zh/posts/newtons-method/">Newton&amp;rsquo;s Method&lt;/a> $O(n\log n)$ 求。&lt;/p>
 &lt;p>分治法并非一无是处。这个方法不需要写多项式求逆和多项式对数函数，写起来要快很多；虽然复杂度多一个对数，但常数较小，也不会慢特别多。&lt;/p>
 &lt;p>多项式的指数函数是有实际的组合意义的。设 $f(x)$ 是一个大小为 $i$ 的盒子内部分配方案数的指数型生成函数（即，$\left[\dfrac{x^i}{i!}\right] f(x)$ 表示一个盒子装 $i$ 个小球的方案数），则 $\exp f(x)$ 表示 $i$ 个有标号小球分配到任意多个无标号盒子的方案数的指数型生成函数（即，$\left[\dfrac{x^i}{i!}\right] (\exp f(x))$ 表示 $i$ 个相互区分的小球放到若干个完全一样的盒子的方案数）。这个组合意义与指数函数的幂级数有关系。&lt;/p>
 &lt;p>这一点的证明只需用下式说明&lt;/p>
@@ -423,7 +423,7 @@ $$&lt;/p>
 &lt;p>$$
 \begin{aligned}a_k&amp;amp;=\sum\limits_{i=0}^{n}\dfrac{b_ik!}{(k-i)!}\\dfrac{a_k}{k!}&amp;amp;=\sum\limits_{i=0}^kb_i\dfrac{1}{(k-i)!}\end{aligned}
 $$&lt;/p>
-&lt;p>这显然是个卷积形式，我们可以在 $O(n\log n)$ 的时间复杂度内完成点值和下降阶乘幂的互相转化。&lt;/p></description></item><item><title>多项式中的 Newton's Method</title><link>https://blog.fei.ac/zh/posts/newtons_method/</link><pubDate>Thu, 14 Jan 2021 21:00:43 +0800</pubDate><guid>https://blog.fei.ac/zh/posts/newtons_method/</guid><description>&lt;p>Newton&amp;rsquo;s Method 是牛顿提出的一种将非线性方程线性化的近似方法。它也可以运用在多项式中，求关于多项式的非线性方程在模意义下的解。&lt;/p>
+&lt;p>这显然是个卷积形式，我们可以在 $O(n\log n)$ 的时间复杂度内完成点值和下降阶乘幂的互相转化。&lt;/p></description></item><item><title>多项式中的 Newton's Method</title><link>https://blog.fei.ac/zh/posts/newtons-method/</link><pubDate>Thu, 14 Jan 2021 21:00:43 +0800</pubDate><guid>https://blog.fei.ac/zh/posts/newtons-method/</guid><description>&lt;p>Newton&amp;rsquo;s Method 是牛顿提出的一种将非线性方程线性化的近似方法。它也可以运用在多项式中，求关于多项式的非线性方程在模意义下的解。&lt;/p>
 &lt;p>要学习 Newton&amp;rsquo;s Method，得先了解泰勒级数。&lt;/p>
 &lt;h2 id="泰勒级数和麦克劳林级数">泰勒级数和麦克劳林级数&lt;/h2>
 &lt;p>泰勒级数用无限项连加式来表示函数。一般地，对于一个光滑函数 $f(x)$，有&lt;/p>
@@ -596,7 +596,7 @@ $$&lt;/p>
 \begin{cases}f_0g_0&amp;amp;=1\newline f_0g_1+f_1g_0&amp;amp;=0\newline f_0g_2+f_1g_1+f_2g_0&amp;amp;=0\newline f_0g_3+f_1g_2+f_2g_1+f_3g_0&amp;amp;=0\newline \ldots\newline f_0g_{n-1}+f_1g_{n-2}+f_2g_{n-3}+\ldots+f_{n-1}g_0&amp;amp;=0\end{cases}
 $$&lt;/p>
 &lt;p>也就是说， &lt;strong>$f(x)$ 在模 $x^n$ 意义下存在逆元，当且仅当 $f(x)$ 的常数项非零；在 $f(x)$ 逆元存在的情况下，$f(x)$ 的逆元唯一&lt;/strong>。&lt;/p>
-&lt;p>根据上述方程组求逆的时间复杂度是 $O(n^2)$，更快的 $O(n\log n)$ 算法请参考 &lt;a href="https://blog.fei.ac/zh/posts/newtons_method">Newton&amp;rsquo;s Method&lt;/a>。&lt;/p></description></item><item><title>任意模数多项式乘法</title><link>https://blog.fei.ac/zh/posts/arbitrary_modulo/</link><pubDate>Thu, 24 Sep 2020 11:19:29 +0800</pubDate><guid>https://blog.fei.ac/zh/posts/arbitrary_modulo/</guid><description>&lt;p>由于 NTT 的数学原理，它只能用于计算模特定模数意义下的多项式乘法。如何计算任意模数的多项式乘法呢？&lt;/p>
+&lt;p>根据上述方程组求逆的时间复杂度是 $O(n^2)$，更快的 $O(n\log n)$ 算法请参考 &lt;a href="https://blog.fei.ac/zh/posts/newtons-method">Newton&amp;rsquo;s Method&lt;/a>。&lt;/p></description></item><item><title>任意模数多项式乘法</title><link>https://blog.fei.ac/zh/posts/arbitrary_modulo/</link><pubDate>Thu, 24 Sep 2020 11:19:29 +0800</pubDate><guid>https://blog.fei.ac/zh/posts/arbitrary_modulo/</guid><description>&lt;p>由于 NTT 的数学原理，它只能用于计算模特定模数意义下的多项式乘法。如何计算任意模数的多项式乘法呢？&lt;/p>
 &lt;p>一种简单的想法是利用中国剩余定理。一般我们计算两个长度在 $10^5$ 级别、系数在 $10^9$ 级别的多项式的卷积，其结果的系数不会超过 $10^{23}$ 级别。只要选取三个乘积超过 $10^{23}$ 的 NTT 模数，分别乘一次，再用中国剩余定理合并答案即可。这种方法常数极大。&lt;/p>
 &lt;p>而我们要介绍的做法是拆系数 FFT。合理的拆系数 FFT 实现消耗的时间仅仅是普通多项式乘法的四倍左右，是一种很优秀的任意模数多项式乘法计算方法。&lt;/p>
 &lt;h2 id="拆系数-fft">拆系数 FFT&lt;/h2>

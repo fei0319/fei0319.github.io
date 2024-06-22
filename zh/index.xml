@@ -33,7 +33,7 @@ $$&lt;/p>
 &lt;p>$$
 \dfrac{\prod_{i=1}^r \left(p^n - p^{i-1}\right)\prod_{i=1}^r \left(p^m - p^{i-1}\right)}{\prod_{i=1}^r \left(p^r - p^{i-1}\right)}
 $$&lt;/p>
-&lt;p>如果将求逆元视作常数复杂度的，则该数可 $O(r)$ 求出。稍作处理，亦可 $O(n)$ 时间内求出 $r=1,2,\ldots,n$ 时的所有答案；见 &lt;a href="https://codeforces.com/contest/1916/problem/H2">CF1916H2&lt;/a>。&lt;/p></description></item><item><title>生成函数幂科技</title><link>https://blog.fei.ac/zh/posts/power_of_gf/</link><pubDate>Sun, 06 Aug 2023 13:10:58 +0800</pubDate><guid>https://blog.fei.ac/zh/posts/power_of_gf/</guid><description>&lt;p>给定 $F(z) = \sum\limits_{i=0}^n f_i x^i$，如何求出 $F^k \bmod x^m$？这样一个问题可以用快速幂在 $O(m\log m\log k)$ 的时间复杂度内解决，亦可以通过&lt;a href="https://blog.fei.ac/zh/posts/polylog/">多项式对数指数&lt;/a>在 $O(m \log m)$ 的时间复杂度内解决。但假定 $m$ 特别大，$n$ 特别小（$m=10^7,n=5$），那我们如何解决？&lt;/p>
+&lt;p>如果将求逆元视作常数复杂度的，则该数可 $O(r)$ 求出。稍作处理，亦可 $O(n)$ 时间内求出 $r=1,2,\ldots,n$ 时的所有答案；见 &lt;a href="https://codeforces.com/contest/1916/problem/H2">CF1916H2&lt;/a>。&lt;/p></description></item><item><title>生成函数幂科技</title><link>https://blog.fei.ac/zh/posts/power-of-gf/</link><pubDate>Sun, 06 Aug 2023 13:10:58 +0800</pubDate><guid>https://blog.fei.ac/zh/posts/power-of-gf/</guid><description>&lt;p>给定 $F(z) = \sum\limits_{i=0}^n f_i x^i$，如何求出 $F^k \bmod x^m$？这样一个问题可以用快速幂在 $O(m\log m\log k)$ 的时间复杂度内解决，亦可以通过&lt;a href="https://blog.fei.ac/zh/posts/polylog/">多项式对数指数&lt;/a>在 $O(m \log m)$ 的时间复杂度内解决。但假定 $m$ 特别大，$n$ 特别小（$m=10^7,n=5$），那我们如何解决？&lt;/p>
 &lt;p>这就需要这样一个 $O(nm)$ 的生成函数幂科技了。令 $G=F^k$，我们有 $G^\prime=kF^\prime F^{k-1}$，故 $FG^\prime = kF^\prime G$。考虑 $x^i$ 项的系数，有&lt;/p>
 &lt;p>$$
 \sum_{j=0}^{i+1} jf_{i-j+1} g_{j} = \sum_{j=0}^{i+1}k(i-j+1)f_{i-j+1} g_{j}
@@ -584,7 +584,7 @@ $$&lt;/p>
 &lt;p>第三天参加比赛。开幕式精准地在 9:45 结束了。随后就是正赛。我们打得十分折磨。&lt;/p>
 &lt;p>我先是过掉了最水的 M 题。然后 Destiny 和张神分别开始攻坚 C 和 L。他们 wa 了几发，随后张神转攻 J 题并于 72min 时通过。期间我在看以为可做的 D 题（事实上这是一道全场仅一队通过的神仙题）。然后我就发现 I 题很水并过掉，并得到了 C 题的 DP 做法。Destiny 认为 DP 应该比他的双向搜索更接近正解，并把他发现的两个 corner cases 告诉了我，于是我通过了 C。在之后，张神在 $n$ 次 wa 后也通过了 L 这道极其恶心的构造题。F 题我们大家都陷入到了归并排序中，只得到了 $4n\log n$ 的做法。我们孤注一掷试图以其通过，未果。最终大罚时通过五题，不出意外应该 cu 了。&lt;/p>
 &lt;p>赛中发了鸡块、鸡柳和汉堡，所以虽然没吃午饭但赛后也不饿。赛后参加了华为座谈会，名为付求爱的华为员工向我们大谈华为的 CodeArts Snap（在此之前我甚至都不知道华为也涉足 AI 领域）并向在场学生许诺实习机会。晚上华为的武汉地区 hr 请我们还有华科的选手吃饭。我蹲在酒店睡大觉，没去。&lt;/p>
-&lt;p>周天我鸽掉了上午的华为挑战赛，只参加了下午的闭幕式。闭幕式上整了一堆上大音乐学院的表演，我欣赏不来。滚榜时，我们心中毫无波澜地确认了我们 cu 的成绩。&lt;/p></description></item><item><title>强连通分量和点双连通分量</title><link>https://blog.fei.ac/zh/posts/connected_component/</link><pubDate>Wed, 18 Jan 2023 15:24:00 +0800</pubDate><guid>https://blog.fei.ac/zh/posts/connected_component/</guid><description>&lt;p>强连通分量和点双连通分量是图论中常见的两个概念。算法竞赛中，我们处理它们时都要使用 Tarjan 算法，因而这二者常常被混淆。强连通分量常常被缩点代称，而点双连通分量则常被割点代称。事实上，缩点和割点并不是一组对应的概念；缩点在点双连通分量中对应的概念是圆方树，割点在强连通分量中对应的概念是割边（桥）。因此，我们要么说“强连通分量和点双连通分量”，要么说“缩点和圆方树”，要么说“割边和割点”，但是不要说“缩点和割点”。人们常将缩点和割点并称的原因可能是洛谷，其关于构造强连通分量和点双连通分量的模板题的名称分别为“缩点”和“割点”，具有很强的误导性。尤其是“缩点”和“割点”都含有“点”字，容易让初学者以为它们是对应的概念，看不透二者的真正关系。&lt;/p>
+&lt;p>周天我鸽掉了上午的华为挑战赛，只参加了下午的闭幕式。闭幕式上整了一堆上大音乐学院的表演，我欣赏不来。滚榜时，我们心中毫无波澜地确认了我们 cu 的成绩。&lt;/p></description></item><item><title>强连通分量和点双连通分量</title><link>https://blog.fei.ac/zh/posts/connected-component/</link><pubDate>Wed, 18 Jan 2023 15:24:00 +0800</pubDate><guid>https://blog.fei.ac/zh/posts/connected-component/</guid><description>&lt;p>强连通分量和点双连通分量是图论中常见的两个概念。算法竞赛中，我们处理它们时都要使用 Tarjan 算法，因而这二者常常被混淆。强连通分量常常被缩点代称，而点双连通分量则常被割点代称。事实上，缩点和割点并不是一组对应的概念；缩点在点双连通分量中对应的概念是圆方树，割点在强连通分量中对应的概念是割边（桥）。因此，我们要么说“强连通分量和点双连通分量”，要么说“缩点和圆方树”，要么说“割边和割点”，但是不要说“缩点和割点”。人们常将缩点和割点并称的原因可能是洛谷，其关于构造强连通分量和点双连通分量的模板题的名称分别为“缩点”和“割点”，具有很强的误导性。尤其是“缩点”和“割点”都含有“点”字，容易让初学者以为它们是对应的概念，看不透二者的真正关系。&lt;/p>
 &lt;p>那么，强连通分量和点双连通分量的真正关系是什么呢？或者说，怎样才能最好地理解它们的相似性和差异性呢？&lt;/p>
 &lt;p>割边和割点的关系。强连通分量是割边分隔出的点集，点双连通分量是割点分割出的点集（特别地，割点本身同时属于它四周的点双连通分量）。因此它们都可以使用 Tarjan 算法处理。在 DFS 树上，一条边 $E$ 是割边当且仅当其儿子的子树中没有指向 $E$ 的祖先（注意这里不是子树外而是祖先，因为有向图的 DFS 树形态特别）的返祖边，一个结点 $V$ 是割点当且仅当其&lt;strong>某个&lt;/strong>儿子的子树中没有指向 $V$ 的祖先的返祖边。删去强连通分量中的任何边得到的生成子图仍然连通（弱连通），删去点双连通分量中的任何结点得到的导出子图仍然连通。&lt;/p>
 &lt;p>有向图和无向图的关系。强连通分量在有向图中定义，点双连通分量在无向图中定义。“任意两个结点都能够互相到达的极大子图”这一定义不能够在无向图中定义强连通分量，因为这实际上指的是连通块；但我们可以用强连通分量的另一个定义“割边分割出的点集”在无向图中定义一个与强连通分量相似的概念，即边双连通分量。因此，“割边分割出的点集”是最适合强连通分量和边双连通分量的定义，它同时适用于有向图和无向图，而强连通分量“任意两个结点都能够互相到达的极大子图”和边双连通分量“删去任意边后任意两个结点仍然连通的极大子图”这两个常见定义则只适用于有向图或无向图。&lt;/p>
@@ -663,7 +663,7 @@ $$&lt;/p>
 &lt;h2 id="反证法">反证法&lt;/h2>
 &lt;p>设 $x$ 到 $y$ 最小瓶颈路上的最大边权为 $m$。假设最小生成树 $T = (V, E)$ 上 $x$ 到 $y$ 的路径上存在边权大于 $m$ 的边，则我们去除 $T$ 中所有边权大于 $m$ 的边 (记作 $V_m$)，$T$ 中剩余的边与顶点形成的图 $T_m = (\complement_VV_m, E)$ 中含超过一个连通块。&lt;/p>
 &lt;p>由于 $x$ 到 $y$ 存在一条所有边的边权都不超过 $m$ 的路径，一定可以加入 $p$ 条边权不大于 $m$ 的边，使得包含 $x$ 所在连通块和 $y$ 所在连通块的一系列共 $p + 1$ 个连通块连通。之后再加入 $|V_m| - p$ 个 $V_m$ 中的边，即可形成一个新的生成树 $T^\prime$。&lt;/p>
-&lt;p>比较 $T$ 和 $T^\prime$，发现 $T^\prime$ 以一些边权不大于 $m$ 的边替换了 $T$ 中边权大于 $m$ 的边，故 $T^\prime$ 的边权和比 $T$ 的更小，$T$ 不是最小生成树，与假设矛盾。&lt;/p></description></item><item><title>从概率生成函数出发研究离散概率</title><link>https://blog.fei.ac/zh/posts/pgf_discrete_possibility/</link><pubDate>Sun, 17 Jul 2022 20:16:44 +0800</pubDate><guid>https://blog.fei.ac/zh/posts/pgf_discrete_possibility/</guid><description>&lt;p>概率生成函数是一种特殊的生成函数，其导数和卷积在离散概率的研究中都有意义。&lt;/p>
+&lt;p>比较 $T$ 和 $T^\prime$，发现 $T^\prime$ 以一些边权不大于 $m$ 的边替换了 $T$ 中边权大于 $m$ 的边，故 $T^\prime$ 的边权和比 $T$ 的更小，$T$ 不是最小生成树，与假设矛盾。&lt;/p></description></item><item><title>从概率生成函数出发研究离散概率</title><link>https://blog.fei.ac/zh/posts/pgf-discrete-possibility/</link><pubDate>Sun, 17 Jul 2022 20:16:44 +0800</pubDate><guid>https://blog.fei.ac/zh/posts/pgf-discrete-possibility/</guid><description>&lt;p>概率生成函数是一种特殊的生成函数，其导数和卷积在离散概率的研究中都有意义。&lt;/p>
 &lt;h2 id="一些基础概念">一些基础概念&lt;/h2>
 &lt;p>对于一个仅取非负实数值的随机变量 $X$，我们定义其概率生成函数为&lt;/p>
 &lt;p>$$
@@ -932,7 +932,7 @@ $$&lt;/p>
 $$&lt;/p>
 &lt;p>只要对 $g(x)$ 求导，再乘上 $\dfrac{1}{g(x)}$ 就能够得到 $\ln g(x)$ 的导数，这个导数的积分就是 $\ln(g(x))$。多项式求导、积分都是非常容易的事情，但是，$\dfrac{g(x)^\prime}{g(x)}$ 的不定积分随常数项的不同有无穷多个，我们应该取哪一个呢？我们取常数项为 $0$ 的那个作为答案，因为只有常数项为 $0$ 的多项式在模意义下存在指数函数。&lt;/p>
 &lt;h2 id="多项式指数函数">多项式指数函数&lt;/h2>
-&lt;p>上面我们提到，多项式 $g(x)$ 在模 $x^n$ 意义下的指数函数存在，当且仅当其常数项为 $0$，否则它对应的泰勒级数也一样不收敛。由于 $\exp f(x)$ 的导数里还是存在 $\exp f(x)$，我们只能用分治 FFT 的方法 $O\left(n\log^2n\right)$ 求出。这种方法由于比较缓慢而不常使用，通常我们使用 &lt;a href="https://blog.fei.ac/zh/posts/newtons_method/">Newton&amp;rsquo;s Method&lt;/a> $O(n\log n)$ 求。&lt;/p>
+&lt;p>上面我们提到，多项式 $g(x)$ 在模 $x^n$ 意义下的指数函数存在，当且仅当其常数项为 $0$，否则它对应的泰勒级数也一样不收敛。由于 $\exp f(x)$ 的导数里还是存在 $\exp f(x)$，我们只能用分治 FFT 的方法 $O\left(n\log^2n\right)$ 求出。这种方法由于比较缓慢而不常使用，通常我们使用 &lt;a href="https://blog.fei.ac/zh/posts/newtons-method/">Newton&amp;rsquo;s Method&lt;/a> $O(n\log n)$ 求。&lt;/p>
 &lt;p>分治法并非一无是处。这个方法不需要写多项式求逆和多项式对数函数，写起来要快很多；虽然复杂度多一个对数，但常数较小，也不会慢特别多。&lt;/p>
 &lt;p>多项式的指数函数是有实际的组合意义的。设 $f(x)$ 是一个大小为 $i$ 的盒子内部分配方案数的指数型生成函数（即，$\left[\dfrac{x^i}{i!}\right] f(x)$ 表示一个盒子装 $i$ 个小球的方案数），则 $\exp f(x)$ 表示 $i$ 个有标号小球分配到任意多个无标号盒子的方案数的指数型生成函数（即，$\left[\dfrac{x^i}{i!}\right] (\exp f(x))$ 表示 $i$ 个相互区分的小球放到若干个完全一样的盒子的方案数）。这个组合意义与指数函数的幂级数有关系。&lt;/p>
 &lt;p>这一点的证明只需用下式说明&lt;/p>
@@ -1184,7 +1184,7 @@ $$&lt;/p>
 &lt;p>$$
 \begin{aligned}a_k&amp;amp;=\sum\limits_{i=0}^{n}\dfrac{b_ik!}{(k-i)!}\\dfrac{a_k}{k!}&amp;amp;=\sum\limits_{i=0}^kb_i\dfrac{1}{(k-i)!}\end{aligned}
 $$&lt;/p>
-&lt;p>这显然是个卷积形式，我们可以在 $O(n\log n)$ 的时间复杂度内完成点值和下降阶乘幂的互相转化。&lt;/p></description></item><item><title>多项式中的 Newton's Method</title><link>https://blog.fei.ac/zh/posts/newtons_method/</link><pubDate>Thu, 14 Jan 2021 21:00:43 +0800</pubDate><guid>https://blog.fei.ac/zh/posts/newtons_method/</guid><description>&lt;p>Newton&amp;rsquo;s Method 是牛顿提出的一种将非线性方程线性化的近似方法。它也可以运用在多项式中，求关于多项式的非线性方程在模意义下的解。&lt;/p>
+&lt;p>这显然是个卷积形式，我们可以在 $O(n\log n)$ 的时间复杂度内完成点值和下降阶乘幂的互相转化。&lt;/p></description></item><item><title>多项式中的 Newton's Method</title><link>https://blog.fei.ac/zh/posts/newtons-method/</link><pubDate>Thu, 14 Jan 2021 21:00:43 +0800</pubDate><guid>https://blog.fei.ac/zh/posts/newtons-method/</guid><description>&lt;p>Newton&amp;rsquo;s Method 是牛顿提出的一种将非线性方程线性化的近似方法。它也可以运用在多项式中，求关于多项式的非线性方程在模意义下的解。&lt;/p>
 &lt;p>要学习 Newton&amp;rsquo;s Method，得先了解泰勒级数。&lt;/p>
 &lt;h2 id="泰勒级数和麦克劳林级数">泰勒级数和麦克劳林级数&lt;/h2>
 &lt;p>泰勒级数用无限项连加式来表示函数。一般地，对于一个光滑函数 $f(x)$，有&lt;/p>
@@ -1357,7 +1357,7 @@ $$&lt;/p>
 \begin{cases}f_0g_0&amp;amp;=1\newline f_0g_1+f_1g_0&amp;amp;=0\newline f_0g_2+f_1g_1+f_2g_0&amp;amp;=0\newline f_0g_3+f_1g_2+f_2g_1+f_3g_0&amp;amp;=0\newline \ldots\newline f_0g_{n-1}+f_1g_{n-2}+f_2g_{n-3}+\ldots+f_{n-1}g_0&amp;amp;=0\end{cases}
 $$&lt;/p>
 &lt;p>也就是说， &lt;strong>$f(x)$ 在模 $x^n$ 意义下存在逆元，当且仅当 $f(x)$ 的常数项非零；在 $f(x)$ 逆元存在的情况下，$f(x)$ 的逆元唯一&lt;/strong>。&lt;/p>
-&lt;p>根据上述方程组求逆的时间复杂度是 $O(n^2)$，更快的 $O(n\log n)$ 算法请参考 &lt;a href="https://blog.fei.ac/zh/posts/newtons_method">Newton&amp;rsquo;s Method&lt;/a>。&lt;/p></description></item><item><title>NOIP2020 爆炸记</title><link>https://blog.fei.ac/zh/posts/noip2020/</link><pubDate>Sat, 05 Dec 2020 22:39:17 +0800</pubDate><guid>https://blog.fei.ac/zh/posts/noip2020/</guid><description>&lt;p>开考看 T1，发现是一道水题，半小时左右切掉。&lt;/p>
+&lt;p>根据上述方程组求逆的时间复杂度是 $O(n^2)$，更快的 $O(n\log n)$ 算法请参考 &lt;a href="https://blog.fei.ac/zh/posts/newtons-method">Newton&amp;rsquo;s Method&lt;/a>。&lt;/p></description></item><item><title>NOIP2020 爆炸记</title><link>https://blog.fei.ac/zh/posts/noip2020/</link><pubDate>Sat, 05 Dec 2020 22:39:17 +0800</pubDate><guid>https://blog.fei.ac/zh/posts/noip2020/</guid><description>&lt;p>开考看 T1，发现是一道水题，半小时左右切掉。&lt;/p>
 &lt;p>再看 T2，稍加思考，写了哈希+调和级数。然而用了神奇的树状数组，复杂度炸成 $O(n\log n\log 26)$，大概只有 $80$ 分。此时才 $9:36$。&lt;/p>
 &lt;p>开 T3。花 $1$ h 打了一个假做法，又花不到 1h 打了一个 $O(nm^2)$ 算法，又花不到 $30$ min 稍稍优化。期望 $40$ 分。&lt;/p>
 &lt;p>T4 感觉正解不太难，但是想不出具体怎么做。于是用剩下不到 1h 的时间打了 $40$ 分暴力。&lt;/p>

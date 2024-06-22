@@ -21,4 +21,4 @@ $$&lt;/p>
 \begin{cases}f_0g_0&amp;amp;=1\newline f_0g_1+f_1g_0&amp;amp;=0\newline f_0g_2+f_1g_1+f_2g_0&amp;amp;=0\newline f_0g_3+f_1g_2+f_2g_1+f_3g_0&amp;amp;=0\newline \ldots\newline f_0g_{n-1}+f_1g_{n-2}+f_2g_{n-3}+\ldots+f_{n-1}g_0&amp;amp;=0\end{cases}
 $$&lt;/p>
 &lt;p>也就是说， &lt;strong>$f(x)$ 在模 $x^n$ 意义下存在逆元，当且仅当 $f(x)$ 的常数项非零；在 $f(x)$ 逆元存在的情况下，$f(x)$ 的逆元唯一&lt;/strong>。&lt;/p>
-&lt;p>根据上述方程组求逆的时间复杂度是 $O(n^2)$，更快的 $O(n\log n)$ 算法请参考 &lt;a href="https://blog.fei.ac/zh/posts/newtons_method">Newton&amp;rsquo;s Method&lt;/a>。&lt;/p></description></item></channel></rss>
+&lt;p>根据上述方程组求逆的时间复杂度是 $O(n^2)$，更快的 $O(n\log n)$ 算法请参考 &lt;a href="https://blog.fei.ac/zh/posts/newtons-method">Newton&amp;rsquo;s Method&lt;/a>。&lt;/p></description></item></channel></rss>
