@@ -596,7 +596,7 @@ $$&lt;/p>
 \begin{cases}f_0g_0&amp;amp;=1\newline f_0g_1+f_1g_0&amp;amp;=0\newline f_0g_2+f_1g_1+f_2g_0&amp;amp;=0\newline f_0g_3+f_1g_2+f_2g_1+f_3g_0&amp;amp;=0\newline \ldots\newline f_0g_{n-1}+f_1g_{n-2}+f_2g_{n-3}+\ldots+f_{n-1}g_0&amp;amp;=0\end{cases}
 $$&lt;/p>
 &lt;p>也就是说， &lt;strong>$f(x)$ 在模 $x^n$ 意义下存在逆元，当且仅当 $f(x)$ 的常数项非零；在 $f(x)$ 逆元存在的情况下，$f(x)$ 的逆元唯一&lt;/strong>。&lt;/p>
-&lt;p>根据上述方程组求逆的时间复杂度是 $O(n^2)$，更快的 $O(n\log n)$ 算法请参考 &lt;a href="https://blog.fei.ac/zh/posts/newtons-method">Newton&amp;rsquo;s Method&lt;/a>。&lt;/p></description></item><item><title>任意模数多项式乘法</title><link>https://blog.fei.ac/zh/posts/arbitrary_modulo/</link><pubDate>Thu, 24 Sep 2020 11:19:29 +0800</pubDate><guid>https://blog.fei.ac/zh/posts/arbitrary_modulo/</guid><description>&lt;p>由于 NTT 的数学原理，它只能用于计算模特定模数意义下的多项式乘法。如何计算任意模数的多项式乘法呢？&lt;/p>
+&lt;p>根据上述方程组求逆的时间复杂度是 $O(n^2)$，更快的 $O(n\log n)$ 算法请参考 &lt;a href="https://blog.fei.ac/zh/posts/newtons-method">Newton&amp;rsquo;s Method&lt;/a>。&lt;/p></description></item><item><title>任意模数多项式乘法</title><link>https://blog.fei.ac/zh/posts/arbitrary-modulo/</link><pubDate>Thu, 24 Sep 2020 11:19:29 +0800</pubDate><guid>https://blog.fei.ac/zh/posts/arbitrary-modulo/</guid><description>&lt;p>由于 NTT 的数学原理，它只能用于计算模特定模数意义下的多项式乘法。如何计算任意模数的多项式乘法呢？&lt;/p>
 &lt;p>一种简单的想法是利用中国剩余定理。一般我们计算两个长度在 $10^5$ 级别、系数在 $10^9$ 级别的多项式的卷积，其结果的系数不会超过 $10^{23}$ 级别。只要选取三个乘积超过 $10^{23}$ 的 NTT 模数，分别乘一次，再用中国剩余定理合并答案即可。这种方法常数极大。&lt;/p>
 &lt;p>而我们要介绍的做法是拆系数 FFT。合理的拆系数 FFT 实现消耗的时间仅仅是普通多项式乘法的四倍左右，是一种很优秀的任意模数多项式乘法计算方法。&lt;/p>
 &lt;h2 id="拆系数-fft">拆系数 FFT&lt;/h2>
@@ -751,7 +751,7 @@ $$&lt;/p>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>以上是我早年间的实现，效率极其低下（$10^5$ 卷积运算耗时 $1109$ ms）。更好的实现可以参考我的项目 &lt;a href="https://github.com/fei0319/poly.h">fstdlib&lt;/a>。&lt;/p>
-&lt;p>拆系数 FFT 是无法通过 &lt;a href="https://judge.yosupo.jp/problem/convolution_mod_1000000007">Library Checker&lt;/a> 的，因为 Library Checker 的多项式长度达到了 $524288$，纵使是 &lt;code>long double&lt;/code> 也无法保证精度。正常情况下不会有题目考察规模如此之大的任意模数卷积。&lt;/p></description></item><item><title>生成函数入门</title><link>https://blog.fei.ac/zh/posts/generating_function/</link><pubDate>Fri, 28 Feb 2020 10:51:38 +0800</pubDate><guid>https://blog.fei.ac/zh/posts/generating_function/</guid><description>&lt;p>生成函数是一种用级数的系数来表达数列的方法，是处理数列的最强有力的方法之一。在 OI 中生成函数常常与多项式结合起来处理计数问题。&lt;/p>
+&lt;p>拆系数 FFT 是无法通过 &lt;a href="https://judge.yosupo.jp/problem/convolution_mod_1000000007">Library Checker&lt;/a> 的，因为 Library Checker 的多项式长度达到了 $524288$，纵使是 &lt;code>long double&lt;/code> 也无法保证精度。正常情况下不会有题目考察规模如此之大的任意模数卷积。&lt;/p></description></item><item><title>生成函数入门</title><link>https://blog.fei.ac/zh/posts/generating-function/</link><pubDate>Fri, 28 Feb 2020 10:51:38 +0800</pubDate><guid>https://blog.fei.ac/zh/posts/generating-function/</guid><description>&lt;p>生成函数是一种用级数的系数来表达数列的方法，是处理数列的最强有力的方法之一。在 OI 中生成函数常常与多项式结合起来处理计数问题。&lt;/p>
 &lt;h2 id="几种基本的生成函数">几种基本的生成函数&lt;/h2>
 &lt;p>对于一个无限长度的数列 $a_0, a_1, a_2, \ldots$，它的普通型生成函数 (Ordinary Generating Function, OGF) 是&lt;/p>
 &lt;p>$$

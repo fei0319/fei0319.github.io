@@ -12,7 +12,7 @@
 &lt;p>张神和我开始看 J。我提出了题目的一种抽象，将原题转换为求图的边匹配；张神猜想边匹配存在的充要条件是每个连通块的边数为偶数。我们两个确信这个猜想是对的，在十几分钟的思考后张神提出了 dfs 树构造。这时 Destiny 过掉了 D。他看了看排行榜，告诉我：如果能把 J 过掉我们金牌就有了。我赶紧上机码 J，却在比赛还剩 40 分钟的时候 wa 掉。&lt;/p>
 &lt;p>两人赶紧过来帮我查错，几分钟后无果，只能让张神赶紧码一份，Destiny 和我到队员机上查错。结束前 15 分钟，张神也 wa 了，Destiny 和我也未查出任何错误。我们都觉得这道题很可能做不出来了。&lt;/p>
 &lt;p>突然，张神指出我们建图的方式会导致本该不同的点重合为同一个点。张神起初表示这个错误没法改，但仅仅一分钟后他突然又喊道“好像可以改”，冲向电脑改代码，我也随即意识到了修改方法，而且对于我的代码来讲，只需要改一行。张神 wa 了，我赶紧切到我的代码改完，提交，通过了这题。吐槽一下这个系统，评测未通过是绿色，通过反而是红色。&lt;/p>
-&lt;p>接下来，大家都不再看题，而是对着排行榜分析起来。Destiny 经验丰富，指出某些封榜后交题的队纯属虚张声势；最后他认为我们金牌很有机会，张神却认为不只是很有机会，而是稳了。最后也确实是金。&lt;/p></description></item><item><title>我的新博客</title><link>https://blog.fei.ac/zh/posts/hello_world/</link><pubDate>Sun, 03 Jul 2022 19:22:44 +0800</pubDate><guid>https://blog.fei.ac/zh/posts/hello_world/</guid><description>&lt;p>一年的紧张备考后，我又有空写博客啦！&lt;/p>
+&lt;p>接下来，大家都不再看题，而是对着排行榜分析起来。Destiny 经验丰富，指出某些封榜后交题的队纯属虚张声势；最后他认为我们金牌很有机会，张神却认为不只是很有机会，而是稳了。最后也确实是金。&lt;/p></description></item><item><title>我的新博客</title><link>https://blog.fei.ac/zh/posts/hello-world/</link><pubDate>Sun, 03 Jul 2022 19:22:44 +0800</pubDate><guid>https://blog.fei.ac/zh/posts/hello-world/</guid><description>&lt;p>一年的紧张备考后，我又有空写博客啦！&lt;/p>
 &lt;p>不过我曾经维护过的博客的相关配置早已丢失，仅其中博文的草稿仍有备份。与其费劲心思恢复旧博客，不如另起炉灶，于是我搭建了这一新博客，一方面保留了一部分过往博文，另一方面也添加了新的内容。&lt;/p></description></item><item><title>WC2021 爆零记</title><link>https://blog.fei.ac/zh/posts/wc2021/</link><pubDate>Wed, 10 Feb 2021 10:56:38 +0800</pubDate><guid>https://blog.fei.ac/zh/posts/wc2021/</guid><description>&lt;p>先花 $20 \text{min}$ 把所有题看了一遍，但是什么想法都没有。&lt;/p>
 &lt;p>$30 \text{min}$ 时开始硬刚 T1，想到 $1\text{h}$ 时想出了一个结论，然后打了一个假做法。稍微改进了一下，得到了一个（应该）没什么问题的 $O(n^2\log n)$ 假做法，过掉 $n=3000$ 的样例。&lt;/p>
 &lt;p>此时已是 $10:30$ 左右。由于不确定 T1 的做法是否是对的，反复校验了一会才开始做 T2。&lt;/p>

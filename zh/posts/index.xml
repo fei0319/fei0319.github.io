@@ -80,7 +80,7 @@ $$&lt;/p>
 4 &amp;amp; \qquad \qquad \qquad \textbf{return }s\newline
 \end{array}
 $$&lt;/p>
-&lt;p>然而该对象事实上可以被 $K$ 和 $P$ 输出，即其可以被一个长度为 $|K|+|P|$ 小于 $|K|+100000$ 的程序输出，和其柯尔莫哥洛夫复杂度不小于 $|K|+100000$ 的性质矛盾。&lt;/p></description></item><item><title>无损压缩算法基础及效率分析</title><link>https://blog.fei.ac/zh/posts/compression_complexity/</link><pubDate>Fri, 14 Jul 2023 16:43:08 +0800</pubDate><guid>https://blog.fei.ac/zh/posts/compression_complexity/</guid><description>&lt;h2 id="前缀码">前缀码&lt;/h2>
+&lt;p>然而该对象事实上可以被 $K$ 和 $P$ 输出，即其可以被一个长度为 $|K|+|P|$ 小于 $|K|+100000$ 的程序输出，和其柯尔莫哥洛夫复杂度不小于 $|K|+100000$ 的性质矛盾。&lt;/p></description></item><item><title>无损压缩算法基础及效率分析</title><link>https://blog.fei.ac/zh/posts/compression-complexity/</link><pubDate>Fri, 14 Jul 2023 16:43:08 +0800</pubDate><guid>https://blog.fei.ac/zh/posts/compression-complexity/</guid><description>&lt;h2 id="前缀码">前缀码&lt;/h2>
 &lt;p>在数据压缩时，我们为每个符号分配一个编码，实现源数据和压缩数据的互相转换。然而，在解压缩（Decompression）的过程中，对编码的不同划分方式会造成歧义。例如，对于如下编码表&lt;/p>
 &lt;table>
 &lt;thead>
@@ -279,7 +279,7 @@ $$&lt;/p>
 &lt;p>似乎在 $100$ 到 $200$ 之间取得较优的效率。在其他机器上运行相同代码，最优值都不同，有在 $13$ 处取得最优值的。值得一提的是，以上实现即使在最优的 $a$ 取值下相比 $O(n\log n)$ 的 &lt;code>std::sort&lt;/code> 仍然不具有显著优势。&lt;/p>
 &lt;p>上述代码本可以 in-place 分割从而得到更好的效率。也许我改天会重写并测试 in-place 版的 BFPRT 算法，或许能有新的发现。&lt;/p>
 &lt;h2 id="credits">Credits&lt;/h2>
-&lt;p>&lt;em>&lt;a href="https://www.cs.princeton.edu/~wayne/cs423/lectures/selection-4up.pdf">Linear Time Selection&lt;/a>&lt;/em>, COS 423 Spring 2002, Kevin Wayne&lt;/p></description></item><item><title>狄利克雷卷积和莫比乌斯反演</title><link>https://blog.fei.ac/zh/posts/arithmetic_functions/</link><pubDate>Wed, 28 Jun 2023 10:07:00 +0800</pubDate><guid>https://blog.fei.ac/zh/posts/arithmetic_functions/</guid><description>&lt;p>数论函数是定义域为 $\mathbb{N}^{+}$，陪域为 $\mathbb{C}$ 的一类函数。常见的数论函数有：&lt;/p>
+&lt;p>&lt;em>&lt;a href="https://www.cs.princeton.edu/~wayne/cs423/lectures/selection-4up.pdf">Linear Time Selection&lt;/a>&lt;/em>, COS 423 Spring 2002, Kevin Wayne&lt;/p></description></item><item><title>狄利克雷卷积和莫比乌斯反演</title><link>https://blog.fei.ac/zh/posts/arithmetic-functions/</link><pubDate>Wed, 28 Jun 2023 10:07:00 +0800</pubDate><guid>https://blog.fei.ac/zh/posts/arithmetic-functions/</guid><description>&lt;p>数论函数是定义域为 $\mathbb{N}^{+}$，陪域为 $\mathbb{C}$ 的一类函数。常见的数论函数有：&lt;/p>
 &lt;ul>
 &lt;li>单位函数 $\epsilon(n)=[n=1]$&lt;/li>
 &lt;li>欧拉函数 $\varphi(n)=\sum\limits_{i=1}^n[(i,n)=1]$&lt;/li>
@@ -621,7 +621,7 @@ $$&lt;/p>
 &lt;h2 id="凸包的闵可夫斯基和在算法竞赛中的应用">凸包的闵可夫斯基和在算法竞赛中的应用&lt;/h2>
 &lt;p>利用凸包求和，我们可以快速地进行最值卷积，即以 $O(|F|+|G|)$ 的时间复杂度求出 $\forall k, P_k = \max\limits_{i+j=k} F_i + G_j$ 和 $\forall k, Q_k = \min\limits_{i+j=k} F_i + G_j$；配合分治式合并可以在 $O(n\log n)$ 的时间内完成一系列大小总和不超过 $n$ 的数列的合并。Splay 启发式合并也可以做到 $O(n\log n)$ 的复杂度，并且相比分治式合并维护树上 DP $O(n^2)$ 的复杂度（这和暴力复杂度相同），它却可以 $O(n\log n)$ 维护树上 DP（因为 Splay 启发式合并的复杂度事实上是 $O((n-a)\log n)$，其中 $a$ 为最大数组的大小）。方便起见，我们一般只维护凸包的上轮廓或是下轮廓。&lt;/p>
 &lt;p>最值卷积听起来很让人激动。类似“给定若干个特定重量和价值的物品，求总重量为特定值时物品的最大总价值”一类的背包问题难道就这样轻松解决了吗？我们把每单个物品都视作一条线段（在我们的理论中，线段也属于凸包），对这些凸包进行合并，不就得到最终答案对应的凸包了吗？事实并非如此美好。因为最终求到的结果中，某些答案对应的点不在凸包的顶点上，而在凸包的边上；而由于单个物品只能取到线段的两个端点而不能取到线段上的非端点（即物品只可取 0 个或 1 个而不能取 0.5 个），最终我们得到的凸包上的非顶点也是不能取的。也就是说，这样求出的凸包，只有顶点对应了的重量求出的是正确答案，其余均求得偏大了。换句话讲，闵可夫斯基和本质上求的是所有可行解的凸包，这些可行解有的在凸包内部，有的在凸包顶点上；只有那些恰好在顶点上的最优解被得到了，而那些不在顶点上的最优解，我们只知道其在这个凸包的范围内，而不知其具体值。&lt;/p>
-&lt;p>为了保证我们能得到所有最优解，必须确保最优解具有凸性，从而它们都在凸包顶点上。最优解是否具有凸性，是能否使用闵可夫斯基和的重要依据。&lt;/p></description></item><item><title>无偏博弈</title><link>https://blog.fei.ac/zh/posts/impartial_game/</link><pubDate>Fri, 05 Aug 2022 15:51:00 +0800</pubDate><guid>https://blog.fei.ac/zh/posts/impartial_game/</guid><description>&lt;p>无偏博弈 (Impartial Game) 是一类满足以下性质的回合制二人游戏：&lt;/p>
+&lt;p>为了保证我们能得到所有最优解，必须确保最优解具有凸性，从而它们都在凸包顶点上。最优解是否具有凸性，是能否使用闵可夫斯基和的重要依据。&lt;/p></description></item><item><title>无偏博弈</title><link>https://blog.fei.ac/zh/posts/impartial-game/</link><pubDate>Fri, 05 Aug 2022 15:51:00 +0800</pubDate><guid>https://blog.fei.ac/zh/posts/impartial-game/</guid><description>&lt;p>无偏博弈 (Impartial Game) 是一类满足以下性质的回合制二人游戏：&lt;/p>
 &lt;ul>
 &lt;li>无偏性：玩家可用的决策仅受当前局势，而不受玩家身份限制&lt;/li>
 &lt;li>有限性：在有限次行动后游戏必将以非平局终止&lt;/li>
@@ -804,7 +804,7 @@ G_n(z) = F^n(z) = \left(\dfrac{p}{1-(1-p)z}\right)^n=\sum\binom{n+i-1}{i}p^n(1-p
 $$&lt;/p>
 &lt;p>当然它的期望和方差也可得分别为 $\dfrac{n(1-p)}{p}$ 和 $\dfrac{n(1-p)}{p^2}$。&lt;/p>
 &lt;p>负二项分布之名何来？我们发现，由于 $\dfrac{1}{F(1)} = 1$，$\dfrac{1}{F(z)}=\dfrac{1}{p}-\dfrac{1-p}{p}z$ 可被视做一次成功概率为 $-\dfrac{1-p}{p}$ （尽管它是个负数）的伯努利分布对应的概率分布函数，而 $G_n(z)=\left(\dfrac{1}{F(z)}\right)^{-n}$ 对应的就是 $-n$ （尽管这是个负数）次这样的伯努利试验的二项分布。&lt;/p>
-&lt;p>未完待续&lt;/p></description></item><item><title>我的新博客</title><link>https://blog.fei.ac/zh/posts/hello_world/</link><pubDate>Sun, 03 Jul 2022 19:22:44 +0800</pubDate><guid>https://blog.fei.ac/zh/posts/hello_world/</guid><description>&lt;p>一年的紧张备考后，我又有空写博客啦！&lt;/p>
+&lt;p>未完待续&lt;/p></description></item><item><title>我的新博客</title><link>https://blog.fei.ac/zh/posts/hello-world/</link><pubDate>Sun, 03 Jul 2022 19:22:44 +0800</pubDate><guid>https://blog.fei.ac/zh/posts/hello-world/</guid><description>&lt;p>一年的紧张备考后，我又有空写博客啦！&lt;/p>
 &lt;p>不过我曾经维护过的博客的相关配置早已丢失，仅其中博文的草稿仍有备份。与其费劲心思恢复旧博客，不如另起炉灶，于是我搭建了这一新博客，一方面保留了一部分过往博文，另一方面也添加了新的内容。&lt;/p></description></item><item><title>Boruvka 算法</title><link>https://blog.fei.ac/zh/posts/boruvka/</link><pubDate>Fri, 26 Mar 2021 11:38:23 +0800</pubDate><guid>https://blog.fei.ac/zh/posts/boruvka/</guid><description>&lt;p>Borůvka 算法是一种基于贪心的最小生成树算法，它比 Prim 算法和 Kruskal 算法更加古老。在 Borůvka 算法的基础上，已经发展出了&lt;a href="https://blog.fei.ac/files/a-randomized-linear-time-algorithm-to-find-mst.pdf">线性的最小生成树算法&lt;/a>。&lt;/p>
 &lt;p>Borůvka 算法的思想是：每次迭代，选取每一个连通块中最小的连向另一个连通块的边，将其加入最小生成树。其过程如下伪代码所示：&lt;/p>
 &lt;p>$$
@@ -1363,7 +1363,7 @@ $$&lt;/p>
 &lt;p>T4 没动。&lt;/p>
 &lt;p>跟同学讨论，才发现 T2 保证 $q$ 互不相同，完全没必要开 &lt;code>std::map&lt;/code>，可以 $O(n)$ 过，不过相信就算是 map 也能在 8700k 上过 $10^6$。回来测才发现 map 的 log 是过不了 $10^6$ 的，T2 可能只有 $60$ 分；T1 挂成 $40$ 分，T3 在不同平台分别水到 $60 \sim 80$ 不等的成绩。Clouder 表示 T4 是水题，我却碰都没碰。&lt;/p>
 &lt;p>人已经没了，希望 CSP 和 NOIP 无关。&lt;/p>
-&lt;p>最终因为 CCF 数据水，拿了 $220$。而强大的 &lt;a href="https://www.codein.icu">Clouder&lt;/a> 暴砍 $325$ 分 orz&lt;/p></description></item><item><title>任意模数多项式乘法</title><link>https://blog.fei.ac/zh/posts/arbitrary_modulo/</link><pubDate>Thu, 24 Sep 2020 11:19:29 +0800</pubDate><guid>https://blog.fei.ac/zh/posts/arbitrary_modulo/</guid><description>&lt;p>由于 NTT 的数学原理，它只能用于计算模特定模数意义下的多项式乘法。如何计算任意模数的多项式乘法呢？&lt;/p>
+&lt;p>最终因为 CCF 数据水，拿了 $220$。而强大的 &lt;a href="https://www.codein.icu">Clouder&lt;/a> 暴砍 $325$ 分 orz&lt;/p></description></item><item><title>任意模数多项式乘法</title><link>https://blog.fei.ac/zh/posts/arbitrary-modulo/</link><pubDate>Thu, 24 Sep 2020 11:19:29 +0800</pubDate><guid>https://blog.fei.ac/zh/posts/arbitrary-modulo/</guid><description>&lt;p>由于 NTT 的数学原理，它只能用于计算模特定模数意义下的多项式乘法。如何计算任意模数的多项式乘法呢？&lt;/p>
 &lt;p>一种简单的想法是利用中国剩余定理。一般我们计算两个长度在 $10^5$ 级别、系数在 $10^9$ 级别的多项式的卷积，其结果的系数不会超过 $10^{23}$ 级别。只要选取三个乘积超过 $10^{23}$ 的 NTT 模数，分别乘一次，再用中国剩余定理合并答案即可。这种方法常数极大。&lt;/p>
 &lt;p>而我们要介绍的做法是拆系数 FFT。合理的拆系数 FFT 实现消耗的时间仅仅是普通多项式乘法的四倍左右，是一种很优秀的任意模数多项式乘法计算方法。&lt;/p>
 &lt;h2 id="拆系数-fft">拆系数 FFT&lt;/h2>
@@ -1630,7 +1630,7 @@ $$&lt;/p>
 &lt;p>对于一个方阵，若其主对角线以下的所有元素都为 $0$，则称之为上三角矩阵；若其主对角线以上的所有元素为 $0$，则称之为下三角矩阵。&lt;/p>
 &lt;p>由行列式的定义可知，若 $A$ 是上三角矩阵或下三角矩阵，$|A| = \prod\limits_{i=1}^nA_{i,i}$。&lt;/p>
 &lt;h2 id="求行列式">求行列式&lt;/h2>
-&lt;p>只要运用&lt;strong>引理 1&lt;/strong>和&lt;strong>引理 5&lt;/strong>，用类似高斯消元的方法将矩阵转为上三角矩阵，我们就可以在 $O(n^3)$ 的时间内求出矩阵的行列式了。&lt;/p></description></item><item><title>生成函数入门</title><link>https://blog.fei.ac/zh/posts/generating_function/</link><pubDate>Fri, 28 Feb 2020 10:51:38 +0800</pubDate><guid>https://blog.fei.ac/zh/posts/generating_function/</guid><description>&lt;p>生成函数是一种用级数的系数来表达数列的方法，是处理数列的最强有力的方法之一。在 OI 中生成函数常常与多项式结合起来处理计数问题。&lt;/p>
+&lt;p>只要运用&lt;strong>引理 1&lt;/strong>和&lt;strong>引理 5&lt;/strong>，用类似高斯消元的方法将矩阵转为上三角矩阵，我们就可以在 $O(n^3)$ 的时间内求出矩阵的行列式了。&lt;/p></description></item><item><title>生成函数入门</title><link>https://blog.fei.ac/zh/posts/generating-function/</link><pubDate>Fri, 28 Feb 2020 10:51:38 +0800</pubDate><guid>https://blog.fei.ac/zh/posts/generating-function/</guid><description>&lt;p>生成函数是一种用级数的系数来表达数列的方法，是处理数列的最强有力的方法之一。在 OI 中生成函数常常与多项式结合起来处理计数问题。&lt;/p>
 &lt;h2 id="几种基本的生成函数">几种基本的生成函数&lt;/h2>
 &lt;p>对于一个无限长度的数列 $a_0, a_1, a_2, \ldots$，它的普通型生成函数 (Ordinary Generating Function, OGF) 是&lt;/p>
 &lt;p>$$

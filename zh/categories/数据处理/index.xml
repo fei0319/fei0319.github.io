@@ -27,7 +27,7 @@ $$&lt;/p>
 4 &amp;amp; \qquad \qquad \qquad \textbf{return }s\newline
 \end{array}
 $$&lt;/p>
-&lt;p>然而该对象事实上可以被 $K$ 和 $P$ 输出，即其可以被一个长度为 $|K|+|P|$ 小于 $|K|+100000$ 的程序输出，和其柯尔莫哥洛夫复杂度不小于 $|K|+100000$ 的性质矛盾。&lt;/p></description></item><item><title>无损压缩算法基础及效率分析</title><link>https://blog.fei.ac/zh/posts/compression_complexity/</link><pubDate>Fri, 14 Jul 2023 16:43:08 +0800</pubDate><guid>https://blog.fei.ac/zh/posts/compression_complexity/</guid><description>&lt;h2 id="前缀码">前缀码&lt;/h2>
+&lt;p>然而该对象事实上可以被 $K$ 和 $P$ 输出，即其可以被一个长度为 $|K|+|P|$ 小于 $|K|+100000$ 的程序输出，和其柯尔莫哥洛夫复杂度不小于 $|K|+100000$ 的性质矛盾。&lt;/p></description></item><item><title>无损压缩算法基础及效率分析</title><link>https://blog.fei.ac/zh/posts/compression-complexity/</link><pubDate>Fri, 14 Jul 2023 16:43:08 +0800</pubDate><guid>https://blog.fei.ac/zh/posts/compression-complexity/</guid><description>&lt;h2 id="前缀码">前缀码&lt;/h2>
 &lt;p>在数据压缩时，我们为每个符号分配一个编码，实现源数据和压缩数据的互相转换。然而，在解压缩（Decompression）的过程中，对编码的不同划分方式会造成歧义。例如，对于如下编码表&lt;/p>
 &lt;table>
 &lt;thead>

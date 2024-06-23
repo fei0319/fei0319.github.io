@@ -157,7 +157,7 @@ G_n(z) = F^n(z) = \left(\dfrac{p}{1-(1-p)z}\right)^n=\sum\binom{n+i-1}{i}p^n(1-p
 $$&lt;/p>
 &lt;p>当然它的期望和方差也可得分别为 $\dfrac{n(1-p)}{p}$ 和 $\dfrac{n(1-p)}{p^2}$。&lt;/p>
 &lt;p>负二项分布之名何来？我们发现，由于 $\dfrac{1}{F(1)} = 1$，$\dfrac{1}{F(z)}=\dfrac{1}{p}-\dfrac{1-p}{p}z$ 可被视做一次成功概率为 $-\dfrac{1-p}{p}$ （尽管它是个负数）的伯努利分布对应的概率分布函数，而 $G_n(z)=\left(\dfrac{1}{F(z)}\right)^{-n}$ 对应的就是 $-n$ （尽管这是个负数）次这样的伯努利试验的二项分布。&lt;/p>
-&lt;p>未完待续&lt;/p></description></item><item><title>生成函数入门</title><link>https://blog.fei.ac/zh/posts/generating_function/</link><pubDate>Fri, 28 Feb 2020 10:51:38 +0800</pubDate><guid>https://blog.fei.ac/zh/posts/generating_function/</guid><description>&lt;p>生成函数是一种用级数的系数来表达数列的方法，是处理数列的最强有力的方法之一。在 OI 中生成函数常常与多项式结合起来处理计数问题。&lt;/p>
+&lt;p>未完待续&lt;/p></description></item><item><title>生成函数入门</title><link>https://blog.fei.ac/zh/posts/generating-function/</link><pubDate>Fri, 28 Feb 2020 10:51:38 +0800</pubDate><guid>https://blog.fei.ac/zh/posts/generating-function/</guid><description>&lt;p>生成函数是一种用级数的系数来表达数列的方法，是处理数列的最强有力的方法之一。在 OI 中生成函数常常与多项式结合起来处理计数问题。&lt;/p>
 &lt;h2 id="几种基本的生成函数">几种基本的生成函数&lt;/h2>
 &lt;p>对于一个无限长度的数列 $a_0, a_1, a_2, \ldots$，它的普通型生成函数 (Ordinary Generating Function, OGF) 是&lt;/p>
 &lt;p>$$
