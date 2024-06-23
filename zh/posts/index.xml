@@ -403,7 +403,7 @@ $$&lt;/p>
 &lt;p>故&lt;/p>
 &lt;p>$$\varphi = \operatorname{id}\ast \mu$$&lt;/p>
 &lt;p>结合 $\mu \ast 1 = \epsilon$ 得&lt;/p>
-&lt;p>$$\operatorname{id}=\varphi\ast 1$$&lt;/p></description></item><item><title>Scheme 解释器原理</title><link>https://blog.fei.ac/zh/posts/thoery_of_scheme_interpretation/</link><pubDate>Tue, 16 May 2023 16:25:00 +0800</pubDate><guid>https://blog.fei.ac/zh/posts/thoery_of_scheme_interpretation/</guid><description>&lt;p>Scheme 是 Lisp 的一种方言，其语法极为简洁。&lt;/p>
+&lt;p>$$\operatorname{id}=\varphi\ast 1$$&lt;/p></description></item><item><title>Scheme 解释器原理</title><link>https://blog.fei.ac/zh/posts/theory-of-scheme-interpretation/</link><pubDate>Tue, 16 May 2023 16:25:00 +0800</pubDate><guid>https://blog.fei.ac/zh/posts/theory-of-scheme-interpretation/</guid><description>&lt;p>Scheme 是 Lisp 的一种方言，其语法极为简洁。&lt;/p>
 &lt;p>在 Scheme 中，所有的过程都通过 &lt;code>(procedure param)&lt;/code> 的形式调用。下面是一些例子：&lt;/p>
 &lt;ul>
 &lt;li>&lt;code>(eq? 3 (+ 1 2))&lt;/code>：计算 3 是否等于 1 + 2&lt;/li>
@@ -612,7 +612,7 @@ $$&lt;/p>
 &lt;p>张神和我开始看 J。我提出了题目的一种抽象，将原题转换为求图的边匹配；张神猜想边匹配存在的充要条件是每个连通块的边数为偶数。我们两个确信这个猜想是对的，在十几分钟的思考后张神提出了 dfs 树构造。这时 Destiny 过掉了 D。他看了看排行榜，告诉我：如果能把 J 过掉我们金牌就有了。我赶紧上机码 J，却在比赛还剩 40 分钟的时候 wa 掉。&lt;/p>
 &lt;p>两人赶紧过来帮我查错，几分钟后无果，只能让张神赶紧码一份，Destiny 和我到队员机上查错。结束前 15 分钟，张神也 wa 了，Destiny 和我也未查出任何错误。我们都觉得这道题很可能做不出来了。&lt;/p>
 &lt;p>突然，张神指出我们建图的方式会导致本该不同的点重合为同一个点。张神起初表示这个错误没法改，但仅仅一分钟后他突然又喊道“好像可以改”，冲向电脑改代码，我也随即意识到了修改方法，而且对于我的代码来讲，只需要改一行。张神 wa 了，我赶紧切到我的代码改完，提交，通过了这题。吐槽一下这个系统，评测未通过是绿色，通过反而是红色。&lt;/p>
-&lt;p>接下来，大家都不再看题，而是对着排行榜分析起来。Destiny 经验丰富，指出某些封榜后交题的队纯属虚张声势；最后他认为我们金牌很有机会，张神却认为不只是很有机会，而是稳了。最后也确实是金。&lt;/p></description></item><item><title>凸包的闵可夫斯基和</title><link>https://blog.fei.ac/zh/posts/sum_of_convex/</link><pubDate>Thu, 25 Aug 2022 09:57:07 +0800</pubDate><guid>https://blog.fei.ac/zh/posts/sum_of_convex/</guid><description>&lt;p>对于两个点集 $A$ 与 $B$，它们的闵可夫斯基和就是 $A + B = {\mathbf a + \mathbf b \rvert \mathbf a \in A, \mathbf b \in B}$。本文只讨论 $A$ 和 $B$ 都是凸包的情况。&lt;/p>
+&lt;p>接下来，大家都不再看题，而是对着排行榜分析起来。Destiny 经验丰富，指出某些封榜后交题的队纯属虚张声势；最后他认为我们金牌很有机会，张神却认为不只是很有机会，而是稳了。最后也确实是金。&lt;/p></description></item><item><title>凸包的闵可夫斯基和</title><link>https://blog.fei.ac/zh/posts/sum-of-convex/</link><pubDate>Thu, 25 Aug 2022 09:57:07 +0800</pubDate><guid>https://blog.fei.ac/zh/posts/sum-of-convex/</guid><description>&lt;p>对于两个点集 $A$ 与 $B$，它们的闵可夫斯基和就是 $A + B = {\mathbf a + \mathbf b \rvert \mathbf a \in A, \mathbf b \in B}$。本文只讨论 $A$ 和 $B$ 都是凸包的情况。&lt;/p>
 &lt;h2 id="符号和约定">符号和约定&lt;/h2>
 &lt;p>$|A|$ 表示凸包 $A$ 的顶点个数，$A_i$ 表示凸包的第 $i$ 个顶点，并且下标是循环的（即 $A_i$ 与 $A_{i+|A|}$ 指同一顶点）。&lt;/p>
 &lt;h2 id="结论和实现">结论和实现&lt;/h2>
@@ -843,7 +843,7 @@ $$&lt;/p>
 y_2=x_1-\left\lfloor\dfrac{a}{b}\right\rfloor y_1\end{cases}
 $$&lt;/p>
 &lt;p>解得 $x_2=0,y_2=1$。由于 $b_2\neq 0$ 且 $b_2\mid a_2$，则该状态满足 $|x_2|\le b_2,|y_2|\le a_2$。&lt;/p>
-&lt;p>归纳证明后面的情况。对于后面的任何一个状态 $S_i$ ($i&amp;gt;2$)，我们有 $x_i=y_{i-1},y_i=x_{i-1}-\left\lfloor\dfrac{a}{b}\right\rfloor y_{i-1}$。将 $|x_{i-1}|\le b_{i-1}=a_i\bmod b_i,|y_{i-1}|\le a_{i-1}=b_i$ 代入得到 $|x_i|\le b_i,|y_i|\le a_i$。&lt;/p></description></item><item><title>静态链分治和树上启发式合并</title><link>https://blog.fei.ac/zh/posts/dsu_on_tree/</link><pubDate>Thu, 18 Mar 2021 10:22:29 +0800</pubDate><guid>https://blog.fei.ac/zh/posts/dsu_on_tree/</guid><description>&lt;p>静态链分治 (DSU on Tree) 和树上启发式合并 (Heuristic Merge on Tree) 是简洁有力的处理树上问题的工具，而代价仅为将复杂度乘上 $O(\log n)$。在处理询问时，要求询问离线。&lt;/p>
+&lt;p>归纳证明后面的情况。对于后面的任何一个状态 $S_i$ ($i&amp;gt;2$)，我们有 $x_i=y_{i-1},y_i=x_{i-1}-\left\lfloor\dfrac{a}{b}\right\rfloor y_{i-1}$。将 $|x_{i-1}|\le b_{i-1}=a_i\bmod b_i,|y_{i-1}|\le a_{i-1}=b_i$ 代入得到 $|x_i|\le b_i,|y_i|\le a_i$。&lt;/p></description></item><item><title>静态链分治和树上启发式合并</title><link>https://blog.fei.ac/zh/posts/dsu-on-tree/</link><pubDate>Thu, 18 Mar 2021 10:22:29 +0800</pubDate><guid>https://blog.fei.ac/zh/posts/dsu-on-tree/</guid><description>&lt;p>静态链分治 (DSU on Tree) 和树上启发式合并 (Heuristic Merge on Tree) 是简洁有力的处理树上问题的工具，而代价仅为将复杂度乘上 $O(\log n)$。在处理询问时，要求询问离线。&lt;/p>
 &lt;p>很多人把静态链分治和树上启发式合并混为一谈，但它们其实是截然不同的算法。大家常见并称之为“树上启发式合并”的算法其实是静态链分治。&lt;/p>
 &lt;h2 id="静态链分治">静态链分治&lt;/h2>
 &lt;blockquote>

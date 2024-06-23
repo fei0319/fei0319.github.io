@@ -18,7 +18,7 @@
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> low[node] &lt;span style="color:#f92672">=&lt;/span> std&lt;span style="color:#f92672">::&lt;/span>min(low[node], low[edge[i].to]);
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>凸包的闵可夫斯基和</title><link>https://blog.fei.ac/zh/posts/sum_of_convex/</link><pubDate>Thu, 25 Aug 2022 09:57:07 +0800</pubDate><guid>https://blog.fei.ac/zh/posts/sum_of_convex/</guid><description>&lt;p>对于两个点集 $A$ 与 $B$，它们的闵可夫斯基和就是 $A + B = {\mathbf a + \mathbf b \rvert \mathbf a \in A, \mathbf b \in B}$。本文只讨论 $A$ 和 $B$ 都是凸包的情况。&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>凸包的闵可夫斯基和</title><link>https://blog.fei.ac/zh/posts/sum-of-convex/</link><pubDate>Thu, 25 Aug 2022 09:57:07 +0800</pubDate><guid>https://blog.fei.ac/zh/posts/sum-of-convex/</guid><description>&lt;p>对于两个点集 $A$ 与 $B$，它们的闵可夫斯基和就是 $A + B = {\mathbf a + \mathbf b \rvert \mathbf a \in A, \mathbf b \in B}$。本文只讨论 $A$ 和 $B$ 都是凸包的情况。&lt;/p>
 &lt;h2 id="符号和约定">符号和约定&lt;/h2>
 &lt;p>$|A|$ 表示凸包 $A$ 的顶点个数，$A_i$ 表示凸包的第 $i$ 个顶点，并且下标是循环的（即 $A_i$ 与 $A_{i+|A|}$ 指同一顶点）。&lt;/p>
 &lt;h2 id="结论和实现">结论和实现&lt;/h2>
