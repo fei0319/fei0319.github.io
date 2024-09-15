@@ -1,4 +1,50 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on 绯想天</title><link>https://blog.fei.ac/zh/posts/</link><description>Recent content in Posts on 绯想天</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>Copyright © 2020 - 2023 Fei Pan</copyright><lastBuildDate>Sat, 08 Jun 2024 20:08:21 +0800</lastBuildDate><atom:link href="https://blog.fei.ac/zh/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>luogu/P9170 [省选联考 2023] 填数游戏</title><link>https://blog.fei.ac/zh/posts/luogu/p9170/</link><pubDate>Sat, 08 Jun 2024 20:08:21 +0800</pubDate><guid>https://blog.fei.ac/zh/posts/luogu/p9170/</guid><description>&lt;blockquote>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on 绯想天</title><link>https://blog.fei.ac/zh/posts/</link><description>Recent content in Posts on 绯想天</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>Copyright © 2020 - 2023 Fei Pan</copyright><lastBuildDate>Sun, 15 Sep 2024 22:54:28 +0800</lastBuildDate><atom:link href="https://blog.fei.ac/zh/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>The 3rd Universal Cup. Stage 3: Ukraine 口胡</title><link>https://blog.fei.ac/zh/posts/ucup-3-stage-3/</link><pubDate>Sun, 15 Sep 2024 22:54:28 +0800</pubDate><guid>https://blog.fei.ac/zh/posts/ucup-3-stage-3/</guid><description>&lt;h2 id="g-goodman">G. Goodman&lt;/h2>
+&lt;p>略&lt;/p>
+&lt;h2 id="a-aibohphobia">A. Aibohphobia&lt;/h2>
+&lt;p>对于 $n = 1$ 的情况特判。以下讨论 $n \ge 2$ 的情况。&lt;/p>
+&lt;ul>
+&lt;li>若仅出现一种字符，答案为负。&lt;/li>
+&lt;li>若仅出现两种字符，当且仅当有一种字符出现次数为 $1$ 时答案为正。&lt;/li>
+&lt;li>若出现三及以上种字符，答案为正，构造如下：所有字符出现次数均为 $1$，则构造显然；否则，存在出现次数多于 $2$ 的字符 $\texttt{a}$，构造 $\texttt{abca&amp;hellip;}$ 即满足条件。&lt;/li>
+&lt;/ul>
+&lt;h2 id="d-daily-disinfection">D. Daily Disinfection&lt;/h2>
+&lt;p>考虑由 $\texttt{1}$ 组成的极长连续子段个数 $x$。若 $x$ 小于等于空位的个数，显然可以花费 $\texttt{1}$ 的个数的代价完成打扫。&lt;/p>
+&lt;p>否则，必定有 $x - 1$ 个空位插在这 $x$ 个子段之间。设这些子段中最短者的长度为 $l$，显然可以花费 $\texttt{1}$ 的个数 + $l$ 的代价完成打扫。接下来证明这个代价是最小的：若存在一种方案，代价比上述值更小，则所有的子段都一定未完全归位；于是第 $1$ 个空位被第 $1$ 个子段的最右侧书本占据，第 $2$ 个空位被第 $2$ 个子段的最右侧书本占据，&amp;hellip;，第 $n$ 个空位被第 $n$ 个子段的最右侧书本占据，与仅有 $n - 1$ 个空位的事实不符。&lt;/p>
+&lt;h2 id="e-equalizer-ehrmantraut">E. Equalizer Ehrmantraut&lt;/h2>
+&lt;p>不妨令 $a_1$ 为最小的数，那么以下至少成立一个：&lt;/p>
+&lt;ul>
+&lt;li>$b_1 = a_1$&lt;/li>
+&lt;li>$\forall i &amp;gt; 1: a_i = a_1$&lt;/li>
+&lt;/ul>
+&lt;p>推广该结论，得到：$(a, b)$ 合法当且仅当对于 $x = \max{a_i}$，当 $a_i &amp;lt; x$ 时 $b_i = a_i$，当 $a_i = x$ 时 $b_i \ge x$。&lt;/p>
+&lt;h2 id="c-chemistry-class">C. Chemistry Class&lt;/h2>
+&lt;p>将 $a$ 排序，显然答案为 $-1$ 当且仅当存在一个 $i$ 使得 $|a_{2i} - a_{2i + 1}| &amp;gt; A$。&lt;/p>
+&lt;p>容易发现不存在交叉的匹配，即将 $a$ 排序后，不存在两个匹配 $(i, j)$、$(k, l)$ 使得 $i &amp;lt; k &amp;lt; j &amp;lt; l$，同时嵌套的匹配仅可嵌套一层，且外层仅能为 $A$ 型匹配，内层仅能为若干个彼此不交的 $B$ 型匹配。&lt;/p>
+&lt;p>对于这种 $ABB\ldots BBA$ 型，可以证明我们要使之极长。于是可以 DP。&lt;/p>
+&lt;h2 id="j-jesses-job">J. Jesse&amp;rsquo;s Job&lt;/h2>
+&lt;p>若排列存在多个置换环，则显然可以将其中一个置换环染黄，其余染蓝，达成 $n$ 的分数。&lt;/p>
+&lt;p>考虑排列仅有一个置换环的情况。此时对于每种颜色，都至少有一个错位，因此分数至多为 $n - 2$。接下来给出一个达成 $n - 2$ 分的分组方案：考虑将置换环分为两条链，设两条链的链头分别为 $p$ 和 $q$，则一条链多一个 $p$ 数和 $q$ 位置，另一条链多一个 $q$ 数和 $p$ 位置，我们希望这两条链都能将 $p$ 和 $q$ 在排序后匹配上，这样其余的 $n - 2$ 个匹配就都能得分。发现 $|p - q| = 1$ 时可以达成。&lt;/p>
+&lt;h2 id="h-highway-hoax">H. Highway Hoax&lt;/h2>
+&lt;p>将 $\texttt{F}$ 视为空，$\texttt{S}$ 视为棋子，则原题相当于：在树上有一系列棋子和有向边，棋子可以沿有向边移动并使之反向，求棋子可能的布局数。&lt;/p>
+&lt;p>显然每条边至多只会被使用一次。则可以设计树形 DP：$dp_{x, 0/1}$ 表示 $x$ 所在子树，在连接 $x$ 及其父亲的边是/否使用时的布局数。该 DP 可用 FFT 优化，复杂度为 $O(n \log n)$。&lt;/p>
+&lt;h2 id="f-formal-fring">F. Formal Fring&lt;/h2>
+&lt;p>当 $n$ 仅有一位时（即 $n = 1$），答案为 $1$。&lt;/p>
+&lt;p>否则 $n$ 至少有两位。考虑将 $n$ 二进制拆分，得到一系列形如 $2^{b_i}$ 的数（$b_0 &amp;gt; b_1 &amp;gt; \ldots &amp;gt; b_k$），可以证明所有的拆分方案都可通过对这 $k$ 个数进一步拆分得到。&lt;/p>
+&lt;p>若 $b_0 &amp;gt; b_1 + 1$，即 $n$ 的最高两位为 $10$，则拆分方案合法当且仅当 $2^{b_0}$ 不被拆分。因为当 $2^{b_0}$ 被拆分为两个 $2^{b_0-1}$ 后，其中一个 $2^{b_0-1}$ 单独成组，其余数共成一组，即构成违例，在此基础上任何进一步的拆分得到的方案也同样违例。令 $f(x)$ 为对 $x$ 任意拆分的方案数，则此情况下答案为 $f(n - 2^{b_0})$。&lt;/p>
+&lt;p>若 $b_0 = b_1 + 1$，即 $n$ 的最高两位为 $11$，则 $2^{b_0}$ 不拆分时合法。接下来讨论 $2^{b_0}$ 被拆分的情况，即有三个 $2^{b_1}$。若不拆分这三个 $2^{b_1}$，则方案显然合法；若拆分这三个 $2^{b_1}$ 中的一或更多个，则方案不合法，证明如下：&lt;/p>
+&lt;p>拆分方案合法当且仅当任意一部分数的和与其余数的和的差都大于 $n - 2^{b_0}$。若拆分三个 $2^{b_1}$ 中的一个，即可将得到的 $[2^{b_1}, 2^{b_1}, 2^{b_1-1}, 2^{b_1-1}]$ 平均分配到两组，其余数统一分配给某一组，此时两组之差为 $n - 2^{b_0} - 2^{b_1}$，是为违例。若拆分更多 $2^{b_1}$ 同样违例。&lt;/p>
+&lt;h2 id="i-increasing-income">I. Increasing Income&lt;/h2>
+&lt;p>原题意可以抽象为：给定一系列二维点 $(x_i, y_i)$，寻找一个排列最大化前缀最大 $x$ 和前缀最大 $y$ 的总数。&lt;/p>
+&lt;p>该问题显然有多项式复杂度解法：设 $dp_{x, y}$ 表示已选的数中第一维最大值为 $x$，第二维最大值为 $y$ 时前缀最大值总数的最大值，有转移方程：&lt;/p>
+&lt;p>$$dp_{\max{x, x_i}, \max{y, y_i}} = \max{dp_{x, y} + [x_i &amp;gt; x] + [y_i &amp;gt; y] | x_i &amp;gt; x \lor y_i &amp;gt; y }$$&lt;/p>
+&lt;p>该 DP 可用树状数组优化至 $O(n \log n)$ 的时间复杂度。&lt;/p>
+&lt;h2 id="b-breaking-bad">B. Breaking Bad&lt;/h2>
+&lt;p>若存在某四个格子 $(x, y), (u, v), (x, v), (u, y)$ 满足 $a_{x, y} + a_{u, v} \neq a_{x, v} + a_{u, y} \pmod 5$，则显然至少存在两种结果。进一步地，若存在四个彼此不共行列的四元组，则答案为 $\texttt{YYYYY}$。&lt;/p>
+&lt;p>若四元组个数小于等于三个，则将他们对应的至多 $6$ 行和 $6$ 列交换至左上角。由于右下角的 $n - 6$ 行 $n - 6$ 列无论如何选择结果均相同，能够用状压 DP 求出最终能得到的数。&lt;/p>
+&lt;h2 id="k-knocker">K. Knocker&lt;/h2>
+&lt;p>如果我们要求每次操作的参数 $x$ 需满足 $x &amp;gt; \lfloor\max{a_i}/2\rfloor$，那么依然能够得到原本能够得到的所有结果。证明：要求操作 $x$ 前，必须操作一遍 $2x, 3x, \ldots \lfloor 500/x \rfloor \cdot x$，这对结果无影响，同时也能保证 $x &amp;gt; \lfloor\max{a_i}/2\rfloor$。&lt;/p>
+&lt;p>于是操作不再视作对所有数取模，而是对所有大于等于 $x$ 的 $a_i$ 减去 $x$。进一步地，我们发现能够在仅对每个数操作一次的情况下达成所有可能的结果。证明：假设第 $i$ 个数最终一共被减去了 $d_i$，将 ${d_i}$ 中元素从大到小依次操作，任意时刻必然仍满足 $d &amp;gt; \lfloor\max{a_i}/2\rfloor$。此外，由于 $\min{d_i} &amp;gt; \max{a_i - d_i}$，任何一个 $a_i$ 也不会被多个 $d_i$ 减。&lt;/p>
+&lt;p>于是可以 DP 求解。&lt;/p></description></item><item><title>luogu/P9170 [省选联考 2023] 填数游戏</title><link>https://blog.fei.ac/zh/posts/luogu/p9170/</link><pubDate>Sat, 08 Jun 2024 20:08:21 +0800</pubDate><guid>https://blog.fei.ac/zh/posts/luogu/p9170/</guid><description>&lt;blockquote>
 &lt;p>对于 $i = 1 \ldots n$，Alice 需要从 $S_i$ 中选择一个数作为 $a_i$；在这之后，Bob 需要从 $T_i$ 中选择 $b_i$。其中 $1 \le |S_i|, |T_i| \le 2$。&lt;/p>
 &lt;p>设 $X = \sum\limits_{i=1}^n [a_i = b_i]$。Alice 的目标是最大化 $X$，Bob 的目标是在保证 $b_i$ 互不相同的前提下最小化 $X$。判断 Bob 能否保证 $b_i$ 互不相同，并在他能时求最终 $X$ 的值。&lt;/p>
 &lt;/blockquote>
