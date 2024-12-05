@@ -1,4 +1,36 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>绯想天</title><link>https://blog.fei.ac/zh/</link><description>Recent content on 绯想天</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>Copyright © 2020 - 2023 Fei Pan</copyright><lastBuildDate>Sun, 15 Sep 2024 22:54:28 +0800</lastBuildDate><atom:link href="https://blog.fei.ac/zh/index.xml" rel="self" type="application/rss+xml"/><item><title>The 3rd Universal Cup. Stage 3: Ukraine 口胡</title><link>https://blog.fei.ac/zh/posts/ucup-3-stage-3/</link><pubDate>Sun, 15 Sep 2024 22:54:28 +0800</pubDate><guid>https://blog.fei.ac/zh/posts/ucup-3-stage-3/</guid><description>&lt;h2 id="g-goodman">G. Goodman&lt;/h2>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>绯想天</title><link>https://blog.fei.ac/zh/</link><description>Recent content on 绯想天</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>Copyright © 2020 - 2023 Fei Pan</copyright><lastBuildDate>Wed, 04 Dec 2024 22:47:57 +0800</lastBuildDate><atom:link href="https://blog.fei.ac/zh/index.xml" rel="self" type="application/rss+xml"/><item><title>Lyndon 串</title><link>https://blog.fei.ac/zh/posts/lyndon/</link><pubDate>Wed, 04 Dec 2024 22:47:57 +0800</pubDate><guid>https://blog.fei.ac/zh/posts/lyndon/</guid><description>&lt;p>我们称一个字符串 $s$ 是 Lyndon 串，当且仅当 $s$ 的字典序小于其所有的真后缀。由于 $s$ 和它的真后缀长度不同，此处的小于是严格小于。&lt;/p>
+&lt;h2 id="lyndon-分解">Lyndon 分解&lt;/h2>
+&lt;p>任何字符串都可以分解为一系列 Lyndon 串 $w_1w_2\ldots w_k$（令 $w_i = s_i$ 即可得到一种分解），如果该分解还满足 $w_1 \ge w_2 \ge \ldots w_k$，则称该分解为 Lyndon 分解。任何字符串的 Lyndon 分解有且仅有一个。&lt;/p>
+&lt;ul>
+&lt;li>存在性：首先将字符串分解为 $w_1w_2\ldots w_n, w_i = s_i$，其中 $w_i$ 均为 Lyndon 串。若相邻两项满足 $w_i &amp;lt; w_{i+1}$，则将它们拼接，显然拼接的结果也是 Lyndon 串。如此反复操作，直至相邻两项均不满足 $w_i &amp;lt; w_{i+1}$，即可得到一个 Lyndon 分解。&lt;/li>
+&lt;li>唯一性：假设存在两个 Lyndon 分解 $u_1 \ldots u_{p}$ 和 $v_1 \ldots v_{q}$。不失一般性，令 $u_1 \neq v_1$ 且 $|u_1| &amp;gt; |u_2|$，则有 $u_1 = v_1v_2 \ldots \overline{v_k}$，其中 $\overline{v_k}$ 是 $v_k$ 的一个前缀。由 $v_1 \ge v_2 \ge \ldots v_{k} \ge \overline{v_k}$ 可得 $v_1v_2 \ldots \overline{v_k} \ge \overline{v_k}$，这与 $u_1 &amp;lt; \overline{v_k}$ 矛盾。&lt;/li>
+&lt;/ul>
+&lt;h2 id="最小表示">最小表示&lt;/h2>
+&lt;p>我们称 $s$ 的所有循环同构中字典序最小的为 $s$ 的最小表示。求 $ss$ 的 Lyndon 分解，取第一个右端点大于等于 $n$ 的字符串的首字符作为循环同构的起点，即可得最小表示。&lt;/p>
+&lt;blockquote>
+&lt;p>Lyndon 串是自己的最小表示，但字符串是自己的最小表示并不能说明其是 Lyndon 串。若 $s$ 为自己的最小表示且 $s$ 的最小正周期为 $|s|$，则 $s$ 为 Lyndon 串。&lt;/p>
+&lt;/blockquote>
+&lt;p>证明：对 $s^2$ 作 Lyndon 分解 $w_1w_2 \ldots w_k$，若 $w_1$ 为首个右端点大于等于 $n$ 的串，则由 Lyndon 串性质可知 $|w_1| = n$，即 $s$ 为 Lyndon 串；若 $w_x$（$x &amp;gt; 1$）为首个右端点大于等于 $n$ 的串，则 $s^2_{x\ldots x+n-1}$ 为 $s$ 的一个最小表示，又 $s$ 的最小周期为 $|s|$，$s$ 的循环同构两两不同，因此 $s$ 不是自己的最小表示，与题设矛盾。&lt;/p>
+&lt;h2 id="run">Run&lt;/h2>
+&lt;p>我们称子串 $s_{l, r}$ 是 $s$ 的一个 Run，当且仅当：&lt;/p>
+&lt;ul>
+&lt;li>令 $p$ 为 $s_{l, r}$ 的最小正周期，则 $r - l + 1 \ge p * 2$；&lt;/li>
+&lt;li>$l = 1$ 或 $s_{l - 1} \neq s_{l - 1 + p}$；&lt;/li>
+&lt;li>$r = n$ 或 $s_{r + 1} \neq s_{r + 1 - p}$。&lt;/li>
+&lt;/ul>
+&lt;p>简单地讲，Run 就是极长的周期子串，且周期至少完整出现两次。我们用有序三元组 $(i, j, p)$ 来表示一个 Run。&lt;/p>
+&lt;p>不妨设在 $(i, j, p)$ 所有长度为 $p$ 的子串中最小的那个为 $s_{l, r}$。那么 $s_{l, r}$ 必然是自己的一个最小表示，又因为 $s_{l, r}$ 的最小正周期为 $r - l + 1$，$s_{l, r}$ 为一个 Lyndon 串。我们称 $s_{l, r}$ 为 $(i, j, p)$ 的 Lyndon 根。如果能够枚举所有的 Lyndon 根，就可以通过哈希求往前后可拓展的长度，得到 Run。&lt;/p>
+&lt;p>考虑 $(i, j, p)$ 的一个 Lyndon 根 $s_{l, l + p - 1}$。比较 $s$ 的 $l$ - 后缀和 $(l + p)$ - 后缀的字典序，去除二者的 LCP，可知实际上就是比较 $s_{j + 1 - p}$ 和 $s_{j + 1}$。由 Run 的性质，必然有 $s_{j + 1 - p} \neq s_{j + 1}$。接下来讨论：&lt;/p>
+&lt;ul>
+&lt;li>若 $s_{j + 1 - p} &amp;gt; s_{j + 1}$，设 $\text{rk} _i$ 表示 $i$ - 后缀字典序的排名，由 Lyndon 串的性质可知 $\forall l &amp;lt; x \le l + p - 1, \text{rk} _x &amp;gt; \text{rk} _l$ 而 $\text{rk} _{l + p} &amp;lt; \text{rk} _{l}$。于是若某个 Lyndon 根的开头为 $l$，我们可知它的结尾一定是最小的满足 $\text{rk} _r &amp;lt; \text{rk} _l$ 的 $r$。&lt;/li>
+&lt;li>若 $s_{j + 1 - p} &amp;lt; s_{j + 1}$，则我们找不到 $(i, j, p)$ 的 Lyndon 根。&lt;/li>
+&lt;/ul>
+&lt;p>对于每个 $l$ 找到第一个满足 $\text{rk}_r &amp;lt; \text{rk}_l$ 的 $r$，即可得到所有满足 $s _{j + 1 - p} &amp;lt; s _{j + 1}$ 的 $(i, j, p)$ 的 Lyndon 根。这个过程可以用单调栈和后缀数组在 $O(n)$ 内完成，也可以用单调栈和哈希在 $O(n\log n)$ 时间内完成。&lt;/p>
+&lt;blockquote>
+&lt;p>事实上，对于 $l$，找出第一个满足 $\text{rk} _r &amp;lt; \text{rk} _l$ 的 $r$，则 $s _{l, r}$ 一定是 Lyndon 串，而且是以 $l$ 为开头的最长 Lyndon 串。不过这个知识对求 Run 无用。&lt;/p>
+&lt;/blockquote>
+&lt;p>对于那些 $s _{j + 1 - p} &amp;gt; s _{j + 1}$ 的 $(i, j, p)$，将 $s$ 的字符翻转后再应用上述过程即可得到它们的 Lyndon 根。因此我们最多可以得到 $2n$ 个可能的 Lyndon 根，即 Run 的总数不超过 $2n$。对这些 Lyndon 根进行扩展即可得到所有的 Run。&lt;/p>
+&lt;p>进一步地，Run 的总数小于 $n$，且 $\sum\limits_{(i, j, p)} \dfrac{j - i + 1}{p} &amp;lt; 3n$，证明略。&lt;/p></description></item><item><title>The 3rd Universal Cup. Stage 3: Ukraine 口胡</title><link>https://blog.fei.ac/zh/posts/ucup-3-stage-3/</link><pubDate>Sun, 15 Sep 2024 22:54:28 +0800</pubDate><guid>https://blog.fei.ac/zh/posts/ucup-3-stage-3/</guid><description>&lt;h2 id="g-goodman">G. Goodman&lt;/h2>
 &lt;p>略&lt;/p>
 &lt;h2 id="a-aibohphobia">A. Aibohphobia&lt;/h2>
 &lt;p>对于 $n = 1$ 的情况特判。以下讨论 $n \ge 2$ 的情况。&lt;/p>
@@ -16,7 +48,7 @@
 &lt;li>$b_1 = a_1$&lt;/li>
 &lt;li>$\forall i &amp;gt; 1: a_i = a_1$&lt;/li>
 &lt;/ul>
-&lt;p>推广该结论，得到：$(a, b)$ 合法当且仅当对于 $x = \max{a_i}$，当 $a_i &amp;lt; x$ 时 $b_i = a_i$，当 $a_i = x$ 时 $b_i \ge x$。&lt;/p>
+&lt;p>推广该结论，得到：$(a, b)$ 合法当且仅当对于 $x = \max\{a_i\}$，当 $a_i &amp;lt; x$ 时 $b_i = a_i$，当 $a_i = x$ 时 $b_i \ge x$。&lt;/p>
 &lt;h2 id="c-chemistry-class">C. Chemistry Class&lt;/h2>
 &lt;p>将 $a$ 排序，显然答案为 $-1$ 当且仅当存在一个 $i$ 使得 $|a_{2i} - a_{2i + 1}| &amp;gt; A$。&lt;/p>
 &lt;p>容易发现不存在交叉的匹配，即将 $a$ 排序后，不存在两个匹配 $(i, j)$、$(k, l)$ 使得 $i &amp;lt; k &amp;lt; j &amp;lt; l$，同时嵌套的匹配仅可嵌套一层，且外层仅能为 $A$ 型匹配，内层仅能为若干个彼此不交的 $B$ 型匹配。&lt;/p>
@@ -36,14 +68,14 @@
 &lt;h2 id="i-increasing-income">I. Increasing Income&lt;/h2>
 &lt;p>原题意可以抽象为：给定一系列二维点 $(x_i, y_i)$，寻找一个排列最大化前缀最大 $x$ 和前缀最大 $y$ 的总数。&lt;/p>
 &lt;p>该问题显然有多项式复杂度解法：设 $dp_{x, y}$ 表示已选的数中第一维最大值为 $x$，第二维最大值为 $y$ 时前缀最大值总数的最大值，有转移方程：&lt;/p>
-&lt;p>$$dp_{\max{x, x_i}, \max{y, y_i}} = \max{dp_{x, y} + [x_i &amp;gt; x] + [y_i &amp;gt; y] | x_i &amp;gt; x \lor y_i &amp;gt; y }$$&lt;/p>
+&lt;p>$$dp_{\max\{x, x_i\}, \max\{y, y_i\}} = \max\{dp_{x, y} + [x_i &amp;gt; x] + [y_i &amp;gt; y] | x_i &amp;gt; x \lor y_i &amp;gt; y \}$$&lt;/p>
 &lt;p>该 DP 可用树状数组优化至 $O(n \log n)$ 的时间复杂度。&lt;/p>
 &lt;h2 id="b-breaking-bad">B. Breaking Bad&lt;/h2>
 &lt;p>若存在某四个格子 $(x, y), (u, v), (x, v), (u, y)$ 满足 $a_{x, y} + a_{u, v} \neq a_{x, v} + a_{u, y} \pmod 5$，则显然至少存在两种结果。进一步地，若存在四个彼此不共行列的四元组，则答案为 $\texttt{YYYYY}$。&lt;/p>
 &lt;p>若四元组个数小于等于三个，则将他们对应的至多 $6$ 行和 $6$ 列交换至左上角。由于右下角的 $n - 6$ 行 $n - 6$ 列无论如何选择结果均相同，能够用状压 DP 求出最终能得到的数。&lt;/p>
 &lt;h2 id="k-knocker">K. Knocker&lt;/h2>
-&lt;p>如果我们要求每次操作的参数 $x$ 需满足 $x &amp;gt; \lfloor\max{a_i}/2\rfloor$，那么依然能够得到原本能够得到的所有结果。证明：要求操作 $x$ 前，必须操作一遍 $2x, 3x, \ldots \lfloor 500/x \rfloor \cdot x$，这对结果无影响，同时也能保证 $x &amp;gt; \lfloor\max{a_i}/2\rfloor$。&lt;/p>
-&lt;p>于是操作不再视作对所有数取模，而是对所有大于等于 $x$ 的 $a_i$ 减去 $x$。进一步地，我们发现能够在仅对每个数操作一次的情况下达成所有可能的结果。证明：假设第 $i$ 个数最终一共被减去了 $d_i$，将 ${d_i}$ 中元素从大到小依次操作，任意时刻必然仍满足 $d &amp;gt; \lfloor\max{a_i}/2\rfloor$。此外，由于 $\min{d_i} &amp;gt; \max{a_i - d_i}$，任何一个 $a_i$ 也不会被多个 $d_i$ 减。&lt;/p>
+&lt;p>如果我们要求每次操作的参数 $x$ 需满足 $x &amp;gt; \lfloor\max\{a_i\}/2\rfloor$，那么依然能够得到原本能够得到的所有结果。证明：要求操作 $x$ 前，必须操作一遍 $2x, 3x, \ldots \lfloor 500/x \rfloor \cdot x$，这对结果无影响，同时也能保证 $x &amp;gt; \lfloor\max\{a_i\}/2\rfloor$。&lt;/p>
+&lt;p>于是操作不再视作对所有数取模，而是对所有大于等于 $x$ 的 $a_i$ 减去 $x$。进一步地，我们发现能够在仅对每个数操作一次的情况下达成所有可能的结果。证明：假设第 $i$ 个数最终一共被减去了 $d_i$，将 $\{d_i\}$ 中元素从大到小依次操作，任意时刻必然仍满足 $d &amp;gt; \lfloor\max\{a_i\}/2\rfloor$。此外，由于 $\min\{d_i\} &amp;gt; \max\{a_i - d_i\}$，任何一个 $a_i$ 也不会被多个 $d_i$ 减。&lt;/p>
 &lt;p>于是可以 DP 求解。&lt;/p></description></item><item><title>luogu/P9170 [省选联考 2023] 填数游戏</title><link>https://blog.fei.ac/zh/posts/luogu/p9170/</link><pubDate>Sat, 08 Jun 2024 20:08:21 +0800</pubDate><guid>https://blog.fei.ac/zh/posts/luogu/p9170/</guid><description>&lt;blockquote>
 &lt;p>对于 $i = 1 \ldots n$，Alice 需要从 $S_i$ 中选择一个数作为 $a_i$；在这之后，Bob 需要从 $T_i$ 中选择 $b_i$。其中 $1 \le |S_i|, |T_i| \le 2$。&lt;/p>
 &lt;p>设 $X = \sum\limits_{i=1}^n [a_i = b_i]$。Alice 的目标是最大化 $X$，Bob 的目标是在保证 $b_i$ 互不相同的前提下最小化 $X$。判断 Bob 能否保证 $b_i$ 互不相同，并在他能时求最终 $X$ 的值。&lt;/p>

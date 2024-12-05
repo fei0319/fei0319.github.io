@@ -16,7 +16,7 @@
 &lt;li>$b_1 = a_1$&lt;/li>
 &lt;li>$\forall i &amp;gt; 1: a_i = a_1$&lt;/li>
 &lt;/ul>
-&lt;p>推广该结论，得到：$(a, b)$ 合法当且仅当对于 $x = \max{a_i}$，当 $a_i &amp;lt; x$ 时 $b_i = a_i$，当 $a_i = x$ 时 $b_i \ge x$。&lt;/p>
+&lt;p>推广该结论，得到：$(a, b)$ 合法当且仅当对于 $x = \max\{a_i\}$，当 $a_i &amp;lt; x$ 时 $b_i = a_i$，当 $a_i = x$ 时 $b_i \ge x$。&lt;/p>
 &lt;h2 id="c-chemistry-class">C. Chemistry Class&lt;/h2>
 &lt;p>将 $a$ 排序，显然答案为 $-1$ 当且仅当存在一个 $i$ 使得 $|a_{2i} - a_{2i + 1}| &amp;gt; A$。&lt;/p>
 &lt;p>容易发现不存在交叉的匹配，即将 $a$ 排序后，不存在两个匹配 $(i, j)$、$(k, l)$ 使得 $i &amp;lt; k &amp;lt; j &amp;lt; l$，同时嵌套的匹配仅可嵌套一层，且外层仅能为 $A$ 型匹配，内层仅能为若干个彼此不交的 $B$ 型匹配。&lt;/p>
@@ -36,12 +36,12 @@
 &lt;h2 id="i-increasing-income">I. Increasing Income&lt;/h2>
 &lt;p>原题意可以抽象为：给定一系列二维点 $(x_i, y_i)$，寻找一个排列最大化前缀最大 $x$ 和前缀最大 $y$ 的总数。&lt;/p>
 &lt;p>该问题显然有多项式复杂度解法：设 $dp_{x, y}$ 表示已选的数中第一维最大值为 $x$，第二维最大值为 $y$ 时前缀最大值总数的最大值，有转移方程：&lt;/p>
-&lt;p>$$dp_{\max{x, x_i}, \max{y, y_i}} = \max{dp_{x, y} + [x_i &amp;gt; x] + [y_i &amp;gt; y] | x_i &amp;gt; x \lor y_i &amp;gt; y }$$&lt;/p>
+&lt;p>$$dp_{\max\{x, x_i\}, \max\{y, y_i\}} = \max\{dp_{x, y} + [x_i &amp;gt; x] + [y_i &amp;gt; y] | x_i &amp;gt; x \lor y_i &amp;gt; y \}$$&lt;/p>
 &lt;p>该 DP 可用树状数组优化至 $O(n \log n)$ 的时间复杂度。&lt;/p>
 &lt;h2 id="b-breaking-bad">B. Breaking Bad&lt;/h2>
 &lt;p>若存在某四个格子 $(x, y), (u, v), (x, v), (u, y)$ 满足 $a_{x, y} + a_{u, v} \neq a_{x, v} + a_{u, y} \pmod 5$，则显然至少存在两种结果。进一步地，若存在四个彼此不共行列的四元组，则答案为 $\texttt{YYYYY}$。&lt;/p>
 &lt;p>若四元组个数小于等于三个，则将他们对应的至多 $6$ 行和 $6$ 列交换至左上角。由于右下角的 $n - 6$ 行 $n - 6$ 列无论如何选择结果均相同，能够用状压 DP 求出最终能得到的数。&lt;/p>
 &lt;h2 id="k-knocker">K. Knocker&lt;/h2>
-&lt;p>如果我们要求每次操作的参数 $x$ 需满足 $x &amp;gt; \lfloor\max{a_i}/2\rfloor$，那么依然能够得到原本能够得到的所有结果。证明：要求操作 $x$ 前，必须操作一遍 $2x, 3x, \ldots \lfloor 500/x \rfloor \cdot x$，这对结果无影响，同时也能保证 $x &amp;gt; \lfloor\max{a_i}/2\rfloor$。&lt;/p>
-&lt;p>于是操作不再视作对所有数取模，而是对所有大于等于 $x$ 的 $a_i$ 减去 $x$。进一步地，我们发现能够在仅对每个数操作一次的情况下达成所有可能的结果。证明：假设第 $i$ 个数最终一共被减去了 $d_i$，将 ${d_i}$ 中元素从大到小依次操作，任意时刻必然仍满足 $d &amp;gt; \lfloor\max{a_i}/2\rfloor$。此外，由于 $\min{d_i} &amp;gt; \max{a_i - d_i}$，任何一个 $a_i$ 也不会被多个 $d_i$ 减。&lt;/p>
+&lt;p>如果我们要求每次操作的参数 $x$ 需满足 $x &amp;gt; \lfloor\max\{a_i\}/2\rfloor$，那么依然能够得到原本能够得到的所有结果。证明：要求操作 $x$ 前，必须操作一遍 $2x, 3x, \ldots \lfloor 500/x \rfloor \cdot x$，这对结果无影响，同时也能保证 $x &amp;gt; \lfloor\max\{a_i\}/2\rfloor$。&lt;/p>
+&lt;p>于是操作不再视作对所有数取模，而是对所有大于等于 $x$ 的 $a_i$ 减去 $x$。进一步地，我们发现能够在仅对每个数操作一次的情况下达成所有可能的结果。证明：假设第 $i$ 个数最终一共被减去了 $d_i$，将 $\{d_i\}$ 中元素从大到小依次操作，任意时刻必然仍满足 $d &amp;gt; \lfloor\max\{a_i\}/2\rfloor$。此外，由于 $\min\{d_i\} &amp;gt; \max\{a_i - d_i\}$，任何一个 $a_i$ 也不会被多个 $d_i$ 减。&lt;/p>
 &lt;p>于是可以 DP 求解。&lt;/p></description></item></channel></rss>
