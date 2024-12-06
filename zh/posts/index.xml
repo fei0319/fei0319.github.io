@@ -30,7 +30,10 @@
 &lt;p>事实上，对于 $l$，找出第一个满足 $\text{rk} _r &amp;lt; \text{rk} _l$ 的 $r$，则 $s _{l, r}$ 一定是 Lyndon 串，而且是以 $l$ 为开头的最长 Lyndon 串。不过这个知识对求 Run 无用。&lt;/p>
 &lt;/blockquote>
 &lt;p>对于那些 $s _{j + 1 - p} &amp;gt; s _{j + 1}$ 的 $(i, j, p)$，将 $s$ 的字符翻转后再应用上述过程即可得到它们的 Lyndon 根。因此我们最多可以得到 $2n$ 个可能的 Lyndon 根，即 Run 的总数不超过 $2n$。对这些 Lyndon 根进行扩展即可得到所有的 Run。&lt;/p>
-&lt;p>进一步地，Run 的总数小于 $n$，且 $\sum\limits_{(i, j, p)} \dfrac{j - i + 1}{p} &amp;lt; 3n$，证明略。&lt;/p></description></item><item><title>The 3rd Universal Cup. Stage 3: Ukraine 口胡</title><link>https://blog.fei.ac/zh/posts/ucup-3-stage-3/</link><pubDate>Sun, 15 Sep 2024 22:54:28 +0800</pubDate><guid>https://blog.fei.ac/zh/posts/ucup-3-stage-3/</guid><description>&lt;h2 id="g-goodman">G. Goodman&lt;/h2>
+&lt;p>进一步地，Run 的总数小于 $n$，且 $\sum\limits_{(i, j, p)} \dfrac{j - i + 1}{p} &amp;lt; 3n$，证明略。&lt;/p>
+&lt;h2 id="幂次串">幂次串&lt;/h2>
+&lt;p>我们称非空串 $s$ 是一个 $k$ 次串（$k &amp;gt; 1$），当且仅当存在一个 $t$ 满足 $s = t^k$。考虑字符串 $s$，对于它的一个 Run $(i, j, p)$，不难得到 $s_{l, l + kxp - 1}$（$x \ge 1, l \ge i, l + kxp \le j$）是一个 $k$ 次串。枚举所有 Run 得出所有该形式的 $k$ 次串，可以不重不漏地统计 $s$ 所有的 $k$ 次子串。&lt;/p>
+&lt;p>证明：若子串 $s_{l, r}$ 是一个 $k$ 次串，计算它的最小正周期 $p$，并向两侧扩展至不破坏该周期的极限，可以得到一个唯一的一个 Run，记该 Run 为 $R(l, r)$。若 $k$ 次子串 $s_{l, r}$ 会被 Run $(i, j, k)$ 计入，则有 $R(l, r) = (i, j, k)$，故 $s_{l, r}$ 会且仅会被 $R(l, r)$ 计入。&lt;/p></description></item><item><title>The 3rd Universal Cup. Stage 3: Ukraine 口胡</title><link>https://blog.fei.ac/zh/posts/ucup-3-stage-3/</link><pubDate>Sun, 15 Sep 2024 22:54:28 +0800</pubDate><guid>https://blog.fei.ac/zh/posts/ucup-3-stage-3/</guid><description>&lt;h2 id="g-goodman">G. Goodman&lt;/h2>
 &lt;p>略&lt;/p>
 &lt;h2 id="a-aibohphobia">A. Aibohphobia&lt;/h2>
 &lt;p>对于 $n = 1$ 的情况特判。以下讨论 $n \ge 2$ 的情况。&lt;/p>
